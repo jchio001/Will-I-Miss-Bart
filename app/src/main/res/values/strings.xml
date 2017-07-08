@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Will I Miss Bart</string>
+
+    <string name="home">Home</string>
+
+    <string name="enter_bart_data">Enter in some information about the stations you\'re interested in.</string>
+    <string name="another_bart">Add another station</string>
+    <string name="plz_stop">I think you\'ve pressed the button enough.</string>
+    <string name="done">Done</string>
+
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>

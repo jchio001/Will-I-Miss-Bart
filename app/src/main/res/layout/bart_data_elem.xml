@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="2dp"
+    android:padding="2dp">
+
+    <Spinner
+        style="@style/OnboardingSpinner"
+        android:id="@+id/bart_spinner" />
+
+    <Spinner
+        style="@style/OnboardingSpinner"
+        android:id="@+id/direction_spinner"
+        android:layout_marginTop="6dp"/>
+
+    <LinearLayout
+        android:id="@+id/day_of_week_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="6dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/OnboardingDaybox"
+            android:id="@+id/sunday_box"
+            android:text="S"/>
+
+        <TextView
+            style="@style/OnboardingDaybox"
+            android:id="@+id/monday_box"
+            android:text="M"/>
+
+        <TextView
+            style="@style/OnboardingDaybox"
+            android:id="@+id/tuesday_box"
+            android:text="T"/>
+
+        <TextView
+            style="@style/OnboardingDaybox"
+            android:id="@+id/wednesday_box"
+            android:text="W"/>
+
+        <TextView
+            style="@style/OnboardingDaybox"
+            android:id="@+id/thursday_box"
+            android:text="T"/>
+
+        <TextView
+            style="@style/OnboardingDaybox"
+            android:id="@+id/friday_box"
+            android:text="F"/>
+
+        <TextView
+            style="@style/OnboardingDaybox"
+            android:id="@+id/saturday_box"
+            android:text="S"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="3dp"
+        android:background="@color/white" />
+
+</LinearLayout>
