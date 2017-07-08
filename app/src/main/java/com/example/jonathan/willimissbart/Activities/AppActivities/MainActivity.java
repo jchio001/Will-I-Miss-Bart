@@ -1,8 +1,12 @@
 package com.example.jonathan.willimissbart.Activities.AppActivities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,25 +17,41 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.jonathan.willimissbart.Adapters.ViewPagerAdapter;
+import com.example.jonathan.willimissbart.Fragments.MyStationsFragment;
+import com.example.jonathan.willimissbart.Misc.Constants;
+import com.example.jonathan.willimissbart.Misc.Utils;
+import com.example.jonathan.willimissbart.Persistence.Models.UserBartData;
+import com.example.jonathan.willimissbart.Persistence.SPSingleton;
 import com.example.jonathan.willimissbart.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
+    @Bind(R.id.toolbar) Toolbar toolbar;
+    @Bind(R.id.tabs) TabLayout tabs;
+    @Bind(R.id.view_pager) ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        Bundle bundle = getIntent().getExtras();
+
+        setUpViewPager(Utils.getUserBartData(bundle, getApplicationContext()));
+        tabs.setupWithViewPager(viewPager);
     }
 
     @Override
@@ -48,16 +68,31 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setUpViewPager(String serializedUserData) {
+        System.out.println(serializedUserData);
+        ArrayList<String> titles = new ArrayList<String>(Arrays.asList(getResources()
+                .getStringArray(R.array.tab_headers)));
+
+        ArrayList<Fragment> fragments = new ArrayList<>();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.USER_DATA, serializedUserData);
+        MyStationsFragment myStationsFragment = new MyStationsFragment();
+        myStationsFragment.setArguments(bundle);
+        fragments.add(myStationsFragment);
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager())
+                .setTitles(titles)
+                .setFragments(fragments);
+
+        viewPager.setAdapter(adapter);
     }
 }

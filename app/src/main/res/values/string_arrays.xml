@@ -5,4 +5,8 @@
         <item>Southbound</item>
         <item>Both</item>
     </string-array>
+    
+    <string-array name="tab_headers">
+        <item>My Stations</item>
+    </string-array>
 </resources>

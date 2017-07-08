@@ -36,6 +36,11 @@ public class SPSingleton {
         return sp.getString(Constants.STATION_LIST_KEY, "");
     }
 
+    public void persistUserData(String userData) {
+        sp.edit().putString(Constants.USER_DATA, userData).commit();
+    }
+
+
     public void persistStations(String stationsJsonArr) {
         sp.edit().putString(Constants.STATION_LIST_KEY, stationsJsonArr).commit();
     }

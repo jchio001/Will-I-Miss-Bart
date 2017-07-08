@@ -27,6 +27,7 @@ import com.example.jonathan.willimissbart.AnimationListeners.StationInputAnimati
 import com.example.jonathan.willimissbart.AnimationListeners.StationInputAnimationListeners.InitialAnimation.HideProgressBarAnimListener;
 import com.example.jonathan.willimissbart.Misc.Constants;
 import com.example.jonathan.willimissbart.Misc.Utils;
+import com.example.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.example.jonathan.willimissbart.Persistence.SPSingleton;
 import com.example.jonathan.willimissbart.Persistence.StationsSingleton;
 import com.example.jonathan.willimissbart.R;
@@ -36,6 +37,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -107,6 +109,7 @@ public class StationInputActivity extends AppCompatActivity {
         if (bartDataElemViewHolders.size() >= 5) {
             Utils.showSnackBar(this, parent, R.color.red, getString(R.string.plz_stop));
             addStationButton.setEnabled(true);
+            doneButton.setEnabled(true);
             return;
         }
 
@@ -138,8 +141,11 @@ public class StationInputActivity extends AppCompatActivity {
 
     @OnClick(R.id.done)
     public void done() {
+        doneButton.setEnabled(false);
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(Constants.USER_DATA, parseAndPersistData(bartDataElemViewHolders));
         startActivity(intent);
+        finish();
     }
 
     @Subscribe
@@ -180,5 +186,27 @@ public class StationInputActivity extends AppCompatActivity {
         SPSingleton.getInstance(getApplicationContext()).persistStations(
                 new Gson().toJson(StationsSingleton.getInstance().getStationElems())
         );
+    }
+
+    private String parseAndPersistData(List<BartDataElemViewHolder> bartDataElemViewHolders) {
+        List<UserBartData> userBartData = new ArrayList<>();
+
+        for (BartDataElemViewHolder bartDataElemViewHolder : bartDataElemViewHolders) {
+            String name = bartDataElemViewHolder.getStationName();
+            boolean[] days = bartDataElemViewHolder.getDaysOfWeekOfInterest();
+            if (!name.equals("Select a station") && !Utils.noDaysSelected(days)) {
+                userBartData.add(
+                        new UserBartData()
+                                .setStation(name)
+                                .setDays(days)
+                                .setDirection(bartDataElemViewHolder.getDirection())
+                );
+            }
+        }
+
+        String serializedUserData = new Gson().toJson(userBartData);
+        SPSingleton.getInstance(getApplicationContext())
+                .persistUserData(new Gson().toJson(userBartData));
+        return serializedUserData;
     }
 }
