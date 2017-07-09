@@ -1,6 +1,8 @@
 package com.example.jonathan.willimissbart.API.Callbacks;
 
 
+import android.util.Log;
+
 import com.example.jonathan.willimissbart.API.APIConstants;
 import com.example.jonathan.willimissbart.API.Models.EtdModels.EtdFailure;
 import com.example.jonathan.willimissbart.API.Models.EtdModels.EtdResp;
@@ -18,7 +20,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class EtdCallback implements Callback<EtdResp> {
-    private final String tag = "EtdCallBack";
+    public static final String tag = "EtdCallback";
     private String stationName;
     private int index;
 
@@ -38,7 +40,7 @@ public class EtdCallback implements Callback<EtdResp> {
 
     @Override
     public void onResponse(Call<EtdResp> call, Response<EtdResp> resp) {
-        System.out.println(tag + " " + String.valueOf(index));
+        Log.i(tag, String.format("Got etd for: %s", stationName));
         switch (resp.code()) {
             case APIConstants.HTTP_STATUS_OK:
                 EventBus.getDefault().post(new EtdRespBundle(index, resp.body()));
@@ -51,6 +53,7 @@ public class EtdCallback implements Callback<EtdResp> {
 
     @Override
     public void onFailure(Call<EtdResp> call, Throwable t) {
+        Log.e(tag, String.format("Failed to get etd for: %s", stationName));
         EventBus.getDefault().post(new EtdFailure(tag, stationName, -1));
     }
 }

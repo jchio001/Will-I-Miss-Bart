@@ -17,7 +17,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class StationsCallback implements Callback<StationsResp> {
-    private final String tag = "StationsCallback";
+    public static final String tag = "StationsCallback";
 
     @Override
     public void onResponse(Call<StationsResp> call, Response<StationsResp> resp) {

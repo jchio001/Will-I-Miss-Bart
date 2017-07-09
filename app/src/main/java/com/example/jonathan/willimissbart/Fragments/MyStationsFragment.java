@@ -46,6 +46,7 @@ public class MyStationsFragment extends Fragment {
 
     private List<MainFeedElemViewHolder> mainElemViewHolders;
     private EtdStation[] stationArr = new EtdStation[5];
+    private boolean[] successArr = new boolean[5]; //keeps track of if API calls are successful
 
     private int day = -1;
     private int stationCntr = 0;
@@ -85,11 +86,13 @@ public class MyStationsFragment extends Fragment {
     }
 
     @Subscribe
-    public synchronized void onEtdResponse(EtdRespBundle etdRespBundle) {
-        stationArr[etdRespBundle.getIndex()] =
-                etdRespBundle.getEtdResp().getRoot().getStation().get(0);
-
-        ++stationCntr;
+    public void onEtdResponse(EtdRespBundle etdRespBundle) {
+        synchronized (this) {
+            stationArr[etdRespBundle.getIndex()] =
+                    etdRespBundle.getEtdResp().getRoot().getStation().get(0);
+            successArr[etdRespBundle.getIndex()] = true;
+            ++stationCntr;
+        }
         if (stationCntr == filteredUserBartData.size()) {
             loadFeed(stationArr);
         }
@@ -97,8 +100,10 @@ public class MyStationsFragment extends Fragment {
 
     @Subscribe
     public synchronized void onEtdFailure(EtdFailure failure) {
-        if (failure.tag.equals("EtdCallback")) {
-            ++stationCntr;
+        if (failure.tag.equals(EtdCallback.tag)) {
+            synchronized (this) {
+                ++stationCntr;
+            }
 
             if (stationCntr == filteredUserBartData.size()) {
                 loadFeed(stationArr);
@@ -132,7 +137,7 @@ public class MyStationsFragment extends Fragment {
         return filteredUserBartData;
     }
 
-    //should usually be using this on main bart
+    //use once all API calls have been made
     private void loadFeed(EtdStation[] stations) {
         progressBar.setVisibility(View.GONE);
         List<MainFeedElemViewHolder> viewHolders = new ArrayList<>();
@@ -140,12 +145,13 @@ public class MyStationsFragment extends Fragment {
                 Context.LAYOUT_INFLATER_SERVICE
         );
 
-        for (EtdStation s : stations) {
+        for (int i = 0; i < stations.length; ++i) {
+            EtdStation s = stations[i];
             if (s != null) {
-                LinearLayout mainBartDataElem = (LinearLayout) vi.inflate(
-                        R.layout.main_bart_data_layout, null
+                View mainBartDataElem = vi.inflate(R.layout.main_bart_data_layout, null);
+                MainFeedElemViewHolder viewHolder = new MainFeedElemViewHolder(
+                        mainBartDataElem, getActivity(), s, successArr[i]
                 );
-                MainFeedElemViewHolder viewHolder = new MainFeedElemViewHolder(mainBartDataElem, s);
                 viewHolders.add(viewHolder);
                 mainFeedLayout.addView(mainBartDataElem);
             } else {
