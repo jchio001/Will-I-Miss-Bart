@@ -32,6 +32,12 @@
         <item name="colorAccent">@color/bartBlue</item>
     </style>
 
+    <style name="GenericTextViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <style name="OnboardingButton" parent="TextAppearance.AppCompat.Medium">
         <item name="android:background">@color/colorPrimaryDark</item>
         <item name="android:layout_width">wrap_content</item>

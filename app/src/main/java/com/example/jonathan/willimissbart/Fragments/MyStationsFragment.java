@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.example.jonathan.willimissbart.API.Models.EtdModels.EtdFailure;
@@ -43,6 +44,7 @@ public class MyStationsFragment extends Fragment {
     @Bind(R.id.main_swl) SwipeRefreshLayout mainSWL;
     @Bind(R.id.main_feed_layout) LinearLayout mainFeedLayout;
     @Bind(R.id.progressBar) ProgressBar progressBar;
+    @Bind(R.id.no_etds_to_display) TextView nothingToDisplayTV;
 
     private EtdRefreshListener etdRefreshListener;
 
@@ -80,9 +82,15 @@ public class MyStationsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         Bundle bundle = getArguments();
         deserializeAndFilter(Utils.getUserBartData(bundle, getActivity().getApplicationContext()));
-        Utils.fetchEtds(filteredUserBartData);
+
+        if (!filteredUserBartData.isEmpty()) {
+            Utils.fetchEtds(filteredUserBartData);
+        } else {
+            handleNothingToFetch();
+        }
     }
 
     @Override
@@ -125,10 +133,14 @@ public class MyStationsFragment extends Fragment {
     }
 
     private List<UserBartData> convertToList(String serializedUserData) {
-        Gson gson = new Gson();
-        Type listType = new TypeToken<List<UserBartData>>() {
-        }.getType();
-        return gson.fromJson(serializedUserData, listType);
+        if (!serializedUserData.isEmpty()) {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<UserBartData>>() {
+            }.getType();
+            return gson.fromJson(serializedUserData, listType);
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     private List<UserBartData> filterUserBartData(List<UserBartData> userBartData) {
@@ -146,9 +158,14 @@ public class MyStationsFragment extends Fragment {
         return filteredUserBartData;
     }
 
+    private void handleNothingToFetch() {
+        progressBar.setVisibility(View.INVISIBLE);
+        nothingToDisplayTV.setVisibility(View.VISIBLE);
+    }
+
     //use once all API calls have been made
     private void loadFeed(EtdStation[] stations) {
-        progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.GONE);
         mainSWL.setRefreshing(false);
         mainFeedLayout.setVisibility(View.INVISIBLE);
         mainFeedLayout.removeAllViews();

@@ -141,10 +141,16 @@ public class StationInputActivity extends AppCompatActivity {
     @OnClick(R.id.done)
     public void done() {
         doneButton.setEnabled(false);
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(Constants.USER_DATA, parseAndPersistData(bartDataElemViewHolders));
-        startActivity(intent);
-        finish();
+
+        String serializedUserData = parseAndPersistData(bartDataElemViewHolders);
+        if (!serializedUserData.isEmpty()) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(Constants.USER_DATA, parseAndPersistData(bartDataElemViewHolders));
+            startActivity(intent);
+            finish();
+        } else {
+            Utils.showSnackBar(this, parent, R.color.red, getString(R.string.all_invalid_data));
+        }
     }
 
     @Subscribe
@@ -204,9 +210,13 @@ public class StationInputActivity extends AppCompatActivity {
             }
         }
 
-        String serializedUserData = new Gson().toJson(userBartData);
-        SPSingleton.getInstance(getApplicationContext())
-                .persistUserData(new Gson().toJson(userBartData));
-        return serializedUserData;
+        if (!userBartData.isEmpty()) {
+            String serializedUserData = new Gson().toJson(userBartData);
+            SPSingleton.getInstance(getApplicationContext())
+                    .persistUserData(new Gson().toJson(userBartData));
+            return serializedUserData;
+        } else {
+            return "";
+        }
     }
 }

@@ -49,19 +49,18 @@ public class EtdRefreshListener implements SwipeRefreshLayout.OnRefreshListener 
             } else {
                 return;
             }
+
+            //prevents the user from spamming refresh
+            long now = System.currentTimeMillis() / 1000;
+            if (now - lastRefreshTime < 45) {
+                Log.i("EtfRefreshListener", "Stop spamming idiot");
+                refreshState = RefreshStateEnum.INACTIVE;
+                swipeRefreshLayout.setRefreshing(false);
+                return;
+            }
+            lastRefreshTime = now;
         }
 
-        //prevents the user from spamming refresh
-        long now = System.currentTimeMillis() / 1000;
-        if (now - lastRefreshTime < 60) {
-            Log.i("EtfRefreshListener", "Stop spamming idiot");
-            refreshState = RefreshStateEnum.INACTIVE;
-            swipeRefreshLayout.setRefreshing(false);
-            return;
-        }
-        lastRefreshTime = now;
-
-        swipeRefreshLayout.setEnabled(false);
         Utils.fetchEtds(userBartData);
     }
 }

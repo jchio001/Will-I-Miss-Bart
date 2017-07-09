@@ -6,9 +6,12 @@
     <string name="enter_bart_data">Enter in some information about the stations you\'re interested in.</string>
     <string name="another_bart">Add another station</string>
     <string name="plz_stop">I think you\'ve pressed the button enough.</string>
+    <string name="all_invalid_data">Error: all of the data is invalid. Please edit your data and try again.</string>
     <string name="done">Done</string>
 
     <string name="title_activity_main">MainActivity</string>
+
+    <string name="no_etds">No information to display today. Change the days of your BART stations if you want to see something.</string>
 
     <string name="action_settings">Settings</string>
 </resources>

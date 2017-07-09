@@ -15,6 +15,16 @@
         android:layout_height="64dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
+
+    <TextView
+        style="@style/GenericTextViewStyle"
+        android:id="@+id/no_etds_to_display"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textSize="28sp"
+        android:text="@string/no_etds"
+        android:visibility="gone"/>
     
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/main_swl"
