@@ -1,4 +1,4 @@
-package com.example.jonathan.willimissbart.AnimationListeners.StationInputAnimationListeners.Generic;
+package com.example.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.Generic;
 
 import android.view.View;
 import android.view.animation.Animation;

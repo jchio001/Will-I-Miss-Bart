@@ -7,8 +7,14 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.jonathan.willimissbart.API.APIConstants;
+import com.example.jonathan.willimissbart.API.Callbacks.EtdCallback;
+import com.example.jonathan.willimissbart.API.RetrofitClient;
+import com.example.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.example.jonathan.willimissbart.Persistence.SPSingleton;
 import com.example.jonathan.willimissbart.R;
+
+import java.util.List;
 
 public class Utils {
     public static boolean noDaysSelected(boolean[] days) {
@@ -27,6 +33,20 @@ public class Utils {
     public static String getUserBartData(Bundle b, Context context) {
         return (b == null) ? SPSingleton.getInstance(context).getUserData() :
                 b.getString(Constants.USER_DATA, "");
+    }
+
+    //usually filtered
+    public static void fetchEtds(List<UserBartData> userBartData) {
+        for (int i = 0; i < userBartData.size(); ++i) {
+            UserBartData data = userBartData.get(i);
+            RetrofitClient.getInstance()
+                    .getMatchingService()
+                    .getEtd("etd", APIConstants.API_KEY, 'y', data.getAbbr(),
+                            Utils.directionToUrlParam(data.getDirection())
+                    )
+                    .clone()
+                    .enqueue(new EtdCallback().setStationName(data.getStation()).setIndex(i));
+        }
     }
 
 

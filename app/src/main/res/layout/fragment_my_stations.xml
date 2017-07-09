@@ -15,20 +15,28 @@
         android:layout_height="64dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
-
-    <ScrollView
-        android:layout_alignParentTop="true"
+    
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/main_swl"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
-        <LinearLayout
-            android:id="@+id/main_feed_layout"
+        <android.support.v4.widget.NestedScrollView
+            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/main_feed_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-    </ScrollView>
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

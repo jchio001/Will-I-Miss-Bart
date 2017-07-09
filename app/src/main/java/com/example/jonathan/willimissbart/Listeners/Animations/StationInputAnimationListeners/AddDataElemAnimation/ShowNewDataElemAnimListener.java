@@ -1,4 +1,4 @@
-package com.example.jonathan.willimissbart.AnimationListeners.StationInputAnimationListeners.AddDataElemAnimation;
+package com.example.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.AddDataElemAnimation;
 
 
 import android.view.View;
@@ -7,7 +7,6 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.example.jonathan.willimissbart.AnimationListeners.StationInputAnimationListeners.Generic.ShowButtonAnimListener;
 import com.example.jonathan.willimissbart.Misc.Constants;
 
 public class ShowNewDataElemAnimListener implements Animation.AnimationListener {

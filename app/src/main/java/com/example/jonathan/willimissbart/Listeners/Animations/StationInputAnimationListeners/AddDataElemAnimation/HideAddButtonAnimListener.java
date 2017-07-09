@@ -1,5 +1,4 @@
-package com.example.jonathan.willimissbart.AnimationListeners.StationInputAnimationListeners.AddDataElemAnimation;
-
+package com.example.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.AddDataElemAnimation;
 
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -9,22 +8,23 @@ import android.widget.LinearLayout;
 
 import com.example.jonathan.willimissbart.Misc.Constants;
 
-public class HideDoneButtonAnimListener implements Animation.AnimationListener {
+
+public class HideAddButtonAnimListener implements Animation.AnimationListener {
     private Button button;
     private Button button2;
     private LinearLayout linearLayout;
 
-    public HideDoneButtonAnimListener setButton(Button button) {
+    public HideAddButtonAnimListener setButton(Button button) {
         this.button = button;
         return this;
     }
 
-    public HideDoneButtonAnimListener setButton2(Button button2) {
+    public HideAddButtonAnimListener setButton2(Button button2) {
         this.button2 = button2;
         return this;
     }
 
-    public HideDoneButtonAnimListener setLinearLayout(LinearLayout linearLayout) {
+    public HideAddButtonAnimListener setLinearLayout(LinearLayout linearLayout) {
         this.linearLayout = linearLayout;
         return this;
     }
@@ -36,17 +36,16 @@ public class HideDoneButtonAnimListener implements Animation.AnimationListener {
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        button2.setVisibility(View.INVISIBLE);
-        linearLayout.setVisibility(View.INVISIBLE);
-        AlphaAnimation showNewDataElem = new AlphaAnimation(0.0f, 1.0f);
-        showNewDataElem.setDuration(Constants.STANDARD_DURATION);
-        showNewDataElem.setAnimationListener(
-                new ShowNewDataElemAnimListener()
+        button.setVisibility(View.INVISIBLE);
+        AlphaAnimation hideDoneButton = new AlphaAnimation(1.0f, 0.0f);
+        hideDoneButton.setDuration(Constants.STANDARD_DURATION);
+        hideDoneButton.setAnimationListener(
+                new HideDoneButtonAnimListener()
                         .setButton(button)
                         .setButton2(button2)
                         .setLinearLayout(linearLayout)
         );
-        linearLayout.startAnimation(showNewDataElem);
+        button2.startAnimation(hideDoneButton);
     }
 
     @Override

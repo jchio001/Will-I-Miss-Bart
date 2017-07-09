@@ -1,11 +1,11 @@
-package com.example.jonathan.willimissbart.AnimationListeners.StationInputAnimationListeners.InitialAnimation;
+package com.example.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.InitialAnimation;
 
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
 
-import com.example.jonathan.willimissbart.AnimationListeners.StationInputAnimationListeners.Generic.ShowButtonAnimListener;
+import com.example.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.Generic.ShowButtonAnimListener;
 import com.example.jonathan.willimissbart.Misc.Constants;
 
 

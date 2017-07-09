@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +12,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.example.jonathan.willimissbart.API.APIConstants;
 import com.example.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.example.jonathan.willimissbart.API.Models.EtdModels.EtdFailure;
 import com.example.jonathan.willimissbart.API.Models.EtdModels.EtdRespBundle;
 import com.example.jonathan.willimissbart.API.Models.EtdModels.EtdStation;
-import com.example.jonathan.willimissbart.API.RetrofitClient;
+import com.example.jonathan.willimissbart.Listeners.SwipeRefresh.EtdRefreshListener;
+import com.example.jonathan.willimissbart.Misc.RefreshStateEnum;
+import com.example.jonathan.willimissbart.Misc.SharedEtdDataBundle;
 import com.example.jonathan.willimissbart.Misc.Utils;
 import com.example.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.example.jonathan.willimissbart.R;
@@ -38,18 +40,21 @@ import butterknife.ButterKnife;
 //Fragments kind of suck...
 @SuppressWarnings("unchecked")
 public class MyStationsFragment extends Fragment {
+    @Bind(R.id.main_swl) SwipeRefreshLayout mainSWL;
     @Bind(R.id.main_feed_layout) LinearLayout mainFeedLayout;
     @Bind(R.id.progressBar) ProgressBar progressBar;
 
+    private EtdRefreshListener etdRefreshListener;
+
     private List<UserBartData> userBartData;
     private List<UserBartData> filteredUserBartData;
-
     private List<MainFeedElemViewHolder> mainElemViewHolders;
+
     private EtdStation[] stationArr = new EtdStation[5];
     private boolean[] successArr = new boolean[5]; //keeps track of if API calls are successful
 
     private int day = -1;
-    private int stationCntr = 0;
+    private SharedEtdDataBundle sharedEtdDataBundle = new SharedEtdDataBundle();
 
     public MyStationsFragment() {
     }
@@ -67,6 +72,7 @@ public class MyStationsFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_my_stations, container, false);
         ButterKnife.bind(this, v);
+        mainSWL.setEnabled(false);
         EventBus.getDefault().register(this);
         return v;
     }
@@ -76,7 +82,7 @@ public class MyStationsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = getArguments();
         deserializeAndFilter(Utils.getUserBartData(bundle, getActivity().getApplicationContext()));
-        fetchBartData(filteredUserBartData);
+        Utils.fetchEtds(filteredUserBartData);
     }
 
     @Override
@@ -91,9 +97,9 @@ public class MyStationsFragment extends Fragment {
             stationArr[etdRespBundle.getIndex()] =
                     etdRespBundle.getEtdResp().getRoot().getStation().get(0);
             successArr[etdRespBundle.getIndex()] = true;
-            ++stationCntr;
+            ++sharedEtdDataBundle.stationCntr;
         }
-        if (stationCntr == filteredUserBartData.size()) {
+        if (sharedEtdDataBundle.stationCntr == filteredUserBartData.size()) {
             loadFeed(stationArr);
         }
     }
@@ -102,10 +108,12 @@ public class MyStationsFragment extends Fragment {
     public synchronized void onEtdFailure(EtdFailure failure) {
         if (failure.tag.equals(EtdCallback.tag)) {
             synchronized (this) {
-                ++stationCntr;
+                stationArr[failure.index] = new EtdStation().setName(failure.stationName);
+                successArr[failure.index] = false;
+                ++sharedEtdDataBundle.stationCntr;
             }
 
-            if (stationCntr == filteredUserBartData.size()) {
+            if (sharedEtdDataBundle.stationCntr == filteredUserBartData.size()) {
                 loadFeed(stationArr);
             }
         }
@@ -118,7 +126,8 @@ public class MyStationsFragment extends Fragment {
 
     private List<UserBartData> convertToList(String serializedUserData) {
         Gson gson = new Gson();
-        Type listType = new TypeToken<List<UserBartData>>(){}.getType();
+        Type listType = new TypeToken<List<UserBartData>>() {
+        }.getType();
         return gson.fromJson(serializedUserData, listType);
     }
 
@@ -139,16 +148,20 @@ public class MyStationsFragment extends Fragment {
 
     //use once all API calls have been made
     private void loadFeed(EtdStation[] stations) {
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.INVISIBLE);
+        mainSWL.setRefreshing(false);
+        mainFeedLayout.setVisibility(View.INVISIBLE);
+        mainFeedLayout.removeAllViews();
+
         List<MainFeedElemViewHolder> viewHolders = new ArrayList<>();
         LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE
         );
 
-        for (int i = 0; i < stations.length; ++i) {
+        for (int i = 0; i < filteredUserBartData.size(); ++i) {
             EtdStation s = stations[i];
+            View mainBartDataElem = vi.inflate(R.layout.main_bart_data_layout, null);
             if (s != null) {
-                View mainBartDataElem = vi.inflate(R.layout.main_bart_data_layout, null);
                 MainFeedElemViewHolder viewHolder = new MainFeedElemViewHolder(
                         mainBartDataElem, getActivity(), s, successArr[i]
                 );
@@ -160,19 +173,17 @@ public class MyStationsFragment extends Fragment {
         }
 
         mainElemViewHolders = viewHolders;
-    }
+        mainSWL.setVisibility(View.VISIBLE);
+        mainFeedLayout.setVisibility(View.VISIBLE);
 
-    //also usually filtered
-    private void fetchBartData(List<UserBartData> userBartData) {
-        for (int i = 0; i < userBartData.size(); ++i) {
-            UserBartData data = userBartData.get(i);
-            RetrofitClient.getInstance()
-                    .getMatchingService()
-                    .getEtd("etd", APIConstants.API_KEY, 'y', data.getAbbr(),
-                            Utils.directionToUrlParam(data.getDirection())
-                    )
-                    .clone()
-                    .enqueue(new EtdCallback().setStationName(data.getStation()).setIndex(i));
+        if (etdRefreshListener == null) {
+            etdRefreshListener = new EtdRefreshListener(mainSWL)
+                    .setUserBartData(filteredUserBartData)
+                    .setSharedEtdDataBundle(sharedEtdDataBundle);
+            mainSWL.setOnRefreshListener(etdRefreshListener);
         }
+
+        etdRefreshListener.setRefreshState(RefreshStateEnum.INACTIVE);
+        mainSWL.setEnabled(true);
     }
 }

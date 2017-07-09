@@ -23,6 +23,11 @@ public class EtdStation implements Serializable {
         return name;
     }
 
+    public EtdStation setName(String name) {
+        this.name = name;
+        return this;
+    }
+
     public String getAbbr() {
         return abbr;
     }

@@ -3,6 +3,8 @@ package com.example.jonathan.willimissbart.API;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -23,10 +25,18 @@ public class RetrofitClient {
     private RetrofitClient() {
         Gson gson = new GsonBuilder().serializeNulls().create();
 
+        Dispatcher dispatcher = new Dispatcher();
+        dispatcher.setMaxRequests(5);
+
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor).build();
+                .addInterceptor(interceptor)
+                .dispatcher(dispatcher)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .client(client)

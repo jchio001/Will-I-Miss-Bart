@@ -7,13 +7,8 @@ import com.example.jonathan.willimissbart.API.APIConstants;
 import com.example.jonathan.willimissbart.API.Models.EtdModels.EtdFailure;
 import com.example.jonathan.willimissbart.API.Models.EtdModels.EtdResp;
 import com.example.jonathan.willimissbart.API.Models.EtdModels.EtdRespBundle;
-import com.example.jonathan.willimissbart.API.Models.Generic.FailureEvent;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,7 +41,7 @@ public class EtdCallback implements Callback<EtdResp> {
                 EventBus.getDefault().post(new EtdRespBundle(index, resp.body()));
                 break;
             default:
-                EventBus.getDefault().post(new EtdFailure(tag, stationName, resp.code()));
+                EventBus.getDefault().post(new EtdFailure(tag, stationName, resp.code(), index));
                 break;
         }
     }
@@ -54,6 +49,6 @@ public class EtdCallback implements Callback<EtdResp> {
     @Override
     public void onFailure(Call<EtdResp> call, Throwable t) {
         Log.e(tag, String.format("Failed to get etd for: %s", stationName));
-        EventBus.getDefault().post(new EtdFailure(tag, stationName, -1));
+        EventBus.getDefault().post(new EtdFailure(tag, stationName, -1, index));
     }
 }
