@@ -1,5 +1,6 @@
 package com.example.jonathan.willimissbart.API;
 
+import com.example.jonathan.willimissbart.API.Models.EtdModels.EtdResp;
 import com.example.jonathan.willimissbart.API.Models.StationModels.StationsResp;
 
 import retrofit2.Call;
@@ -10,5 +11,12 @@ public interface MatchingService {
     @GET("stn.aspx")
     Call<StationsResp> getStations(@Query("cmd") String cmd,
                                    @Query("key") String key,
-                                   @Query("json") String isJson);
+                                   @Query("json") Character isJson);
+
+    @GET("etd.aspx")
+    Call<EtdResp> getEtd(@Query("cmd") String cmd,
+                         @Query("key") String key,
+                         @Query("json") Character y,
+                         @Query("orig") String orig,
+                         @Query("dir") Character dir);
 }

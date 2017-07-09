@@ -20,6 +20,10 @@ public class Utils {
         return true;
     }
 
+    public static Character directionToUrlParam(String direction) {
+        return direction.equals("Both") ? null : direction.charAt(0);
+    }
+
     public static String getUserBartData(Bundle b, Context context) {
         return (b == null) ? SPSingleton.getInstance(context).getUserData() :
                 b.getString(Constants.USER_DATA, "");

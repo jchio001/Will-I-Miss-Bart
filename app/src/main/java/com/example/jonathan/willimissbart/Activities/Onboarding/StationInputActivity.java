@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.example.jonathan.willimissbart.API.APIConstants;
 import com.example.jonathan.willimissbart.API.Callbacks.StationsCallback;
-import com.example.jonathan.willimissbart.API.Models.FailureEvent;
+import com.example.jonathan.willimissbart.API.Models.Generic.FailureEvent;
 import com.example.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.example.jonathan.willimissbart.API.Models.StationModels.StationsResp;
 import com.example.jonathan.willimissbart.API.RetrofitClient;
@@ -37,7 +37,6 @@ import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -84,7 +83,7 @@ public class StationInputActivity extends AppCompatActivity {
         if (stationsJSON.isEmpty()) {
             RetrofitClient.getInstance()
                     .getMatchingService()
-                    .getStations("stns", APIConstants.API_KEY, "y")
+                    .getStations("stns", APIConstants.API_KEY, 'y')
                     .enqueue(new StationsCallback());
         } else {
             Gson gson = new Gson();
@@ -198,6 +197,7 @@ public class StationInputActivity extends AppCompatActivity {
                 userBartData.add(
                         new UserBartData()
                                 .setStation(name)
+                                .setAbbr(bartDataElemViewHolder.getStationAbbr())
                                 .setDays(days)
                                 .setDirection(bartDataElemViewHolder.getDirection())
                 );

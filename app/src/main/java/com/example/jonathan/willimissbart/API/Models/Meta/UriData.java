@@ -1,4 +1,4 @@
-package com.example.jonathan.willimissbart.API.Models.StationModels;
+package com.example.jonathan.willimissbart.API.Models.Meta;
 
 
 import com.google.gson.annotations.Expose;

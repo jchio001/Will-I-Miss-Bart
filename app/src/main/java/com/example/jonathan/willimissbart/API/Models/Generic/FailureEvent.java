@@ -1,4 +1,4 @@
-package com.example.jonathan.willimissbart.API.Models;
+package com.example.jonathan.willimissbart.API.Models.Generic;
 
 public class FailureEvent {
     public String tag;

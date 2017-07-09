@@ -11,6 +11,10 @@ public class UserBartData implements Serializable {
     @Expose
     private String station;
 
+    @SerializedName("abbr")
+    @Expose
+    private String abbr;
+
     @SerializedName("direction")
     @Expose
     private String direction;
@@ -27,6 +31,15 @@ public class UserBartData implements Serializable {
 
     public UserBartData setStation(String station) {
         this.station = station;
+        return this;
+    }
+
+    public String getAbbr() {
+        return abbr;
+    }
+
+    public UserBartData setAbbr(String abbr) {
+        this.abbr = abbr;
         return this;
     }
 

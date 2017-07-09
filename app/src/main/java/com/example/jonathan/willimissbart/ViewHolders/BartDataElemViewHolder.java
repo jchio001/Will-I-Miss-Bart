@@ -59,6 +59,10 @@ public class BartDataElemViewHolder {
         return ((Station) bartSpinner.getSelectedItem()).getName();
     }
 
+    public String getStationAbbr() {
+        return ((Station) bartSpinner.getSelectedItem()).getAbbr();
+    }
+
     public String getDirection() {
         return directionSpinner.getSelectedItem().toString();
     }

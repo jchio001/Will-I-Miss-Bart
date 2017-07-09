@@ -1,6 +1,8 @@
 package com.example.jonathan.willimissbart.API.Models.StationModels;
 
 
+import com.example.jonathan.willimissbart.API.Models.Generic.Message;
+import com.example.jonathan.willimissbart.API.Models.Meta.UriData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,9 +17,6 @@ public class StationsRoot implements Serializable {
     @Expose
     private Stations stations;
 
-    @SerializedName("message")
-    @Expose
-    private String message;
 
     public UriData getUri() {
         return uri;
@@ -25,9 +24,5 @@ public class StationsRoot implements Serializable {
 
     public Stations getStations() {
         return stations;
-    }
-
-    public String getMessage() {
-        return message;
     }
 }

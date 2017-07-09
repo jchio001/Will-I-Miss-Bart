@@ -12,17 +12,25 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/bartBlue</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/white</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar2" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorAccent">@color/bartBlue</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="BartBlueSpinner">
+        <item name="colorAccent">@color/bartBlue</item>
+    </style>
 
     <style name="OnboardingButton" parent="TextAppearance.AppCompat.Medium">
         <item name="android:background">@color/colorPrimaryDark</item>
