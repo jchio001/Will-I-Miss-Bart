@@ -1,9 +1,12 @@
 package com.example.jonathan.willimissbart.API.Models.StationModels;
 
+import com.example.jonathan.willimissbart.API.Models.Generic.SimpleListItem;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Station {
+import java.io.Serializable;
+
+public class Station implements Serializable, SimpleListItem {
     @SerializedName("name")
     @Expose
     private String name;
@@ -39,6 +42,11 @@ public class Station {
     @SerializedName("zipcode")
     @Expose
     private int zipCode;
+
+    @Override
+    public String getTag() {
+        return name;
+    }
 
     public String getName() {
         return name;

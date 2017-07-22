@@ -7,35 +7,42 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.example.jonathan.willimissbart.API.Models.Generic.SimpleListItem;
 import com.example.jonathan.willimissbart.Enums.StyleEnum;
 import com.example.jonathan.willimissbart.R;
 import com.example.jonathan.willimissbart.ViewHolders.SimpleLargeListItemViewHolder;
 
 import java.util.List;
 
-public class StringAdapter extends BaseAdapter {
+public class SimpleLargeTextListAdapter<T extends SimpleListItem> extends BaseAdapter {
     private Context context;
-    private List<String> stringList;
+    private List<T> items;
     private StyleEnum style = StyleEnum.BART_STYLE;
 
-    public StringAdapter(Context context, List<String> stringList) {
+    public SimpleLargeTextListAdapter(Context context, List<T> items) {
         this.context = context;
-        this.stringList = stringList;
+        this.items = items;
     }
 
-    public StringAdapter setStyle(StyleEnum style) {
+    public SimpleLargeTextListAdapter setStyle(StyleEnum style) {
         this.style = style;
         return this;
     }
 
-    @Override
-    public int getCount() {
-        return stringList.size();
+    public void refresh(List<T> items) {
+        this.items.clear();
+        this.items.addAll(items);
+        notifyDataSetChanged();
     }
 
     @Override
-    public String getItem(int position) {
-        return stringList.get(position);
+    public int getCount() {
+        return items.size();
+    }
+
+    @Override
+    public SimpleListItem getItem(int position) {
+        return items.get(position);
     }
 
     @Override
@@ -57,7 +64,7 @@ public class StringAdapter extends BaseAdapter {
             holder = (SimpleLargeListItemViewHolder) convertView.getTag();
         }
 
-        holder.textView.setText(stringList.get(position));
+        holder.textView.setText(items.get(position).getTag());
 
         return convertView;
     }

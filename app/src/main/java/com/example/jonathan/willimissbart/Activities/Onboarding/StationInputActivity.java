@@ -21,7 +21,7 @@ import com.example.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.example.jonathan.willimissbart.API.Models.StationModels.StationsResp;
 import com.example.jonathan.willimissbart.API.RetrofitClient;
 import com.example.jonathan.willimissbart.Activities.AppActivities.MainActivity;
-import com.example.jonathan.willimissbart.Adapters.StationSpinnerAdapter;
+import com.example.jonathan.willimissbart.Adapters.SimpleLargeTextListAdapter;
 import com.example.jonathan.willimissbart.Adapters.StringAdapter;
 import com.example.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.AddDataElemAnimation.HideAddButtonAnimListener;
 import com.example.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.InitialAnimation.HideProgressBarAnimListener;
@@ -56,7 +56,7 @@ public class StationInputActivity extends AppCompatActivity {
     @Bind(R.id.add_station) Button addStationButton;
     @Bind(R.id.done) Button doneButton;
 
-    private StationSpinnerAdapter stationSpinnerAdapter;
+    private SimpleLargeTextListAdapter simpleLargeTextListAdapter;
     private StringAdapter directionsAdapter;
     private List<BartDataElemViewHolder> bartDataElemViewHolders;
 
@@ -73,9 +73,8 @@ public class StationInputActivity extends AppCompatActivity {
 
         bartDataElemViewHolders = new ArrayList<>();
         bartDataElemViewHolders.add(
-                new BartDataElemViewHolder(firstSelectBartLayout)
-                        .setColorSelected(getResources().getColor(R.color.colorPrimaryDark))
-                        .setColorNotSelected(getResources().getColor(R.color.bartBlue))
+                new BartDataElemViewHolder(firstSelectBartLayout, this)
+                        .build(null)
         );
 
         String stationsJSON =
@@ -86,10 +85,8 @@ public class StationInputActivity extends AppCompatActivity {
                     .getStations("stns", APIConstants.API_KEY, 'y')
                     .enqueue(new StationsCallback());
         } else {
-            Gson gson = new Gson();
-            Type listType = new TypeToken<List<Station>>(){}.getType();
-            List<Station> stations = gson.fromJson(stationsJSON, listType);
-            setUpActivityLayout(stations);
+            Utils.loadStations(stationsJSON);
+            setUpActivityLayout();
         }
     }
 
@@ -117,12 +114,12 @@ public class StationInputActivity extends AppCompatActivity {
         newDataElem.setVisibility(View.GONE);
         int index = bartDataElemViewHolders.size();
         bartDataElemViewHolders.add(
-                new BartDataElemViewHolder(newDataElem)
+                new BartDataElemViewHolder(newDataElem, this)
                         .setColorSelected(getResources().getColor(R.color.colorPrimaryDark))
-                        .setColorNotSelected(getResources().getColor(R.color.bartBlue))
+                        .setColorNotSelected(getResources().getColor(android.R.color.transparent))
         );
         bartDataElemViewHolders.get(index)
-                .setBartSpinnerAdapter(stationSpinnerAdapter)
+                .setBartSpinnerAdapter(simpleLargeTextListAdapter)
                 .setDirectionSpinnerAdapter(directionsAdapter);
         dataElemLayout.addView(newDataElem, index);
 
@@ -155,8 +152,11 @@ public class StationInputActivity extends AppCompatActivity {
 
     @Subscribe
     public void onStationsListEvent(StationsResp stationsResp) {
+        StationsSingleton.getInstance().setStationElems(
+                stationsResp.getStationsRoot().getStations().getStationList()
+        );
         persistStations();
-        setUpActivityLayout(stationsResp.getStationsRoot().getStations().getStationList());
+        setUpActivityLayout();
     }
 
     @Subscribe
@@ -164,14 +164,13 @@ public class StationInputActivity extends AppCompatActivity {
         Toast.makeText(this, String.valueOf(event.code), Toast.LENGTH_SHORT).show();
     }
 
-    private void setUpActivityLayout(List<Station> stations) {
-        StationsSingleton.getInstance().setStationElems(stations);
-
-        stationSpinnerAdapter = new StationSpinnerAdapter(
+    @SuppressWarnings("unchecked")
+    private void setUpActivityLayout() {
+        simpleLargeTextListAdapter = new SimpleLargeTextListAdapter(
                 this, StationsSingleton.getInstance().getStationElems()
         );
         bartDataElemViewHolders.get(0)
-                .setBartSpinnerAdapter(stationSpinnerAdapter)
+                .setBartSpinnerAdapter(simpleLargeTextListAdapter)
                 .setDirectionSpinnerAdapter(directionsAdapter);
 
         AlphaAnimation hideProgressBar = new AlphaAnimation(1.0f, 0.0f);

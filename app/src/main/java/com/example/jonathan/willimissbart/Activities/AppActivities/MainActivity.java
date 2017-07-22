@@ -1,40 +1,28 @@
 package com.example.jonathan.willimissbart.Activities.AppActivities;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.jonathan.willimissbart.Adapters.ViewPagerAdapter;
+import com.example.jonathan.willimissbart.Fragments.BsaFragment;
+import com.example.jonathan.willimissbart.Fragments.EtdsFragment;
 import com.example.jonathan.willimissbart.Fragments.MyStationsFragment;
 import com.example.jonathan.willimissbart.Misc.Constants;
 import com.example.jonathan.willimissbart.Misc.Utils;
-import com.example.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.example.jonathan.willimissbart.Persistence.SPSingleton;
 import com.example.jonathan.willimissbart.R;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
     @Bind(R.id.toolbar) Toolbar toolbar;
@@ -49,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Bundle bundle = getIntent().getExtras();
+        Utils.loadStations(
+                SPSingleton.getInstance(getApplicationContext()).getPersistedStations()
+        );
 
         setUpViewPager(Utils.getUserBartData(bundle, getApplicationContext()));
         tabs.setupWithViewPager(viewPager);
@@ -85,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Fragment> fragments = new ArrayList<>();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.USER_DATA, serializedUserData);
+        EtdsFragment etfsFRagment = new EtdsFragment();
+        etfsFRagment.setArguments(bundle);
+        fragments.add(etfsFRagment);
+        fragments.add(new BsaFragment());
         MyStationsFragment myStationsFragment = new MyStationsFragment();
         myStationsFragment.setArguments(bundle);
         fragments.add(myStationsFragment);
@@ -93,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 .setTitles(titles)
                 .setFragments(fragments);
 
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);
     }
 }

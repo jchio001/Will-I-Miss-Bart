@@ -13,5 +13,9 @@
 
     <string name="no_etds">No information to display today. Change the days of your BART stations if you want to see something.</string>
 
+    <string name="failed_to_get_bsa">Unable to fetch bsa\'s. Please try again later.</string>
+
+    <string name="save">Save</string>
+
     <string name="action_settings">Settings</string>
 </resources>

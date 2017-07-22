@@ -3,29 +3,15 @@ package com.example.jonathan.willimissbart.Listeners.SwipeRefresh;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
+import com.example.jonathan.willimissbart.API.APIConstants;
+import com.example.jonathan.willimissbart.API.Callbacks.BsaCallback;
+import com.example.jonathan.willimissbart.API.RetrofitClient;
 import com.example.jonathan.willimissbart.Enums.RefreshStateEnum;
-import com.example.jonathan.willimissbart.Misc.SharedEtdDataBundle;
-import com.example.jonathan.willimissbart.Misc.Utils;
-import com.example.jonathan.willimissbart.Persistence.Models.UserBartData;
 
-import java.util.List;
 
-public class EtdRefreshListener extends BaseRefreshListener {
-    private SharedEtdDataBundle sharedEtdDataBundle;
-    private List<UserBartData> userBartData;
-
-    public EtdRefreshListener(SwipeRefreshLayout swipeRefreshLayout) {
+public class BsaRefreshListener extends BaseRefreshListener {
+    public BsaRefreshListener(SwipeRefreshLayout swipeRefreshLayout) {
         super(swipeRefreshLayout);
-    }
-
-    public EtdRefreshListener setSharedEtdDataBundle(SharedEtdDataBundle sharedEtdDataBundle) {
-        this.sharedEtdDataBundle = sharedEtdDataBundle;
-        return this;
-    }
-
-    public EtdRefreshListener setUserBartData(List<UserBartData> userBartData) {
-        this.userBartData = userBartData;
-        return this;
     }
 
     @Override
@@ -48,7 +34,9 @@ public class EtdRefreshListener extends BaseRefreshListener {
             lastRefreshTime = now;
         }
 
-        sharedEtdDataBundle.stationCntr = 0;
-        Utils.fetchEtds(userBartData);
+        RetrofitClient.getInstance()
+                .getMatchingService()
+                .getBsa("bsa", APIConstants.API_KEY, 'y')
+                .enqueue(new BsaCallback());
     }
 }

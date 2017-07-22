@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/simple_large_list_item"
     android:background="@color/bartBlue"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="1dp"
-    android:paddingEnd="1dp">
+    android:padding="1dp">
 
     <TextView
         android:id="@+id/simple_textview"

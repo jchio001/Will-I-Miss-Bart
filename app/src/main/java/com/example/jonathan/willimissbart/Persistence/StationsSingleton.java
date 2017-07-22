@@ -31,7 +31,12 @@ public class StationsSingleton {
     }
 
     public void setStationElems(List<Station> stationElems) {
-        this.stationElems.add(new Station().setName("Select a station"));
+        //prevents redudant adding of "Select a station" dud elements
+        if (stationElems.size() > 0 &&
+                !stationElems.get(0).getName().equals("Select a station")) {
+            this.stationElems.add(new Station().setName("Select a station"));
+        }
+
         this.stationElems.addAll(stationElems);
     }
 }

@@ -1,5 +1,4 @@
-package com.example.jonathan.willimissbart.API.Models.EtdModels;
-
+package com.example.jonathan.willimissbart.API.Models.BSAModels;
 
 import com.example.jonathan.willimissbart.API.Models.Meta.XMLData;
 import com.google.gson.annotations.Expose;
@@ -7,12 +6,12 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class EtdResp implements Serializable{
+public class BsaResp implements Serializable {
     @SerializedName("root")
     @Expose
-    private EtdRoot root;
+    private BsaRoot root;
 
-    public EtdRoot getRoot() {
+    public BsaRoot getRoot() {
         return root;
     }
 }
