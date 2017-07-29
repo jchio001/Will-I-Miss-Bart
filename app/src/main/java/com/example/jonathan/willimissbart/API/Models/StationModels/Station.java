@@ -45,20 +45,20 @@ public class Station implements Serializable, SimpleListItem {
 
     @Override
     public String getTag() {
-        return name;
+        return abbr;
     }
 
     public String getName() {
         return name;
     }
 
-    public Station setName(String name) {
-        this.name = name;
-        return this;
-    }
-
     public String getAbbr() {
         return abbr;
+    }
+
+    public Station setAbbr(String abbr) {
+        this.abbr = abbr;
+        return this;
     }
 
     public double getLatitude() {

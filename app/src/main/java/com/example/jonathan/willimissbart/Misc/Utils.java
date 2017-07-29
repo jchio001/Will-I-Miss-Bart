@@ -18,8 +18,6 @@ import com.example.jonathan.willimissbart.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONObject;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +42,13 @@ public class Utils {
     }
 
     public static void loadStations(String stationsJSON) {
-        Gson gson = new Gson();
-        Type listType = new TypeToken<List<Station>>(){}.getType();
-        List<Station> stations = gson.fromJson(stationsJSON, listType);
-        StationsSingleton.getInstance().setStationElems(stations);
+        if (StationsSingleton.getInstance().getStationElems().isEmpty()) {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<Station>>() {
+            }.getType();
+            List<Station> stations = gson.fromJson(stationsJSON, listType);
+            StationsSingleton.getInstance().setStationElems(stations);
+        }
     }
 
     public static List<UserBartData> convertToList(String serializedUserData) {
@@ -71,10 +72,29 @@ public class Utils {
                             Utils.directionToUrlParam(data.getDirection())
                     )
                     .clone()
-                    .enqueue(new EtdCallback().setStationName(data.getStation()).setIndex(i));
+                    .enqueue(
+                            new EtdCallback()
+                                    .setStationName(data.getStation())
+                                    .setStationAbbr(data.getAbbr())
+                                    .setIndex(i)
+                    );
         }
     }
 
+    public static boolean didDataChange(List<UserBartData> oldUserData,
+                                        List<UserBartData> newUserData) {
+        if (oldUserData.size() != newUserData.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < oldUserData.size(); ++i) {
+            if (!oldUserData.get(i).equals(newUserData.get(i))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public static Snackbar showSnackBar(Context context, View parent, int colorId, String message) {
         Snackbar snackbar = Snackbar.make(parent, message, Snackbar.LENGTH_LONG);

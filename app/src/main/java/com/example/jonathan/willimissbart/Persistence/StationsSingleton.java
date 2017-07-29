@@ -8,7 +8,7 @@ import java.util.List;
 
 public class StationsSingleton {
     private static StationsSingleton instance;
-    private List<Station> stationElems;
+    private List<Station> stationElems = new ArrayList<>();
 
     private StationsSingleton() {
         stationElems = new ArrayList<>();
@@ -33,8 +33,8 @@ public class StationsSingleton {
     public void setStationElems(List<Station> stationElems) {
         //prevents redudant adding of "Select a station" dud elements
         if (stationElems.size() > 0 &&
-                !stationElems.get(0).getName().equals("Select a station")) {
-            this.stationElems.add(new Station().setName("Select a station"));
+                !stationElems.get(0).getAbbr().equals("Select a station")) {
+            this.stationElems.add(new Station().setAbbr("Select a station"));
         }
 
         this.stationElems.addAll(stationElems);

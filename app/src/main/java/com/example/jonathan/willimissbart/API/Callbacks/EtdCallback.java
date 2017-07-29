@@ -17,10 +17,20 @@ import retrofit2.Response;
 public class EtdCallback implements Callback<EtdResp> {
     public static final String tag = "EtdCallback";
     private String stationName;
+    private String stationAbbr;
     private int index;
+
+    public String getStationName() {
+        return stationName;
+    }
 
     public EtdCallback setStationName(String stationName) {
         this.stationName = stationName;
+        return this;
+    }
+
+    public EtdCallback setStationAbbr(String stationAbbr) {
+        this.stationAbbr = stationAbbr;
         return this;
     }
 
@@ -35,20 +45,22 @@ public class EtdCallback implements Callback<EtdResp> {
 
     @Override
     public void onResponse(Call<EtdResp> call, Response<EtdResp> resp) {
-        Log.i(tag, String.format("Got etd for: %s", stationName));
+        Log.i(tag, String.format("Got etd for: %s", stationAbbr));
         switch (resp.code()) {
             case APIConstants.HTTP_STATUS_OK:
                 EventBus.getDefault().post(new EtdRespBundle(index, resp.body()));
                 break;
             default:
-                EventBus.getDefault().post(new EtdFailure(tag, stationName, resp.code(), index));
+                EventBus.getDefault().post(new EtdFailure(
+                        tag, stationName, stationAbbr, resp.code(), index)
+                );
                 break;
         }
     }
 
     @Override
     public void onFailure(Call<EtdResp> call, Throwable t) {
-        Log.e(tag, String.format("Failed to get etd for: %s", stationName));
-        EventBus.getDefault().post(new EtdFailure(tag, stationName, -1, index));
+        Log.e(tag, String.format("Failed to get etd for: %s", stationAbbr));
+        EventBus.getDefault().post(new EtdFailure(tag, stationName, stationAbbr, -1, index));
     }
 }

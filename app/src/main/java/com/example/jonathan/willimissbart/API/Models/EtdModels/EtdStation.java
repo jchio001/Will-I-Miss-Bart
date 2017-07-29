@@ -32,6 +32,11 @@ public class EtdStation implements Serializable {
         return abbr;
     }
 
+    public EtdStation setAbbr(String abbr) {
+        this.abbr = abbr;
+        return this;
+    }
+
     public List<Etd> getEtds() {
         return etds;
     }

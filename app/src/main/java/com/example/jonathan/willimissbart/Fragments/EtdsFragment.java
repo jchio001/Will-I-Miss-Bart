@@ -24,13 +24,10 @@ import com.example.jonathan.willimissbart.Misc.Utils;
 import com.example.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.example.jonathan.willimissbart.R;
 import com.example.jonathan.willimissbart.ViewHolders.MainFeedElemViewHolder;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -57,9 +54,6 @@ public class EtdsFragment extends Fragment {
 
     private int day = -1;
     private SharedEtdDataBundle sharedEtdDataBundle = new SharedEtdDataBundle();
-
-    public EtdsFragment() {
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,7 +110,9 @@ public class EtdsFragment extends Fragment {
     public synchronized void onEtdFailure(EtdFailure failure) {
         if (failure.tag.equals(EtdCallback.tag)) {
             synchronized (this) {
-                stationArr[failure.index] = new EtdStation().setName(failure.stationName);
+                stationArr[failure.index] = new EtdStation()
+                        .setName(failure.stationName)
+                        .setAbbr(failure.stationAbbr);
                 successArr[failure.index] = false;
                 ++sharedEtdDataBundle.stationCntr;
             }
@@ -127,24 +123,39 @@ public class EtdsFragment extends Fragment {
         }
     }
 
+    @Subscribe
+    public void onUpdatedUserData(List<UserBartData> newUserData) {
+        mainSWL.setVisibility(View.VISIBLE);
+        mainSWL.setRefreshing(true);
+        userBartData = newUserData;
+        filteredUserBartData = filterUserBartData(newUserData);
+        nothingToDisplayTV.setVisibility(View.GONE);
+        sharedEtdDataBundle.stationCntr = 0;
+
+        if (!filteredUserBartData.isEmpty()) {
+            Utils.fetchEtds(userBartData);
+        } else {
+            mainSWL.setVisibility(View.INVISIBLE);
+            mainSWL.setRefreshing(false);
+            handleNothingToFetch();
+        }
+    }
+
     private void deserializeAndFilter(String serializedUserData) {
         userBartData = Utils.convertToList(serializedUserData);
         filteredUserBartData = filterUserBartData(userBartData);
     }
 
     private List<UserBartData> filterUserBartData(List<UserBartData> userBartData) {
-        int curDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
-        if (curDay != day) {
-            List<UserBartData> filteredByToday = new ArrayList<>();
-            day = curDay;
-            for (UserBartData data : userBartData) {
-                if (data.getDays()[curDay]) {
-                    filteredByToday.add(data);
-                }
+        day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
+        List<UserBartData> filteredByToday = new ArrayList<>();
+        for (UserBartData data : userBartData) {
+            if (data.getDays()[day]) {
+                filteredByToday.add(data);
             }
-            return filteredByToday;
         }
-        return filteredUserBartData;
+
+        return filteredByToday;
     }
 
     private void handleNothingToFetch() {

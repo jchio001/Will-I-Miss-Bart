@@ -202,9 +202,11 @@ public class StationInputActivity extends AppCompatActivity {
                 userBartData.add(
                         new UserBartData()
                                 .setStation(name)
+                                .setStationIndex(bartDataElemViewHolder.getStationIndex())
                                 .setAbbr(bartDataElemViewHolder.getStationAbbr())
-                                .setDays(days)
                                 .setDirection(bartDataElemViewHolder.getDirection())
+                                .setDirectionIndex(bartDataElemViewHolder.getDirectionIndex())
+                                .setDays(days)
                 );
             }
         }

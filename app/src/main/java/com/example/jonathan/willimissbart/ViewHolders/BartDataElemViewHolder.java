@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.example.jonathan.willimissbart.Adapters.SimpleLargeTextListAdapter;
@@ -21,6 +22,7 @@ import com.example.jonathan.willimissbart.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 public class BartDataElemViewHolder {
     @Bind(R.id.day_of_week_layout) public LinearLayout dayOfWeekLayout;
@@ -30,8 +32,10 @@ public class BartDataElemViewHolder {
             R.id.tuesday_box, R.id.wednesday_box,
             R.id.thursday_box, R.id.friday_box,
             R.id.saturday_box}) public TextView[] dayBoxes;
+    @Bind(R.id.divider) View divider;
 
     private Context context;
+    private View view;
     private StyleEnum style = StyleEnum.BART_STYLE;
 
     private int colorSelected = -1;
@@ -39,7 +43,25 @@ public class BartDataElemViewHolder {
 
     public BartDataElemViewHolder(View v, Context context) {
         ButterKnife.bind(this, v);
+        this.view = view;
         this.context = context;
+    }
+
+    @OnClick({R.id.sunday_box, R.id.monday_box, R.id.tuesday_box, R.id.wednesday_box,
+            R.id.thursday_box, R.id.friday_box, R.id.saturday_box})
+    public void onDayBoxClicked(TextView v) {
+        int backgroundColor = ((ColorDrawable) v.getBackground()).getColor();
+        if (backgroundColor == colorNotSelected) {
+            v.setBackgroundColor(colorSelected);
+        } else {
+            v.setBackgroundColor(colorNotSelected);
+        }
+    }
+
+    @OnLongClick(R.id.bart_data_elem_parent)
+    public boolean onLongClickParent() {
+        Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show();
+        return true;
     }
 
     //ghetto builder pattern
@@ -47,24 +69,28 @@ public class BartDataElemViewHolder {
         colorNotSelected = ContextCompat.getColor(context, android.R.color.transparent);
         if (style != StyleEnum.BART_STYLE) {
             colorSelected = ContextCompat.getColor(context, R.color.lightGrey);
+            int black = ContextCompat.getColor(context, R.color.black);
 
             GradientDrawable drawable =
                     (GradientDrawable) ContextCompat.getDrawable(
                             context,
                             R.drawable.white_rounded_background
                     );
-            drawable.setStroke(2, context.getResources().getColor(R.color.black));
+            drawable.setStroke(2, black);
             bartSpinner.setBackground(drawable);
             directionSpinner.setBackground(drawable);
+            divider.setBackgroundColor(black);
 
             for (TextView dayBox : dayBoxes) {
-                dayBox.setTextColor(context.getResources().getColor(R.color.black));
+                dayBox.setTextColor(black);
             }
         } else {
             colorSelected = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
 
-        if (data !=  null) {
+        if (data != null) {
+            bartSpinner.setSelection(data.getStationIndex());
+            directionSpinner.setSelection(data.getDirectionIndex());
             for (int i = 0; i < data.getDays().length; ++i) {
                 dayBoxes[i].setBackgroundColor(data.getDays()[i] ? colorSelected : colorNotSelected);
             }
@@ -102,6 +128,10 @@ public class BartDataElemViewHolder {
         return ((Station) bartSpinner.getSelectedItem()).getName();
     }
 
+    public int getStationIndex() {
+        return bartSpinner.getSelectedItemPosition();
+    }
+
     public String getStationAbbr() {
         return ((Station) bartSpinner.getSelectedItem()).getAbbr();
     }
@@ -110,6 +140,11 @@ public class BartDataElemViewHolder {
         return directionSpinner.getSelectedItem().toString();
     }
 
+    public int getDirectionIndex() {
+        return directionSpinner.getSelectedItemPosition();
+    }
+
+    //This would take 1 line of code with lambas...
     public boolean[] getDaysOfWeekOfInterest() {
         boolean[] daysOfWeek = new boolean[7];
         for (int i = 0; i < dayBoxes.length; ++i) {
@@ -119,14 +154,14 @@ public class BartDataElemViewHolder {
         return daysOfWeek;
     }
 
-    @OnClick({R.id.sunday_box, R.id.monday_box, R.id.tuesday_box, R.id.wednesday_box,
-            R.id.thursday_box, R.id.friday_box, R.id.saturday_box})
-    public void onDayBoxClicked(TextView v) {
-        int backgroundColor = ((ColorDrawable) v.getBackground()).getColor();
-        if (backgroundColor == colorNotSelected) {
-            v.setBackgroundColor(colorSelected);
-        } else {
-            v.setBackgroundColor(colorNotSelected);
-        }
+    public UserBartData getDataFromView() {
+        Station selectedStation = (Station) bartSpinner.getSelectedItem();
+        return new UserBartData()
+                .setStation(selectedStation.getName())
+                .setStationIndex(bartSpinner.getSelectedItemPosition())
+                .setAbbr(selectedStation.getAbbr())
+                .setDirection((String) directionSpinner.getSelectedItem())
+                .setDirectionIndex(directionSpinner.getSelectedItemPosition())
+                .setDays(getDaysOfWeekOfInterest());
     }
 }

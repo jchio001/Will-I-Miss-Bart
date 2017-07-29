@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jonathan.willimissbart.API.Models.EtdModels.Estimate;
 import com.example.jonathan.willimissbart.API.Models.EtdModels.Etd;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnLongClick;
 
 public class EtdViewHolder {
     @Bind(R.id.etd_layout) LinearLayout etdLayout;
@@ -23,12 +25,20 @@ public class EtdViewHolder {
 
     List<EstimateViewHolder> estimateViewHolders = new ArrayList<>();
     private final Context context;
+    private String destinationName;
 
     public EtdViewHolder(View v, Context context, Etd etd) {
         ButterKnife.bind(this, v);
         this.context = context;
+        this.destinationName = etd.getDestination();
         stationAbbrTv.setText(etd.getAbbreviation());
         setUpEstimates(etd.getEstimates());
+    }
+
+    @OnLongClick(R.id.station_abbr)
+    public boolean onAbbrLongClick() {
+        Toast.makeText(context, destinationName, Toast.LENGTH_SHORT).show();
+        return true;
     }
 
     private void setUpEstimates(List<Estimate> estimates) {
