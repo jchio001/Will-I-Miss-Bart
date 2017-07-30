@@ -5,17 +5,16 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.example.jonathan.willimissbart.Adapters.SimpleLargeTextListAdapter;
 import com.example.jonathan.willimissbart.Adapters.StringAdapter;
 import com.example.jonathan.willimissbart.Enums.StyleEnum;
+import com.example.jonathan.willimissbart.Dialogs.DeleteAlertDialog;
 import com.example.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.example.jonathan.willimissbart.R;
 
@@ -35,16 +34,21 @@ public class BartDataElemViewHolder {
     @Bind(R.id.divider) View divider;
 
     private Context context;
-    private View view;
+    private DeleteAlertDialog.DeleteDataElemListener listener;
     private StyleEnum style = StyleEnum.BART_STYLE;
 
+    private int index;
     private int colorSelected = -1;
     private int colorNotSelected = -1;
 
-    public BartDataElemViewHolder(View v, Context context) {
+    public BartDataElemViewHolder(View v,
+                                  Context context,
+                                  DeleteAlertDialog.DeleteDataElemListener listener,
+                                  int index) {
         ButterKnife.bind(this, v);
-        this.view = view;
         this.context = context;
+        this.listener = listener;
+        this.index = index;
     }
 
     @OnClick({R.id.sunday_box, R.id.monday_box, R.id.tuesday_box, R.id.wednesday_box,
@@ -60,7 +64,7 @@ public class BartDataElemViewHolder {
 
     @OnLongClick(R.id.bart_data_elem_parent)
     public boolean onLongClickParent() {
-        Toast.makeText(context, "Deleting", Toast.LENGTH_SHORT).show();
+        new DeleteAlertDialog(context, listener, index).show();
         return true;
     }
 
@@ -163,5 +167,9 @@ public class BartDataElemViewHolder {
                 .setDirection((String) directionSpinner.getSelectedItem())
                 .setDirectionIndex(directionSpinner.getSelectedItemPosition())
                 .setDays(getDaysOfWeekOfInterest());
+    }
+
+    public void decrementIndex() {
+        --index;
     }
 }

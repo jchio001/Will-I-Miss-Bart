@@ -47,7 +47,6 @@
                 android:orientation="vertical">
 
                 <include layout="@layout/bart_data_elem"
-                    android:id="@+id/select_bart_layout"
                     android:visibility="invisible" />
 
                 <Button

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -17,12 +18,12 @@ import android.widget.Toast;
 import com.example.jonathan.willimissbart.API.APIConstants;
 import com.example.jonathan.willimissbart.API.Callbacks.StationsCallback;
 import com.example.jonathan.willimissbart.API.Models.Generic.FailureEvent;
-import com.example.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.example.jonathan.willimissbart.API.Models.StationModels.StationsResp;
 import com.example.jonathan.willimissbart.API.RetrofitClient;
 import com.example.jonathan.willimissbart.Activities.AppActivities.MainActivity;
 import com.example.jonathan.willimissbart.Adapters.SimpleLargeTextListAdapter;
 import com.example.jonathan.willimissbart.Adapters.StringAdapter;
+import com.example.jonathan.willimissbart.Dialogs.DeleteAlertDialog;
 import com.example.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.AddDataElemAnimation.HideAddButtonAnimListener;
 import com.example.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.InitialAnimation.HideProgressBarAnimListener;
 import com.example.jonathan.willimissbart.Misc.Constants;
@@ -33,12 +34,10 @@ import com.example.jonathan.willimissbart.Persistence.StationsSingleton;
 import com.example.jonathan.willimissbart.R;
 import com.example.jonathan.willimissbart.ViewHolders.BartDataElemViewHolder;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,10 +46,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class StationInputActivity extends AppCompatActivity {
+public class StationInputActivity extends AppCompatActivity
+        implements DeleteAlertDialog.DeleteDataElemListener {
     @Bind(R.id.activity_station_input) CoordinatorLayout parent;
     @Bind(R.id.data_elem_layout) LinearLayout dataElemLayout;
-    @Bind(R.id.select_bart_layout) LinearLayout firstSelectBartLayout;
+    @Bind(R.id.bart_data_elem_parent) LinearLayout firstSelectBartLayout;
     @Bind(R.id.progressBar) ProgressBar progressBar;
     @Bind(R.id.input_bart_info_tv) TextView textView;
     @Bind(R.id.add_station) Button addStationButton;
@@ -59,6 +59,8 @@ public class StationInputActivity extends AppCompatActivity {
     private SimpleLargeTextListAdapter simpleLargeTextListAdapter;
     private StringAdapter directionsAdapter;
     private List<BartDataElemViewHolder> bartDataElemViewHolders;
+
+    private int nextIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +75,7 @@ public class StationInputActivity extends AppCompatActivity {
 
         bartDataElemViewHolders = new ArrayList<>();
         bartDataElemViewHolders.add(
-                new BartDataElemViewHolder(firstSelectBartLayout, this)
+                new BartDataElemViewHolder(firstSelectBartLayout, this, this, nextIndex++)
                         .build(null)
         );
 
@@ -96,6 +98,17 @@ public class StationInputActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void deleteDataElem(int index) {
+        Log.i("StationInputActivity", String.format("Deleting %d", index));
+        bartDataElemViewHolders.remove(index);
+        for (int i = index + 1; i < bartDataElemViewHolders.size(); ++i) {
+            bartDataElemViewHolders.get(i).decrementIndex();
+        }
+        dataElemLayout.removeViewAt(index);
+        --nextIndex;
+    }
+
     @OnClick(R.id.add_station)
     public void addDataElem() {
         addStationButton.setEnabled(false);
@@ -112,16 +125,16 @@ public class StationInputActivity extends AppCompatActivity {
         LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout newDataElem = (LinearLayout) vi.inflate(R.layout.bart_data_elem, null);
         newDataElem.setVisibility(View.GONE);
-        int index = bartDataElemViewHolders.size();
         bartDataElemViewHolders.add(
-                new BartDataElemViewHolder(newDataElem, this)
+                new BartDataElemViewHolder(newDataElem, this, this, nextIndex)
                         .setColorSelected(getResources().getColor(R.color.colorPrimaryDark))
                         .setColorNotSelected(getResources().getColor(android.R.color.transparent))
         );
-        bartDataElemViewHolders.get(index)
+        bartDataElemViewHolders.get(nextIndex)
                 .setBartSpinnerAdapter(simpleLargeTextListAdapter)
                 .setDirectionSpinnerAdapter(directionsAdapter);
-        dataElemLayout.addView(newDataElem, index);
+        dataElemLayout.addView(newDataElem, nextIndex);
+        ++nextIndex;
 
         AlphaAnimation hideAddMoreButton = new AlphaAnimation(1.0f, 0.0f);
         hideAddMoreButton.setDuration(Constants.STANDARD_DURATION);
