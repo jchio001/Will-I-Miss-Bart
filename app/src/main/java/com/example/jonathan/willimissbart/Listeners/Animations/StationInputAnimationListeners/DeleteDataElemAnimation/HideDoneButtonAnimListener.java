@@ -7,6 +7,7 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.example.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.Generic.ReshowButtonsAnimListener;
 import com.example.jonathan.willimissbart.Misc.Constants;
 
 public class HideDoneButtonAnimListener implements Animation.AnimationListener {
@@ -46,6 +47,11 @@ public class HideDoneButtonAnimListener implements Animation.AnimationListener {
         button2.setVisibility(View.INVISIBLE);
         AlphaAnimation deleteView = new AlphaAnimation(1.0f, 0.0f);
         deleteView.setDuration(Constants.STANDARD_DURATION);
+        deleteView.setAnimationListener(new DeleteViewAnimListener()
+                .setButton(button)
+                .setButton2(button2)
+                .setParent(parent)
+                .setViewToDelete(viewToDelete));
         viewToDelete.startAnimation(deleteView);
     }
 

@@ -7,6 +7,7 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.example.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.Generic.ReshowButtonsAnimListener;
 import com.example.jonathan.willimissbart.Misc.Constants;
 
 public class ShowNewDataElemAnimListener implements Animation.AnimationListener {
@@ -39,7 +40,7 @@ public class ShowNewDataElemAnimListener implements Animation.AnimationListener 
         AlphaAnimation reshowAddButtonAnim = new AlphaAnimation(0.0f, 1.0f);
         reshowAddButtonAnim.setDuration(Constants.STANDARD_DURATION);
         reshowAddButtonAnim.setAnimationListener(
-                new ReshowAddButtonAnimListener()
+                new ReshowButtonsAnimListener()
                         .setButton(button)
                         .setButton2(button2)
         );

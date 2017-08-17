@@ -1,24 +1,23 @@
-package com.example.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.AddDataElemAnimation;
+package com.example.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.Generic;
 
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
 
-import com.example.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.Generic.ShowButtonAnimListener;
 import com.example.jonathan.willimissbart.Misc.Constants;
 
 
-public class ReshowAddButtonAnimListener implements Animation.AnimationListener {
+public class ReshowButtonsAnimListener implements Animation.AnimationListener {
     private Button button;
     private Button button2;
 
-    public ReshowAddButtonAnimListener setButton(Button button) {
+    public ReshowButtonsAnimListener setButton(Button button) {
         this.button = button;
         return this;
     }
 
-    public ReshowAddButtonAnimListener setButton2(Button button2) {
+    public ReshowButtonsAnimListener setButton2(Button button2) {
         this.button2 = button2;
         return this;
     }

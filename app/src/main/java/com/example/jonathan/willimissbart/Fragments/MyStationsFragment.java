@@ -1,7 +1,5 @@
 package com.example.jonathan.willimissbart.Fragments;
 
-
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -25,10 +22,11 @@ import com.example.jonathan.willimissbart.Persistence.SPSingleton;
 import com.example.jonathan.willimissbart.Persistence.StationsSingleton;
 import com.example.jonathan.willimissbart.R;
 import com.example.jonathan.willimissbart.ViewHolders.BartDataElemViewHolder;
+import com.example.jonathan.willimissbart.ViewHolders.OptionsElemViewHolder;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,17 +38,14 @@ import butterknife.OnClick;
 
 public class MyStationsFragment extends Fragment
         implements DeleteAlertDialog.DeleteDataElemListener {
-    OnDeleteViewListener deleteCallback;
-
-    public interface OnDeleteViewListener {
-        public void onDeleteView(int index);
-    }
-
     @Bind(R.id.my_stations_parent) LinearLayout parent;
-    @Bind(R.id.save) Button saveButton;
+    @Bind(R.id.options) LinearLayout optionsLayout;
+    @Bind(R.id.add_widget) LinearLayout addWidget;
+    @Bind(R.id.undo_widget) LinearLayout undoWidget;
+    @Bind(R.id.save_widget) LinearLayout saveWidget;
 
     private List<UserBartData> userData;
-    private List<BartDataElemViewHolder> bartDataElemViewHolders = new ArrayList<>();
+    private List<BartDataElemViewHolder> bartDataElemViewHolders = Lists.newArrayList();
     private LayoutInflater vi;
     private SimpleLargeTextListAdapter<Station> stationsAdapter;
     private StringAdapter directionsAdapter;
@@ -93,6 +88,10 @@ public class MyStationsFragment extends Fragment
             parent.addView(bartDataView, i);
         }
 
+        new OptionsElemViewHolder(addWidget, R.string.fa_plus, "Add");
+        new OptionsElemViewHolder(undoWidget, R.string.fa_undo, "Reset");
+        new OptionsElemViewHolder(saveWidget, R.string.fa_save, "Save");
+
         return v;
     }
 
@@ -106,15 +105,31 @@ public class MyStationsFragment extends Fragment
     @Override
     public void deleteDataElem(int index) {
         Log.i("MyStationsFragment", String.format("Deleting %d", index));
-        bartDataElemViewHolders.remove(index);
         for (int i = index + 1; i < bartDataElemViewHolders.size(); ++i) {
             bartDataElemViewHolders.get(i).decrementIndex();
         }
+        bartDataElemViewHolders.remove(index);
         parent.removeViewAt(index);
     }
 
+    @OnClick(R.id.add_widget)
+    public void addDataElem() {
+        if (bartDataElemViewHolders.size() < 5) {
+            View bartDataView = vi.inflate(R.layout.bart_data_elem, null);
+            bartDataElemViewHolders.add(
+                    new BartDataElemViewHolder(
+                            bartDataView, getActivity(), this, bartDataElemViewHolders.size())
+                            .setBartSpinnerAdapter(stationsAdapter)
+                            .setDirectionSpinnerAdapter(directionsAdapter)
+                            .setStyle(StyleEnum.NO_STYLE)
+                            .build(null)
+            );
+            parent.addView(bartDataView, bartDataElemViewHolders.size() - 1);
+        }
+    }
+
     //TODO: Check user data to see that they didn't do something stupid
-    @OnClick(R.id.save)
+    @OnClick(R.id.save_widget)
     public void onSave() {
         long now = System.currentTimeMillis() / 1000;
         if (now - lastSaveTime < 60) {

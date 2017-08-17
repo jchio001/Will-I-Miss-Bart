@@ -1,6 +1,5 @@
 package com.example.jonathan.willimissbart.ViewHolders;
 
-
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fa_save">{fa-floppy-o}</string>
+    <string name="fa_plus">{fa-plus}</string>
+    <string name="fa_undo">{fa-undo}</string>
+</resources>

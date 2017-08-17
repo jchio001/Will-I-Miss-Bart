@@ -101,10 +101,10 @@ public class StationInputActivity extends AppCompatActivity
     @Override
     public void deleteDataElem(int index) {
         Log.i("StationInputActivity", String.format("Deleting %d", index));
-        bartDataElemViewHolders.remove(index);
         for (int i = index + 1; i < bartDataElemViewHolders.size(); ++i) {
             bartDataElemViewHolders.get(i).decrementIndex();
         }
+        bartDataElemViewHolders.remove(index);
         dataElemLayout.removeViewAt(index);
         --nextIndex;
     }
