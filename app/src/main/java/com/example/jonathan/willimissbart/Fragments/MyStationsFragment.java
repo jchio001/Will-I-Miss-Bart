@@ -76,17 +76,7 @@ public class MyStationsFragment extends Fragment
                 Utils.getUserBartData(bundle, getActivity().getApplicationContext())
         );
 
-        for (int i = 0; i < userData.size(); ++i) {
-            View bartDataView = vi.inflate(R.layout.bart_data_elem, null);
-            bartDataElemViewHolders.add(
-                    new BartDataElemViewHolder(bartDataView, getActivity(), this, i)
-                            .setBartSpinnerAdapter(stationsAdapter)
-                            .setDirectionSpinnerAdapter(directionsAdapter)
-                            .setStyle(StyleEnum.NO_STYLE)
-                            .build(userData.get(i))
-            );
-            parent.addView(bartDataView, i);
-        }
+        loadFeed(userData);
 
         new OptionsElemViewHolder(addWidget, R.string.fa_plus, "Add");
         new OptionsElemViewHolder(undoWidget, R.string.fa_undo, "Reset");
@@ -101,7 +91,7 @@ public class MyStationsFragment extends Fragment
         EventBus.getDefault().unregister(this);
     }
 
-    //Let the fragment handle deletion since the order of the view holders needs to be maintained
+    // Let the fragment handle deletion since the order of the view holders needs to be maintained
     @Override
     public void deleteDataElem(int index) {
         Log.i("MyStationsFragment", String.format("Deleting %d", index));
@@ -112,7 +102,50 @@ public class MyStationsFragment extends Fragment
         parent.removeViewAt(index);
     }
 
-    @OnClick(R.id.add_widget)
+    // Associating all 3 items with the same onclick listener so that they can all be debounced
+    // together
+    @OnClick({R.id.add_widget, R.id.undo_widget, R.id.save_widget})
+    public void onOptionChosen(View v) {
+        if (v.getId() == R.id.add_widget) {
+            addDataElem();
+        } else if (v.getId() == R.id.undo_widget) {
+            loadFeed(userData);
+        } else {
+            save();
+        }
+    }
+
+    // Loading the feed is now smart enough to reuse views! We did it reddit!
+    public void loadFeed(List<UserBartData> data) {
+        // Loop 1: Reuse existing bartDataElemViewHolders
+        int i = 0;
+        for (; i < Math.min(data.size(), bartDataElemViewHolders.size()); ++i) {
+            bartDataElemViewHolders.get(i).build(data.get(i));
+        }
+
+        // Loop 2: Create new bartDataElemViewHolders when there's not enough
+        for (; i < data.size(); ++i) {
+            View bartDataView = vi.inflate(R.layout.bart_data_elem, null);
+            bartDataElemViewHolders.add(
+                    new BartDataElemViewHolder(bartDataView, getActivity(), this, i)
+                            .setBartSpinnerAdapter(stationsAdapter)
+                            .setDirectionSpinnerAdapter(directionsAdapter)
+                            .setStyle(StyleEnum.NO_STYLE)
+                            .build(data.get(i))
+            );
+            parent.addView(bartDataView, i);
+        }
+
+        // Loop 3: Delete excess bartDataElemViewHolders. It could be argued that I can just keep
+        // them in memory, but it'll make it more difficult maintaining the information
+        // since I need to utilize more indexes in order to do so
+        int numViewsToRemove = bartDataElemViewHolders.size() - data.size();
+        for (int j = 0; j < numViewsToRemove; ++j) {
+            bartDataElemViewHolders.remove(data.size());
+            parent.removeViewAt(data.size());
+        }
+    }
+
     public void addDataElem() {
         if (bartDataElemViewHolders.size() < 5) {
             View bartDataView = vi.inflate(R.layout.bart_data_elem, null);
@@ -129,8 +162,7 @@ public class MyStationsFragment extends Fragment
     }
 
     //TODO: Check user data to see that they didn't do something stupid
-    @OnClick(R.id.save_widget)
-    public void onSave() {
+    public void save() {
         long now = System.currentTimeMillis() / 1000;
         if (now - lastSaveTime < 60) {
             Log.i("MyStationsFragment", "Stop spamming idiot.");
