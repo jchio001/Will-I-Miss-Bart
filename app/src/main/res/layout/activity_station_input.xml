@@ -21,22 +21,37 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true" />
 
-        <TextView
-            style="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/white"
-            android:id="@+id/input_bart_info_tv"
-            android:gravity="center"
-            android:layout_marginBottom="20dp"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/info_layout"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:text="@string/enter_bart_data"
-            android:visibility="invisible" />
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/enter_bart_data" />
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/help_tv"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/help"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
 
         <ScrollView
             android:id="@+id/station_input_scroll_view"
-            android:layout_below="@+id/input_bart_info_tv"
+            android:layout_below="@+id/info_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

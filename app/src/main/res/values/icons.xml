@@ -3,4 +3,7 @@
     <string name="fa_save">{fa-floppy-o}</string>
     <string name="fa_plus">{fa-plus}</string>
     <string name="fa_undo">{fa-undo}</string>
+    <string name="fa_times">{fa-times}</string>
+
+    <string name="help">Need help?    {fa-info-circle}</string>
 </resources>

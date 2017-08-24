@@ -3,18 +3,25 @@
 
     <string name="home">Home</string>
 
-    <string name="enter_bart_data">Enter in some information about the stations you\'re interested in.</string>
-    <string name="another_bart">Add another station</string>
-    <string name="plz_stop">I think you\'ve pressed the button enough.</string>
+    <string name="enter_bart_data">Enter in some information about the stations you\'re interested in keeping track of.</string>
+    <string name="another_bart">Track another station</string>
+    <string name="plz_stop">I think you\'ve pressed the button1 enough.</string>
     <string name="all_invalid_data">Error: all of the data is invalid. Please edit your data and try again.</string>
     <string name="done">Done</string>
+    <string name="help_blurb">
+        In order to present information about BART that best suits you, it\'s required to enter in some information about the stations you are about.
+        \n\nIn addition to the name, it\'s also required to enter:\n
+        - The direction from the station\n
+        - The days of the week which you\'re interested the station\n
+    </string>
 
-    <string name="title_activity_main">MainActivity</string>
-
+    <string name="from">From&#160;</string>
+    <string name="going_towards">, going towards&#160;</string>
     <string name="no_etds">No information to display today. Change the days of your BART stations if you want to see something.</string>
 
     <string name="failed_to_get_bsa">Unable to fetch bsa\'s. Please try again later.</string>
 
+    <string name="my_stations_blurb">This is a list of information about the stations you\'re currently tracking. Here, you can add more stations to track or change information about the stations you\'re currently tracking.</string>
     <string name="save">Save</string>
 
     <string name="action_settings">Settings</string>
