@@ -1,5 +1,6 @@
 package com.app.jonathan.willimissbart.API.Models.EtdModels;
 
+import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -19,22 +20,17 @@ public class EtdStation implements Serializable {
     @Expose
     private List<Etd> etds;
 
+    public EtdStation(UserBartData data) {
+        this.name = data.getStation();
+        this.abbr = data.getAbbr();
+    }
+
     public String getName() {
         return name;
     }
 
-    public EtdStation setName(String name) {
-        this.name = name;
-        return this;
-    }
-
     public String getAbbr() {
         return abbr;
-    }
-
-    public EtdStation setAbbr(String abbr) {
-        this.abbr = abbr;
-        return this;
     }
 
     public List<Etd> getEtds() {

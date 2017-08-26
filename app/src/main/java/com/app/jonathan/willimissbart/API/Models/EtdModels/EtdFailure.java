@@ -1,18 +1,21 @@
 package com.app.jonathan.willimissbart.API.Models.EtdModels;
 
 
+import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
+import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
+
 public class EtdFailure {
     public String tag;
-    public String stationName;
-    public String stationAbbr;
     public int errorCode;
+    public boolean retryAfterFailure;
+    public UserBartData data;
     public int index;
 
-    public EtdFailure(String tag, String stationName, String stationAbbr, int errorCode, int index) {
-        this.tag = tag;
-        this.stationName = stationName;
-        this.stationAbbr = stationAbbr;
+    public EtdFailure(EtdCallback etdCallback, int errorCode) {
+        this.tag = EtdCallback.tag;
         this.errorCode = errorCode;
-        this.index = index;
+        this.retryAfterFailure = etdCallback.isRetryAfterFailure();
+        this.data = etdCallback.getData();
+        this.index = etdCallback.getIndex();
     }
 }

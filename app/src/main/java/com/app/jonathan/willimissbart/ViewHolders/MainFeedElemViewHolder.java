@@ -26,6 +26,7 @@ public class MainFeedElemViewHolder {
     private List<EtdViewHolder> etdViewHolders = new ArrayList<>();
     private ErrorTextViewViewHolder errorTextViewViewHolder;
     private final Context context;
+    private String abbr;
     private String name;
     private boolean success;
 
@@ -33,8 +34,9 @@ public class MainFeedElemViewHolder {
         ButterKnife.bind(this, v);
         this.context = context;
         this.success = success;
-        parentAbbr.setText(station.getAbbr());
+        this.abbr = station.getAbbr();
         this.name = station.getName();
+        parentAbbr.setText(abbr);
         setUpEtds(station.getEtds());
     }
 
@@ -50,7 +52,7 @@ public class MainFeedElemViewHolder {
             }
         } else {
            View v = vi.inflate(R.layout.etd_error_tv, null);
-            errorTextViewViewHolder = new ErrorTextViewViewHolder(v, success);
+            errorTextViewViewHolder = new ErrorTextViewViewHolder(v, abbr, success);
             mainBartDataLayout.addView(v, 1);
         }
     }

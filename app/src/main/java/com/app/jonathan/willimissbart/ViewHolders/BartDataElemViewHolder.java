@@ -30,6 +30,7 @@ public class BartDataElemViewHolder {
             R.id.tuesday_box, R.id.wednesday_box,
             R.id.thursday_box, R.id.friday_box,
             R.id.saturday_box}) public TextView[] dayBoxes;
+    @Bind(R.id.enter_days) TextView daysBlurb;
     @Bind(R.id.divider) View divider;
 
     private Context context;
@@ -82,6 +83,7 @@ public class BartDataElemViewHolder {
             drawable.setStroke(2, black);
             bartSpinner.setBackground(drawable);
             directionSpinner.setBackground(drawable);
+            daysBlurb.setTextColor(black);
             divider.setBackgroundColor(black);
 
             for (TextView dayBox : dayBoxes) {

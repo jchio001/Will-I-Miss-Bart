@@ -1,6 +1,5 @@
 package com.app.jonathan.willimissbart.Fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,9 +28,12 @@ import com.google.common.collect.Lists;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,6 +45,7 @@ public class EtdsFragment extends Fragment {
     @Bind(R.id.main_feed_layout) LinearLayout mainFeedLayout;
     @Bind(R.id.progressBar) ProgressBar progressBar;
     @Bind(R.id.no_etds_to_display) TextView nothingToDisplayTV;
+    @Bind(R.id.departures_as_of) TextView departuresAsOf;
 
     private EtdRefreshListener etdRefreshListener;
 
@@ -50,11 +53,15 @@ public class EtdsFragment extends Fragment {
     private List<UserBartData> filteredUserBartData;
     private List<MainFeedElemViewHolder> mainElemViewHolders = Lists.newArrayList();
 
+    // Data for setting the the feed of ETD's
     private EtdStation[] stationArr = new EtdStation[5];
-    private boolean[] successArr = new boolean[5]; //keeps track of if API calls are successful
+    // Need the user data to make retry calls
+    private UserBartData[] associatedData = new UserBartData[5];
+    private boolean[] successArr = new boolean[5]; // keeps track of if API calls are successful
 
     private int day = -1;
     private SharedEtdDataBundle sharedEtdDataBundle = new SharedEtdDataBundle();
+    DateFormat format = new SimpleDateFormat("h:mm a", Locale.US);
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,9 +118,7 @@ public class EtdsFragment extends Fragment {
     public synchronized void onEtdFailure(EtdFailure failure) {
         if (failure.tag.equals(EtdCallback.tag)) {
             synchronized (this) {
-                stationArr[failure.index] = new EtdStation()
-                        .setName(failure.stationName)
-                        .setAbbr(failure.stationAbbr);
+                stationArr[failure.index] = new EtdStation(failure.data);
                 successArr[failure.index] = false;
                 ++sharedEtdDataBundle.stationCntr;
             }
@@ -169,12 +174,15 @@ public class EtdsFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
         mainSWL.setRefreshing(false);
         mainFeedLayout.setVisibility(View.INVISIBLE);
-        mainFeedLayout.removeAllViews();
+        int curChildCnt = mainFeedLayout.getChildCount();
+
+        for (int i = 0; i < curChildCnt - 1; ++i) {
+            mainFeedLayout.removeViewAt(1);
+        }
+        setUpRetrievalTimeText();
 
         mainElemViewHolders.clear();
-        LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(
-                Context.LAYOUT_INFLATER_SERVICE
-        );
+        LayoutInflater vi = LayoutInflater.from(getActivity());
 
         for (int i = 0; i < filteredUserBartData.size(); ++i) {
             EtdStation s = stations[i];
@@ -202,5 +210,13 @@ public class EtdsFragment extends Fragment {
 
         etdRefreshListener.setRefreshState(RefreshStateEnum.INACTIVE);
         mainSWL.setEnabled(true);
+    }
+
+    private void setUpRetrievalTimeText() {
+        departuresAsOf.setText(
+                String.format(
+                        getString(R.string.departures_as_of),
+                        format.format(Calendar.getInstance().getTime()))
+        );
     }
 }

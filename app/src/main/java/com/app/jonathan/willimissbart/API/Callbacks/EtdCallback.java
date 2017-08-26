@@ -7,6 +7,7 @@ import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdFailure;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdResp;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdRespBundle;
+import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -16,26 +17,20 @@ import retrofit2.Response;
 
 public class EtdCallback implements Callback<EtdResp> {
     public static final String tag = "EtdCallback";
-    private String stationName;
-    private String stationAbbr;
+    private UserBartData data;
     private int index;
+    private boolean retryAfterFailure = false;
 
-    public String getStationName() {
-        return stationName;
+    public static String getTag() {
+        return tag;
     }
 
-    public EtdCallback setStationName(String stationName) {
-        this.stationName = stationName;
-        return this;
+    public UserBartData getData() {
+        return data;
     }
 
-    public EtdCallback setStationAbbr(String stationAbbr) {
-        this.stationAbbr = stationAbbr;
-        return this;
-    }
-
-    public EtdCallback setIndex(int index) {
-        this.index = index;
+    public EtdCallback setData(UserBartData data) {
+        this.data = data;
         return this;
     }
 
@@ -43,24 +38,36 @@ public class EtdCallback implements Callback<EtdResp> {
         return index;
     }
 
+    public EtdCallback setIndex(int index) {
+        this.index = index;
+        return this;
+    }
+
+    public boolean isRetryAfterFailure() {
+        return retryAfterFailure;
+    }
+
+    public void setRetryAfterFailure(boolean retryAfterFailure) {
+        this.retryAfterFailure = retryAfterFailure;
+    }
+
     @Override
     public void onResponse(Call<EtdResp> call, Response<EtdResp> resp) {
-        Log.i(tag, String.format("Got etd for: %s", stationAbbr));
+        Log.i(tag, String.format("Got etd for: %s", data.getStation()));
         switch (resp.code()) {
             case APIConstants.HTTP_STATUS_OK:
-                EventBus.getDefault().post(new EtdRespBundle(index, resp.body()));
+                EventBus.getDefault()
+                        .post(new EtdRespBundle(index, retryAfterFailure, resp.body()));
                 break;
             default:
-                EventBus.getDefault().post(new EtdFailure(
-                        tag, stationName, stationAbbr, resp.code(), index)
-                );
+                EventBus.getDefault().post(new EtdFailure(this, resp.code()));
                 break;
         }
     }
 
     @Override
     public void onFailure(Call<EtdResp> call, Throwable t) {
-        Log.e(tag, String.format("Failed to get etd for: %s", stationAbbr));
-        EventBus.getDefault().post(new EtdFailure(tag, stationName, stationAbbr, -1, index));
+        Log.e(tag, String.format("Failed to get etd for: %s", data.getStation()));
+        EventBus.getDefault().post(new EtdFailure(this, -1));
     }
 }

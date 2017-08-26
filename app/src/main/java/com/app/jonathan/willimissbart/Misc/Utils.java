@@ -57,8 +57,7 @@ public class Utils {
     public static List<UserBartData> convertToList(String serializedUserData) {
         if (!serializedUserData.isEmpty()) {
             Gson gson = new Gson();
-            Type listType = new TypeToken<List<UserBartData>>() {
-            }.getType();
+            Type listType = new TypeToken<List<UserBartData>>() {}.getType();
             return gson.fromJson(serializedUserData, listType);
         } else {
             return new ArrayList<>();
@@ -77,8 +76,7 @@ public class Utils {
                     .clone()
                     .enqueue(
                             new EtdCallback()
-                                    .setStationName(data.getStation())
-                                    .setStationAbbr(data.getAbbr())
+                                    .setData(userBartData.get(i))
                                     .setIndex(i)
                     );
         }
