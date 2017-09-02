@@ -3,6 +3,7 @@
     package="com.app.jonathan.willimissbart">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -12,6 +13,15 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <receiver android:name=".BroadcastReceiver.TimerNotificationReceiver">
+            <intent-filter>
+                <action android:name="dismiss"></action>
+                <action android:name="update"></action>
+            </intent-filter>
+
+        </receiver>
+
         <activity
             android:name="com.app.jonathan.willimissbart.Activities.Onboarding.SplashActivity"
             android:screenOrientation="portrait"

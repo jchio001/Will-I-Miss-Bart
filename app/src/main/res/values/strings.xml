@@ -20,6 +20,10 @@
     <string name="departures_as_of">Departures as of %s. Swipe up to refresh.</string>
     <string name="no_etds">No etds for this station.</string>
     <string name="failed_to_get_etds">Failed to fetch etds. Press here to try again.</string>
+    <string name="origin">From</string>
+    <string name="destination">To</string>
+    <string name="r_u_stupid">You don\'t need a timer for a leaving train.</string>
+    <string name="starting_timer">Timer started.</string>
 
     <string name="from">From&#160;</string>
     <string name="going_towards">, going towards&#160;</string>
@@ -34,4 +38,6 @@
 
     <string name="deleting_data">Deleting Data</string>
     <string name="sure_to_delete">Are you sure you want to delete this?</string>
+
+    <string name="close">Close</string>
 </resources>

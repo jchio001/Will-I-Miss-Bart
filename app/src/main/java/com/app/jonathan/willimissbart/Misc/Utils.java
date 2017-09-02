@@ -1,6 +1,7 @@
 package com.app.jonathan.willimissbart.Misc;
 
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -11,6 +12,7 @@ import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
+import com.app.jonathan.willimissbart.Notification.TimerNotificationBuilder;
 import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
@@ -23,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class Utils {
@@ -124,5 +127,27 @@ public class Utils {
         tv.setTextColor(context.getResources().getColor(R.color.white));
         snackbar.show();
         return snackbar;
+    }
+
+    public static String generateTimerText(int seconds) {
+        long minutesLeft = seconds / 60;
+        long secondsLeft = seconds % 60;
+        String time =  String.format(
+                Locale.ENGLISH,
+                "%s:%s",
+                (minutesLeft < 10 ? "0" : "") + String.valueOf(minutesLeft),
+                (secondsLeft < 10 ? "0" : "") + String.valueOf(secondsLeft));
+        return time;
+    }
+
+    public static void createOrUpdateNotification(String title, int time) {
+        Context context = MyApplication.getContext();
+        ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE))
+                .notify(Constants.TIMER_NOTIF_ID,
+                        new TimerNotificationBuilder(title, time).build());
+    }
+
+    public static int getTimerDuration(String min) {
+        return Integer.valueOf(min) * 60 * 9 / 10;
     }
 }

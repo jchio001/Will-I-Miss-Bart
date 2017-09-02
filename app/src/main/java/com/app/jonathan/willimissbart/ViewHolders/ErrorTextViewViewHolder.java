@@ -10,6 +10,7 @@ import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Misc.MyApplication;
 import com.app.jonathan.willimissbart.Misc.Utils;
+import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.app.jonathan.willimissbart.R;
 
 import butterknife.Bind;
@@ -23,13 +24,13 @@ public class ErrorTextViewViewHolder {
     private static final String FAILED_TO_GET_ETDS =
             MyApplication.getContext().getString(R.string.failed_to_get_etds);
 
-    private String abbr;
+    private UserBartData data;
     private boolean success;
 
-    public ErrorTextViewViewHolder(View v, String abbr, boolean success) {
+    public ErrorTextViewViewHolder(View v, UserBartData data, boolean success) {
         ButterKnife.bind(this, v);
         errorTV.setText(success ? NO_ETDS : FAILED_TO_GET_ETDS);
-        this.abbr = abbr;
+        this.data = data;
         this.success = success;
     }
 

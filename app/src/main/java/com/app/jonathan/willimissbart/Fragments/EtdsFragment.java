@@ -116,9 +116,13 @@ public class EtdsFragment extends Fragment {
 
     @Subscribe
     public synchronized void onEtdFailure(EtdFailure failure) {
+        //No idea why I need to tag the failure, should remove
         if (failure.tag.equals(EtdCallback.tag)) {
             synchronized (this) {
                 stationArr[failure.index] = new EtdStation(failure.data);
+                // only need the user data for failure since I want to user to be able to refresh
+                // each item individually
+                associatedData[failure.index] = failure.data;
                 successArr[failure.index] = false;
                 ++sharedEtdDataBundle.stationCntr;
             }
@@ -189,7 +193,11 @@ public class EtdsFragment extends Fragment {
             View mainBartDataElem = vi.inflate(R.layout.main_bart_data_layout, null);
             if (s != null) {
                 MainFeedElemViewHolder viewHolder = new MainFeedElemViewHolder(
-                        mainBartDataElem, getActivity(), s, successArr[i]
+                        mainBartDataElem,
+                        getActivity(),
+                        s,
+                        associatedData[i],
+                        successArr[i]
                 );
                 mainElemViewHolders.add(viewHolder);
                 mainFeedLayout.addView(mainBartDataElem);
