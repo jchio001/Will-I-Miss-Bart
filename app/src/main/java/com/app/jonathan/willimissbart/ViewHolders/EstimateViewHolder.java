@@ -17,6 +17,7 @@ import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.MyApplication;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.R;
+import com.app.jonathan.willimissbart.Service.TimerService;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,11 +44,11 @@ public class EstimateViewHolder {
     public void promptForNotification() {
         if (!estimateMins.equals("Leaving")) {
             final String title = getTitle();
-            Intent intent = new Intent();
+            Intent intent = new Intent(context, TimerService.class);
             intent.setAction(Constants.UPDATE);
             intent.putExtra(Constants.TITLE, title);
             intent.putExtra(Constants.SECONDS, Utils.getTimerDuration(estimateMins));
-            context.sendBroadcast(intent);
+            context.startService(intent);
             Toast.makeText(context, R.string.starting_timer, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, R.string.r_u_stupid, Toast.LENGTH_SHORT).show();

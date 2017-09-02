@@ -11,6 +11,7 @@ import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.MyApplication;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Runnables.StartTimerRunnable;
+import com.app.jonathan.willimissbart.Service.TimerService;
 
 public class TimerNotificationReceiver extends BroadcastReceiver {
     public static NotificationCountDownTimer timer;
@@ -24,6 +25,8 @@ public class TimerNotificationReceiver extends BroadcastReceiver {
                     timer = null;
                 }
 
+                Intent stopIntent = new Intent(context, TimerService.class);
+                context.stopService(stopIntent);
                 NotificationManager manager = (NotificationManager)
                         context.getSystemService(Context.NOTIFICATION_SERVICE);
                 manager.cancel(Constants.TIMER_NOTIF_ID);
@@ -31,8 +34,8 @@ public class TimerNotificationReceiver extends BroadcastReceiver {
             case Constants.UPDATE:
                 String title = intent.getStringExtra(Constants.TITLE);
                 int seconds = intent.getIntExtra(Constants.SECONDS, -1);
-                setTimer(new NotificationCountDownTimer(seconds, 1000L, title));
                 Utils.createOrUpdateNotification(title, seconds);
+                setTimer(new NotificationCountDownTimer(seconds, 1000L, title));
                 break;
             default:
                 break;

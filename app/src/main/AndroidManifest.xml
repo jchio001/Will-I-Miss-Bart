@@ -14,10 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <service
+            android:name=".Service.TimerService"
+            android:exported="false"/>
+
         <receiver android:name=".BroadcastReceiver.TimerNotificationReceiver">
             <intent-filter>
                 <action android:name="dismiss"></action>
-                <action android:name="update"></action>
             </intent-filter>
 
         </receiver>

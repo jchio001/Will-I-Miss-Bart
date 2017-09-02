@@ -13,7 +13,7 @@ public class Constants {
     public static final String TITLE = "title";
     public static final String SECONDS = "seconds";
 
-    // INTENT VALUES
+    // INTENT TAGS
     public static final String DISMISS = "dismiss";
     public static final String UPDATE = "update";
 
