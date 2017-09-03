@@ -1,15 +1,10 @@
 package com.app.jonathan.willimissbart.ViewHolders;
 
 
-import android.app.Application;
 import android.view.View;
 import android.widget.TextView;
 
-import com.app.jonathan.willimissbart.API.APIConstants;
-import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
-import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Misc.MyApplication;
-import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.app.jonathan.willimissbart.R;
 

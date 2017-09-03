@@ -1,8 +1,8 @@
 package com.app.jonathan.willimissbart.Activities.Onboarding;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.app.jonathan.willimissbart.Activities.AppActivities.MainActivity;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;

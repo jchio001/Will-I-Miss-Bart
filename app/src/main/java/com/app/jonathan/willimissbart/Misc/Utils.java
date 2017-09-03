@@ -147,7 +147,12 @@ public class Utils {
                         new TimerNotificationBuilder(title, time).build());
     }
 
-    public static int getTimerDuration(String min) {
-        return Integer.valueOf(min) * 60 * 9 / 10;
+    // Converts a minute into a timer estimate
+    // Dampening factor is smaller for smaller intervals as the train will be more likely
+    // to leave earlier
+    public static int getTimerDuration(String min, long timeInSeconds) {
+        int minAsInt = Integer.valueOf(min);
+        return minAsInt * 60 * ((minAsInt > 5) ? 95 : 90) / 100
+            - ((int) ((System.currentTimeMillis() / 1000) - timeInSeconds));
     }
 }

@@ -14,9 +14,13 @@ public class Constants {
     public static final String SECONDS = "seconds";
 
     // INTENT TAGS
-    public static final String DISMISS = "dismiss";
-    public static final String UPDATE = "update";
+    public static final String DISMISS = "WillIMissBart.dismiss";
+    public static final String UPDATE = "WillIMissBart.update";
+    public static final String ALARM = "WillIMissBart.alarm";
 
     // NOTIFICATION IDS
     public static final int TIMER_NOTIF_ID = 1;
+
+    // VIBRATION PATTERN
+    public static long[] VIBRATION_PATTERN = {0, 500, 500};
 }

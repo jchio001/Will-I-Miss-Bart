@@ -20,7 +20,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnLongClick;
 
-public class MainFeedElemViewHolder {
+public class MainEtdsViewHolder {
     @Bind(R.id.parent_station_abbr) TextView parentAbbr;
     @Bind(R.id.main_bart_data_layout) LinearLayout mainBartDataLayout;
 
@@ -31,28 +31,30 @@ public class MainFeedElemViewHolder {
     private String name;
     private boolean success;
 
-    public MainFeedElemViewHolder(View v,
-                                  Context context,
-                                  EtdStation station,
-                                  UserBartData data,
-                                  boolean success) {
+    public MainEtdsViewHolder(View v,
+                              Context context,
+                              EtdStation station,
+                              UserBartData data,
+                              boolean success,
+                              long timeInSeconds) {
         ButterKnife.bind(this, v);
         this.context = context;
         this.success = success;
         this.abbr = station.getAbbr();
         this.name = station.getName();
         parentAbbr.setText(abbr);
-        setUpEtds(station.getEtds(), data);
+        setUpEtds(station.getEtds(), data, timeInSeconds);
     }
 
-    private void setUpEtds(List<Etd> etds, UserBartData data) {
+    private void setUpEtds(List<Etd> etds, UserBartData data, long timeInSeconds) {
         LayoutInflater vi = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
 
         if (etds != null) {
             for (int i = 1; i < etds.size() + 1; ++i) {
                 View v = vi.inflate(R.layout.etd_layout, null);
-                etdsViewHolders.add(new EtdsViewHolder(v, context, etds.get(i - 1), abbr));
+                etdsViewHolders.add(new EtdsViewHolder(v, context,
+                    etds.get(i - 1), abbr, timeInSeconds));
                 mainBartDataLayout.addView(v, i);
             }
         } else {

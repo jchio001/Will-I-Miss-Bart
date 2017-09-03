@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.support.v7.app.NotificationCompat;
 import android.widget.RemoteViews;
 
-import com.app.jonathan.willimissbart.BroadcastReceiver.TimerNotificationReceiver;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.MyApplication;
 import com.app.jonathan.willimissbart.Misc.Utils;

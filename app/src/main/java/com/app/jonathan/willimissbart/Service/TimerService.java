@@ -1,11 +1,9 @@
 package com.app.jonathan.willimissbart.Service;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 
 import com.app.jonathan.willimissbart.CountDownTimer.NotificationCountDownTimer;

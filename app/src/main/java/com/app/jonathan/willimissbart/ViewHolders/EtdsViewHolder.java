@@ -27,7 +27,7 @@ public class EtdsViewHolder {
     private final Context context;
     private String destinationName;
 
-    public EtdsViewHolder(View v, Context context, Etd etd, String originAbbr) {
+    public EtdsViewHolder(View v, Context context, Etd etd, String originAbbr, long timeInSeconds) {
         ButterKnife.bind(this, v);
         // need origin & destination abbreviations for notification
         v.setTag(R.string.origin, originAbbr);
@@ -35,7 +35,7 @@ public class EtdsViewHolder {
         this.context = context;
         this.destinationName = etd.getDestination();
         stationAbbrTv.setText(etd.getAbbreviation());
-        setUpEstimates(etd.getEstimates());
+        setUpEstimates(etd.getEstimates(), timeInSeconds);
     }
 
     @OnLongClick(R.id.station_abbr)
@@ -44,7 +44,7 @@ public class EtdsViewHolder {
         return true;
     }
 
-    private void setUpEstimates(List<Estimate> estimates) {
+    private void setUpEstimates(List<Estimate> estimates, long timeInSeconds) {
         if (estimates != null) {
             LayoutInflater vi = (LayoutInflater) context.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
@@ -52,7 +52,7 @@ public class EtdsViewHolder {
             for (int i = 1; i < estimates.size() + 1; ++i) {
                 View v = vi.inflate(R.layout.estimate_layout, null);
                 estimateViewHolders.add(
-                        new EstimateViewHolder(v, context, estimates.get(i - 1)));
+                        new EstimateViewHolder(v, context, estimates.get(i - 1), timeInSeconds));
                 etdLayout.addView(v, i);
             }
         }

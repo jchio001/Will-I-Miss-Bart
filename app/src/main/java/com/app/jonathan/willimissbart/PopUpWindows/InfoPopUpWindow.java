@@ -1,7 +1,6 @@
 package com.app.jonathan.willimissbart.PopUpWindows;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.WindowManager;

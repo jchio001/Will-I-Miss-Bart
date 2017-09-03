@@ -12,8 +12,8 @@ import android.widget.TextView;
 import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.app.jonathan.willimissbart.Adapters.SimpleLargeTextListAdapter;
 import com.app.jonathan.willimissbart.Adapters.StringAdapter;
-import com.app.jonathan.willimissbart.Enums.StyleEnum;
 import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog;
+import com.app.jonathan.willimissbart.Enums.StyleEnum;
 import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.app.jonathan.willimissbart.R;
 

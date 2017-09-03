@@ -24,6 +24,7 @@
     <string name="destination">To</string>
     <string name="r_u_stupid">You don\'t need a timer for a leaving train.</string>
     <string name="starting_timer">Timer started.</string>
+    <string name="too_late">The train probably left already.</string>
 
     <string name="from">From&#160;</string>
     <string name="going_towards">, going towards&#160;</string>

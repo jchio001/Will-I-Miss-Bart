@@ -135,7 +135,7 @@ public class StationInputActivity extends AppCompatActivity
         addStationButton.setEnabled(false);
         doneButton.setEnabled(false);
 
-        //stop spamming the button idiot
+        // stop spamming the button idiot
         if (bartDataElemViewHolders.size() >= 5) {
             Utils.showSnackBar(this, parent, R.color.red, getString(R.string.plz_stop));
             addStationButton.setEnabled(true);

@@ -11,10 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.jonathan.willimissbart.API.Models.EtdModels.Estimate;
-import com.app.jonathan.willimissbart.BroadcastReceiver.TimerNotificationReceiver;
-import com.app.jonathan.willimissbart.CountDownTimer.NotificationCountDownTimer;
 import com.app.jonathan.willimissbart.Misc.Constants;
-import com.app.jonathan.willimissbart.Misc.MyApplication;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.Service.TimerService;
@@ -31,11 +28,14 @@ public class EstimateViewHolder {
     private final View view;
     private String estimateMins;
 
-    public EstimateViewHolder(View v, Context context, Estimate estimate) {
+    private long timeInSeconds;
+
+    public EstimateViewHolder(View v, Context context, Estimate estimate, long timeInSeconds) {
         ButterKnife.bind(this, v);
         this.context = context;
         this.view = v;
         this.estimateMins = estimate.getMinutes();
+        this.timeInSeconds = timeInSeconds;
         colorView.setBackground(getDrawable(estimate.getHexcolor()));
         estimateTV.setText(getEstimateText(estimateMins));
     }
@@ -43,11 +43,17 @@ public class EstimateViewHolder {
     @OnClick(R.id.estimate_parent)
     public void promptForNotification() {
         if (!estimateMins.equals("Leaving")) {
+            int estimate = Utils.getTimerDuration(estimateMins, timeInSeconds);
+            if (estimate < 30) {
+                Toast.makeText(context, R.string.too_late, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             final String title = getTitle();
             Intent intent = new Intent(context, TimerService.class);
             intent.setAction(Constants.UPDATE);
             intent.putExtra(Constants.TITLE, title);
-            intent.putExtra(Constants.SECONDS, Utils.getTimerDuration(estimateMins));
+            intent.putExtra(Constants.SECONDS, estimate);
             context.startService(intent);
             Toast.makeText(context, R.string.starting_timer, Toast.LENGTH_SHORT).show();
         } else {

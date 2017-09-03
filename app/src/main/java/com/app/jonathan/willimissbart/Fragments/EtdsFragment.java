@@ -16,13 +16,13 @@ import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdFailure;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdRespBundle;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdStation;
-import com.app.jonathan.willimissbart.Listeners.SwipeRefresh.EtdRefreshListener;
 import com.app.jonathan.willimissbart.Enums.RefreshStateEnum;
+import com.app.jonathan.willimissbart.Listeners.SwipeRefresh.EtdRefreshListener;
 import com.app.jonathan.willimissbart.Misc.SharedEtdDataBundle;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.app.jonathan.willimissbart.R;
-import com.app.jonathan.willimissbart.ViewHolders.MainFeedElemViewHolder;
+import com.app.jonathan.willimissbart.ViewHolders.MainEtdsViewHolder;
 import com.google.common.collect.Lists;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,7 +38,7 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-//Fragments kind of suck...
+// Fragments kind of suck...
 @SuppressWarnings("unchecked")
 public class EtdsFragment extends Fragment {
     @Bind(R.id.main_swl) SwipeRefreshLayout mainSWL;
@@ -51,13 +51,16 @@ public class EtdsFragment extends Fragment {
 
     private List<UserBartData> userBartData;
     private List<UserBartData> filteredUserBartData;
-    private List<MainFeedElemViewHolder> mainElemViewHolders = Lists.newArrayList();
+    private List<MainEtdsViewHolder> mainElemViewHolders = Lists.newArrayList();
 
     // Data for setting the the feed of ETD's
     private EtdStation[] stationArr = new EtdStation[5];
-    // Need the user data to make retry calls
+    // Need the user data to make retry calls. TODO: use this
     private UserBartData[] associatedData = new UserBartData[5];
     private boolean[] successArr = new boolean[5]; // keeps track of if API calls are successful
+    // keeps track of when each call is received (in epoch seconds)
+    // this is so that better timer intervals can be generated
+    private long[] timeOfResponse = new long[5];
 
     private int day = -1;
     private SharedEtdDataBundle sharedEtdDataBundle = new SharedEtdDataBundle();
@@ -104,8 +107,9 @@ public class EtdsFragment extends Fragment {
     @Subscribe
     public void onEtdResponse(EtdRespBundle etdRespBundle) {
         synchronized (this) {
+            timeOfResponse[etdRespBundle.getIndex()] = System.currentTimeMillis() / 1000;
             stationArr[etdRespBundle.getIndex()] =
-                    etdRespBundle.getEtdResp().getRoot().getStation().get(0);
+                etdRespBundle.getEtdResp().getRoot().getStation().get(0);
             successArr[etdRespBundle.getIndex()] = true;
             ++sharedEtdDataBundle.stationCntr;
         }
@@ -116,9 +120,10 @@ public class EtdsFragment extends Fragment {
 
     @Subscribe
     public synchronized void onEtdFailure(EtdFailure failure) {
-        //No idea why I need to tag the failure, should remove
+        //No idea why I need to tag the failure, should remove. TODO: think about this later
         if (failure.tag.equals(EtdCallback.tag)) {
             synchronized (this) {
+                timeOfResponse[failure.index] = System.currentTimeMillis() / 1000;
                 stationArr[failure.index] = new EtdStation(failure.data);
                 // only need the user data for failure since I want to user to be able to refresh
                 // each item individually
@@ -173,7 +178,7 @@ public class EtdsFragment extends Fragment {
         nothingToDisplayTV.setVisibility(View.VISIBLE);
     }
 
-    //use once all API calls have been made
+    // load feed all API calls have been made
     private void loadFeed(EtdStation[] stations) {
         progressBar.setVisibility(View.GONE);
         mainSWL.setRefreshing(false);
@@ -192,13 +197,13 @@ public class EtdsFragment extends Fragment {
             EtdStation s = stations[i];
             View mainBartDataElem = vi.inflate(R.layout.main_bart_data_layout, null);
             if (s != null) {
-                MainFeedElemViewHolder viewHolder = new MainFeedElemViewHolder(
-                        mainBartDataElem,
-                        getActivity(),
-                        s,
-                        associatedData[i],
-                        successArr[i]
-                );
+                MainEtdsViewHolder viewHolder = new MainEtdsViewHolder(
+                    mainBartDataElem,
+                    getActivity(),
+                    s,
+                    associatedData[i],
+                    successArr[i],
+                    timeOfResponse[i]);
                 mainElemViewHolders.add(viewHolder);
                 mainFeedLayout.addView(mainBartDataElem);
             } else {
@@ -211,8 +216,8 @@ public class EtdsFragment extends Fragment {
 
         if (etdRefreshListener == null) {
             etdRefreshListener = new EtdRefreshListener(mainSWL)
-                    .setUserBartData(filteredUserBartData)
-                    .setSharedEtdDataBundle(sharedEtdDataBundle);
+                .setUserBartData(filteredUserBartData)
+                .setSharedEtdDataBundle(sharedEtdDataBundle);
             mainSWL.setOnRefreshListener(etdRefreshListener);
         }
 
@@ -222,9 +227,9 @@ public class EtdsFragment extends Fragment {
 
     private void setUpRetrievalTimeText() {
         departuresAsOf.setText(
-                String.format(
-                        getString(R.string.departures_as_of),
-                        format.format(Calendar.getInstance().getTime()))
+            String.format(
+                getString(R.string.departures_as_of),
+                format.format(Calendar.getInstance().getTime()))
         );
     }
 }
