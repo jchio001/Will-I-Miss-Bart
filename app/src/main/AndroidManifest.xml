@@ -20,7 +20,6 @@
         <receiver android:name=".BroadcastReceiver.TimerNotificationReceiver">
             <intent-filter>
                 <action android:name="WillIMissBart.dismiss"></action>
-                <action android:name="WillIMissBart.alarm"></action>
             </intent-filter>
         </receiver>
 

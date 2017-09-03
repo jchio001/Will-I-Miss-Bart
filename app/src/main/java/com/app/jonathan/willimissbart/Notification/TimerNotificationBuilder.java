@@ -23,13 +23,26 @@ public class TimerNotificationBuilder {
         this.title = title;
     }
 
-    public Notification build() {;
+    public Notification build(boolean isHeadsUp) {
         return new NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setCustomContentView(createView(time))
-                .setOngoing(true)
-                .build();
+            .setDefaults(isHeadsUp ? Notification.DEFAULT_ALL : 0)
+            .setCustomContentView(createView(time))
+            .setOngoing(true)
+            .setPriority(isHeadsUp ? Notification.PRIORITY_HIGH : Notification.PRIORITY_DEFAULT)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .build();
     }
+
+    // use this if
+    public Notification buildHeadsUp() {
+        return new NotificationCompat.Builder(context)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setCustomContentView(createView(time))
+            .setOngoing(true)
+            .setPriority(Notification.PRIORITY_HIGH)
+            .build();
+    }
+
 
     public RemoteViews createView(int time) {
         Intent intent = new Intent();
@@ -39,7 +52,8 @@ public class TimerNotificationBuilder {
 
         RemoteViews r = new RemoteViews(context.getPackageName(), R.layout.notification_timer);
         r.setTextViewText(R.id.notif_title, title);
-        r.setTextViewText(R.id.notif_timer, Utils.generateTimerText(time));
+        r.setTextViewText(R.id.notif_timer, time != 0 ? Utils.generateTimerText(time) :
+            context.getString(R.string.train_leaving));
         r.setOnClickPendingIntent(R.id.notif_close, pendingIntent);
 
         return r;

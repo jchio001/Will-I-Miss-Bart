@@ -1,11 +1,7 @@
-package com.app.jonathan.willimissbart.CountDownTimer;
+package com.app.jonathan.willimissbart.Timers;
 
-import android.content.Intent;
 import android.os.CountDownTimer;
 
-import com.app.jonathan.willimissbart.BroadcastReceiver.TimerNotificationReceiver;
-import com.app.jonathan.willimissbart.Misc.Constants;
-import com.app.jonathan.willimissbart.Misc.MyApplication;
 import com.app.jonathan.willimissbart.Misc.Utils;
 
 public class NotificationCountDownTimer extends CountDownTimer {
@@ -29,9 +25,6 @@ public class NotificationCountDownTimer extends CountDownTimer {
     @Override
     public void onFinish() {
         Utils.createOrUpdateNotification(title, 0);
-        Intent intent = new Intent(MyApplication.getContext(), TimerNotificationReceiver.class);
-        intent.setAction(Constants.ALARM);
-        MyApplication.getContext().sendBroadcast(intent);
         this.cancel();
     }
 }

@@ -23,9 +23,6 @@ public class TimerNotificationReceiver extends BroadcastReceiver {
                     context.getSystemService(Context.NOTIFICATION_SERVICE);
                 manager.cancel(Constants.TIMER_NOTIF_ID);
                 break;
-            case Constants.ALARM:
-                v.vibrate(Constants.VIBRATION_PATTERN, 0);
-                break;
             default:
                 break;
         }

@@ -3,7 +3,9 @@ package com.app.jonathan.willimissbart.Misc;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
@@ -142,9 +144,16 @@ public class Utils {
 
     public static void createOrUpdateNotification(String title, int time) {
         Context context = MyApplication.getContext();
+        if (time <= 0) {
+            ((AudioManager) context.getSystemService(Context.AUDIO_SERVICE))
+                .setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+            ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE))
+                .vibrate(Constants.VIBRATION_PATTERN, 0);
+        }
+
         ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE))
                 .notify(Constants.TIMER_NOTIF_ID,
-                        new TimerNotificationBuilder(title, time).build());
+                        new TimerNotificationBuilder(title, time).build(time == 0));
     }
 
     // Converts a minute into a timer estimate

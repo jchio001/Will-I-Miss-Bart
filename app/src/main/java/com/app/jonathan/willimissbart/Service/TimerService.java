@@ -6,9 +6,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.app.jonathan.willimissbart.CountDownTimer.NotificationCountDownTimer;
+import com.app.jonathan.willimissbart.Timers.NotificationCountDownTimer;
 import com.app.jonathan.willimissbart.Misc.Constants;
-import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Notification.TimerNotificationBuilder;
 import com.app.jonathan.willimissbart.Runnables.StartTimerRunnable;
 
@@ -30,8 +29,7 @@ public class TimerService extends Service {
                     int seconds = intent.getIntExtra(Constants.SECONDS, -1);
                     setTimer(new NotificationCountDownTimer(seconds, 1000L, title));
                     startForeground(Constants.TIMER_NOTIF_ID,
-                        new TimerNotificationBuilder(title, seconds).build());
-                    Utils.createOrUpdateNotification(title, seconds);
+                        new TimerNotificationBuilder(title, seconds).build(seconds == 0));
                     break;
                 default:
                     break;

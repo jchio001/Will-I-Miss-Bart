@@ -3,7 +3,7 @@ package com.app.jonathan.willimissbart.Dialogs;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
+import android.view.ContextThemeWrapper;
 
 import com.app.jonathan.willimissbart.R;
 
