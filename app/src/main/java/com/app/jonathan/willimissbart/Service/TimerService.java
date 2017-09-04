@@ -29,7 +29,7 @@ public class TimerService extends Service {
                     int seconds = intent.getIntExtra(Constants.SECONDS, -1);
                     setTimer(new NotificationCountDownTimer(seconds, 1000L, title));
                     startForeground(Constants.TIMER_NOTIF_ID,
-                        new TimerNotificationBuilder(title, seconds).build(seconds == 0));
+                        new TimerNotificationBuilder(title, seconds).build(seconds < 0));
                     break;
                 default:
                     break;

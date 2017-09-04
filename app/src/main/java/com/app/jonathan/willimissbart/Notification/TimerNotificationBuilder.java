@@ -33,17 +33,6 @@ public class TimerNotificationBuilder {
             .build();
     }
 
-    // use this if
-    public Notification buildHeadsUp() {
-        return new NotificationCompat.Builder(context)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setCustomContentView(createView(time))
-            .setOngoing(true)
-            .setPriority(Notification.PRIORITY_HIGH)
-            .build();
-    }
-
-
     public RemoteViews createView(int time) {
         Intent intent = new Intent();
         intent.setAction(Constants.DISMISS);
@@ -52,7 +41,7 @@ public class TimerNotificationBuilder {
 
         RemoteViews r = new RemoteViews(context.getPackageName(), R.layout.notification_timer);
         r.setTextViewText(R.id.notif_title, title);
-        r.setTextViewText(R.id.notif_timer, time != 0 ? Utils.generateTimerText(time) :
+        r.setTextViewText(R.id.notif_timer, time >= 0 ? Utils.generateTimerText(time) :
             context.getString(R.string.train_leaving));
         r.setOnClickPendingIntent(R.id.notif_close, pendingIntent);
 

@@ -86,9 +86,9 @@ public class MyStationsFragment extends Fragment
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     // Let the fragment handle deletion since the order of the view holders needs to be maintained

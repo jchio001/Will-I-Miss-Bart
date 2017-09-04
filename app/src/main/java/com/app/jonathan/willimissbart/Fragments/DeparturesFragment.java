@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
 
 // Fragments kind of suck...
 @SuppressWarnings("unchecked")
-public class EtdsFragment extends Fragment {
+public class DeparturesFragment extends Fragment {
     @Bind(R.id.main_swl) SwipeRefreshLayout mainSWL;
     @Bind(R.id.main_feed_layout) LinearLayout mainFeedLayout;
     @Bind(R.id.progressBar) ProgressBar progressBar;
@@ -69,7 +69,6 @@ public class EtdsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -78,8 +77,10 @@ public class EtdsFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_etds, container, false);
+        View v = inflater.inflate(R.layout.fragment_departures, container, false);
         ButterKnife.bind(this, v);
+        EventBus.getDefault().register(this);
+
         mainSWL.setEnabled(false);
         return v;
     }
@@ -99,8 +100,9 @@ public class EtdsFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
     }
 
@@ -195,7 +197,7 @@ public class EtdsFragment extends Fragment {
 
         for (int i = 0; i < filteredUserBartData.size(); ++i) {
             EtdStation s = stations[i];
-            View mainBartDataElem = vi.inflate(R.layout.main_bart_data_layout, null);
+            View mainBartDataElem = vi.inflate(R.layout.main_departure_layout, null);
             if (s != null) {
                 MainEtdsViewHolder viewHolder = new MainEtdsViewHolder(
                     mainBartDataElem,
@@ -207,7 +209,7 @@ public class EtdsFragment extends Fragment {
                 mainElemViewHolders.add(viewHolder);
                 mainFeedLayout.addView(mainBartDataElem);
             } else {
-                Log.e("EtdsFragment", "EtdStation is null");
+                Log.e("DeparturesFragment", "EtdStation is null");
             }
         }
 

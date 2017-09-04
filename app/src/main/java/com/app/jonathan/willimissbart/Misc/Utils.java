@@ -144,7 +144,7 @@ public class Utils {
 
     public static void createOrUpdateNotification(String title, int time) {
         Context context = MyApplication.getContext();
-        if (time <= 0) {
+        if (time < 0) {
             ((AudioManager) context.getSystemService(Context.AUDIO_SERVICE))
                 .setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
             ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE))
@@ -153,7 +153,7 @@ public class Utils {
 
         ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE))
                 .notify(Constants.TIMER_NOTIF_ID,
-                        new TimerNotificationBuilder(title, time).build(time == 0));
+                        new TimerNotificationBuilder(title, time).build(time < 0));
     }
 
     // Converts a minute into a timer estimate

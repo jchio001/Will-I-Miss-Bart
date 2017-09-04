@@ -11,7 +11,7 @@ import android.view.MenuItem;
 
 import com.app.jonathan.willimissbart.Adapters.ViewPagerAdapter;
 import com.app.jonathan.willimissbart.Fragments.BsaFragment;
-import com.app.jonathan.willimissbart.Fragments.EtdsFragment;
+import com.app.jonathan.willimissbart.Fragments.DeparturesFragment;
 import com.app.jonathan.willimissbart.Fragments.MyStationsFragment;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
@@ -75,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Fragment> fragments = new ArrayList<>();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.USER_DATA, serializedUserData);
-        EtdsFragment etdsFragment = new EtdsFragment();
-        etdsFragment.setArguments(bundle);
-        fragments.add(etdsFragment);
+        DeparturesFragment departuresFragment = new DeparturesFragment();
+        departuresFragment.setArguments(bundle);
+        fragments.add(departuresFragment);
         fragments.add(new BsaFragment());
         MyStationsFragment myStationsFragment = new MyStationsFragment();
         myStationsFragment.setArguments(bundle);

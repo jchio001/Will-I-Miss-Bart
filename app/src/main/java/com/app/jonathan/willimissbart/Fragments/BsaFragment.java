@@ -41,8 +41,7 @@ public class BsaFragment extends Fragment {
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
+        super.onCreate(savedInstanceState);;
         adapter = new SimpleLargeTextListAdapter(getActivity(), new ArrayList<>())
                 .setStyle(StyleEnum.NO_STYLE);
     }
@@ -52,6 +51,7 @@ public class BsaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_bsa, container, false);
         ButterKnife.bind(this, v);
+        EventBus.getDefault().register(this);
 
         bsaSWL.setRefreshing(true);
         bsaSWL.setEnabled(false);
@@ -63,8 +63,9 @@ public class BsaFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
     }
 

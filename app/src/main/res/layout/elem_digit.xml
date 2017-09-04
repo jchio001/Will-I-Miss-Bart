@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/increment"
+        style="@style/NotificationArrowTheme"
+        android:paddingTop="2dp"
+        android:text="@string/fa_caret_up"/>
+
+    <TextView
+        android:id="@+id/digit"
+        style="@style/NotificationDialogTheme"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/zero"
+        android:textColor="@color/black"
+        android:textSize="40sp"/>
+
+    <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/decrement"
+        style="@style/NotificationArrowTheme"
+        android:paddingBottom="2dp"
+        android:text="@string/fa_caret_down"/>
+
+</LinearLayout>

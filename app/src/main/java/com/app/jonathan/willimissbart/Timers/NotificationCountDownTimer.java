@@ -1,8 +1,12 @@
 package com.app.jonathan.willimissbart.Timers;
 
+import android.content.Intent;
 import android.os.CountDownTimer;
 
+import com.app.jonathan.willimissbart.Misc.Constants;
+import com.app.jonathan.willimissbart.Misc.MyApplication;
 import com.app.jonathan.willimissbart.Misc.Utils;
+import com.app.jonathan.willimissbart.Service.TimerService;
 
 public class NotificationCountDownTimer extends CountDownTimer {
     private String title;
@@ -18,13 +22,21 @@ public class NotificationCountDownTimer extends CountDownTimer {
 
     @Override
     public void onTick(long millisUntilFinished) {
-        --time;
-        Utils.createOrUpdateNotification(title, time);
+        Utils.createOrUpdateNotification(title, --time);
     }
 
     @Override
     public void onFinish() {
-        Utils.createOrUpdateNotification(title, 0);
+        --time;
+        if (time > 0) {
+            Intent intent = new Intent(MyApplication.getContext(), TimerService.class);
+            intent.setAction(Constants.UPDATE);
+            intent.putExtra(Constants.TITLE, title);
+            intent.putExtra(Constants.SECONDS, time);
+            MyApplication.getContext().startService(intent);
+        } else {
+            Utils.createOrUpdateNotification(title, -1);
+        }
         this.cancel();
     }
 }

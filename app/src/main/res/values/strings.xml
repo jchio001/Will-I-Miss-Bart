@@ -29,6 +29,11 @@
     <string name="starting_timer">Timer started.</string>
     <string name="too_late">The train probably left already.</string>
 
+    <!-- Timer dialog -->
+    <string name="timer_notif_title">How many minutes early do you want the timer to trigger?</string>
+    <string name="zero">0</string>
+    <string name="too_early">You should\'ve left a long time ago if you wanted to leave that early.</string>
+
     <string name="from">From&#160;</string>
     <string name="going_towards">, going towards&#160;</string>
     <string name="nothing_to_display">No information to display today. Change the days of your BART stations if you want to see something.</string>

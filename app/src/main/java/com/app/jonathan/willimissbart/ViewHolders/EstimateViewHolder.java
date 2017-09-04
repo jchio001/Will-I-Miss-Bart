@@ -1,7 +1,6 @@
 package com.app.jonathan.willimissbart.ViewHolders;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -11,10 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.jonathan.willimissbart.API.Models.EtdModels.Estimate;
-import com.app.jonathan.willimissbart.Misc.Constants;
+import com.app.jonathan.willimissbart.Dialogs.NotificationAlertDialog;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.R;
-import com.app.jonathan.willimissbart.Service.TimerService;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,13 +47,8 @@ public class EstimateViewHolder {
                 return;
             }
 
-            final String title = getTitle();
-            Intent intent = new Intent(context, TimerService.class);
-            intent.setAction(Constants.UPDATE);
-            intent.putExtra(Constants.TITLE, title);
-            intent.putExtra(Constants.SECONDS, estimate);
-            context.startService(intent);
-            Toast.makeText(context, R.string.starting_timer, Toast.LENGTH_SHORT).show();
+            // Passed in estimate already factors in current time!
+            new NotificationAlertDialog(context, getTitle(), estimate).show();
         } else {
             Toast.makeText(context, R.string.r_u_stupid, Toast.LENGTH_SHORT).show();
         }
@@ -63,7 +56,7 @@ public class EstimateViewHolder {
 
     private Drawable getDrawable(String color) {
         GradientDrawable drawable = (GradientDrawable) context.getResources()
-                .getDrawable(R.drawable.black_rectangular_border);
+            .getDrawable(R.drawable.black_rectangular_border);
         drawable.setColor(Color.parseColor(color));
         return drawable;
     }

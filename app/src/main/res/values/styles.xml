@@ -84,4 +84,27 @@
         <item name="colorAccent">@color/bartBlue</item>
     </style>
 
+    <style name="NotificationDialogTheme">
+        <item name="android:gravity">center</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minEms">1</item>
+        <item name="android:maxLength">1</item>
+    </style>
+
+    <style name="NotificationArrowTheme" parent="NotificationDialogTheme">
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="DigitLayoutTheme">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">-9dp</item>
+        <item name="android:layout_marginRight">-9dp</item>
+    </style>
+
 </resources>
