@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
@@ -42,7 +43,7 @@ import butterknife.ButterKnife;
 // Fragments kind of suck...
 @SuppressWarnings("unchecked")
 public class DeparturesFragment extends Fragment {
-    @Bind(R.id.departures_parent) CoordinatorLayout parent;
+    @Bind(R.id.departures_parent) RelativeLayout parent;
     @Bind(R.id.main_swl) SwipeRefreshLayout mainSWL;
     @Bind(R.id.main_feed_layout) LinearLayout mainFeedLayout;
     @Bind(R.id.progressBar) ProgressBar progressBar;

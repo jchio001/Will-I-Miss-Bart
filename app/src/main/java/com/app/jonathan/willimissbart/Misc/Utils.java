@@ -32,6 +32,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 
+// Random utility functions
 public class Utils {
     public static boolean noDaysSelected(boolean[] days) {
         for (boolean b : days) {
@@ -95,7 +96,7 @@ public class Utils {
         for (UserBartData dataElem : userData) {
             if (!dataElem.getAbbr().equals("Select a station")) {
                 if (stationAbbrSet.contains(dataElem.getAbbr())) {
-                    //can't have duplicates
+                    // can't have duplicates
                     throw new IllegalArgumentException();
                 } else {
                     stationAbbrSet.add(dataElem.getAbbr());
@@ -132,6 +133,14 @@ public class Utils {
                 (minutesLeft < 10 ? "0" : "") + String.valueOf(minutesLeft),
                 (secondsLeft < 10 ? "0" : "") + String.valueOf(secondsLeft));
         return time;
+    }
+
+    // Converts seconds into a string of format: %d min(s) %d seconds
+    public static String secondsToString(int seconds) {
+        return String.format(Locale.ENGLISH,
+            "%d min" + (seconds / 60 > 1 ? "s" : "") + " %d seconds",
+            seconds / 60,
+            seconds % 60);
     }
 
     public static void createOrUpdateNotification(String title, int time) {

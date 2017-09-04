@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class EstimateViewHolder {
+    @Bind(R.id.estimate_parent) LinearLayout parent;
     @Bind(R.id.color) View colorView;
     @Bind(R.id.estimate) TextView estimateTV;
 
@@ -48,10 +50,15 @@ public class EstimateViewHolder {
             }
 
             // Passed in estimate already factors in current time!
-            new NotificationAlertDialog(context, getTitle(), estimate).show();
+            parent.setEnabled(false);
+            new NotificationAlertDialog(this, estimate).show();
         } else {
             Toast.makeText(context, R.string.r_u_stupid, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     private Drawable getDrawable(String color) {
@@ -65,9 +72,13 @@ public class EstimateViewHolder {
         return minutes.equals("Leaving") ? minutes : minutes + "m";
     }
 
-    private String getTitle() {
+    public String getTitle() {
         ViewGroup parent = (ViewGroup) view.getParent();
         return parent.getTag(R.string.origin) + " to " +
             parent.getTag(R.string.destination) + " leaving in:";
+    }
+
+    public void enable() {
+        parent.setEnabled(true);
     }
 }
