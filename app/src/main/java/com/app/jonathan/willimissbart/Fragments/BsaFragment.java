@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.app.jonathan.willimissbart.Adapters.SimpleLargeTextListAdapter;
 import com.app.jonathan.willimissbart.Enums.RefreshStateEnum;
 import com.app.jonathan.willimissbart.Enums.StyleEnum;
 import com.app.jonathan.willimissbart.Listeners.SwipeRefresh.BsaRefreshListener;
+import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.R;
 
 import org.greenrobot.eventbus.EventBus;
@@ -41,7 +43,7 @@ public class BsaFragment extends Fragment {
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);;
+        super.onCreate(savedInstanceState);
         adapter = new SimpleLargeTextListAdapter(getActivity(), new ArrayList<>())
                 .setStyle(StyleEnum.NO_STYLE);
     }

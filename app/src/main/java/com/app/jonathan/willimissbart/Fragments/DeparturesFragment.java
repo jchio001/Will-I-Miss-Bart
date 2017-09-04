@@ -2,6 +2,7 @@ package com.app.jonathan.willimissbart.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -41,6 +42,7 @@ import butterknife.ButterKnife;
 // Fragments kind of suck...
 @SuppressWarnings("unchecked")
 public class DeparturesFragment extends Fragment {
+    @Bind(R.id.departures_parent) CoordinatorLayout parent;
     @Bind(R.id.main_swl) SwipeRefreshLayout mainSWL;
     @Bind(R.id.main_feed_layout) LinearLayout mainFeedLayout;
     @Bind(R.id.progressBar) ProgressBar progressBar;
@@ -97,6 +99,8 @@ public class DeparturesFragment extends Fragment {
         } else {
             handleNothingToFetch();
         }
+
+        Utils.showTipSnackBar(getActivity(), parent, R.color.bartBlue);
     }
 
     @Override

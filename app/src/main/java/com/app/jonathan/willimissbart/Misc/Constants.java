@@ -1,5 +1,7 @@
 package com.app.jonathan.willimissbart.Misc;
 
+import com.app.jonathan.willimissbart.R;
+
 public class Constants {
     // SHARED PREFERENCE KEYS
     public static final String STATION_LIST_KEY = "STATION_LIST";
@@ -22,4 +24,7 @@ public class Constants {
 
     // VIBRATION PATTERN
     public static long[] VIBRATION_PATTERN = {0, 1000, 1000};
+
+    // TIPS
+    public static int[] TIP_IDS = {R.string.tip_1, R.string.tip_2};
 }

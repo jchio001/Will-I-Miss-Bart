@@ -28,6 +28,8 @@
     <string name="r_u_stupid">You don\'t need a timer for a leaving train.</string>
     <string name="starting_timer">Timer started.</string>
     <string name="too_late">The train probably left already.</string>
+    <string name="tip_1">Did you know? If you press on a estimate, you can set a timer to notify you when that train leaves!</string>
+    <string name="tip_2">Unsure what station an abbreviation stands for? Hold your finger over the abbreviation!</string>
 
     <!-- Timer dialog -->
     <string name="timer_notif_title">How many minutes early do you want the timer to trigger?</string>

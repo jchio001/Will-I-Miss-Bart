@@ -137,7 +137,7 @@ public class StationInputActivity extends AppCompatActivity
 
         // stop spamming the button idiot
         if (bartDataElemViewHolders.size() >= 5) {
-            Utils.showSnackBar(this, parent, R.color.red, getString(R.string.plz_stop));
+            Utils.showSnackbar(this, parent, R.color.red, R.string.plz_stop);
             addStationButton.setEnabled(true);
             doneButton.setEnabled(true);
             return;
@@ -180,7 +180,7 @@ public class StationInputActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         } else {
-            Utils.showSnackBar(this, parent, R.color.red, getString(R.string.all_invalid_data));
+            Utils.showSnackbar(this, parent, R.color.red, R.string.all_invalid_data);
         }
     }
 

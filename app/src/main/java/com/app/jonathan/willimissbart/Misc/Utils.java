@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 
@@ -28,6 +29,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 
 public class Utils {
@@ -121,16 +123,6 @@ public class Utils {
         return false;
     }
 
-    public static Snackbar showSnackBar(Context context, View parent, int colorId, String message) {
-        Snackbar snackbar = Snackbar.make(parent, message, Snackbar.LENGTH_LONG);
-        View rootView = snackbar.getView();
-        snackbar.getView().setBackgroundColor(context.getResources().getColor(colorId));
-        TextView tv = (TextView) rootView.findViewById(android.support.design.R.id.snackbar_text);
-        tv.setTextColor(context.getResources().getColor(R.color.white));
-        snackbar.show();
-        return snackbar;
-    }
-
     public static String generateTimerText(int seconds) {
         long minutesLeft = seconds / 60;
         long secondsLeft = seconds % 60;
@@ -163,5 +155,37 @@ public class Utils {
         int minAsInt = Integer.valueOf(min);
         return minAsInt * 60 * ((minAsInt > 5) ? 95 : 90) / 100
             - ((int) ((System.currentTimeMillis() / 1000) - timeInSeconds));
+    }
+
+    public static Snackbar showSnackbar(Context context, View parent, int colorId, int stringId) {
+        Snackbar snackbar = Snackbar.make(parent, stringId, Snackbar.LENGTH_LONG);
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, colorId));
+        View rootView = snackbar.getView();
+        TextView tv = (TextView) rootView.findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextColor(ContextCompat.getColor(context, R.color.white));
+        snackbar.show();
+        return snackbar;
+    }
+
+    public static Snackbar showSnackbar(Context context,
+                                        View parent,
+                                        int colorId,
+                                        int stringId,
+                                        int duration) {
+        Snackbar snackbar = Snackbar.make(parent, stringId, Snackbar.LENGTH_LONG);
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, colorId));
+        snackbar.setDuration(duration);
+        View rootView = snackbar.getView();
+        TextView tv = (TextView) rootView.findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextColor(ContextCompat.getColor(context, R.color.white));
+        snackbar.show();
+        return snackbar;
+    }
+
+    public static Snackbar showTipSnackBar(Context context,
+                                           View parent,
+                                           int colorId) {
+        int tipId = Constants.TIP_IDS[new Random().nextInt(2)];
+        return showSnackbar(context, parent, colorId, tipId, 10000);
     }
 }
