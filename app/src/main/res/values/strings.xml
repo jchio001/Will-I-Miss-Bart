@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Will I Miss Bart</string>
+    <string name="app_name">BART Tracker</string>
 
     <string name="home">Home</string>
 
@@ -8,16 +8,15 @@
     <string name="close">Tap here to close</string>
     <string name="imageview_desc">App icon</string>
 
-    <string name="enter_bart_data">Enter in some information about the stations you\'re interested in keeping track of.</string>
+    <string name="enter_bart_data">What stations are you interested in tracking? </string>
     <string name="another_bart">Track another station</string>
     <string name="plz_stop">I think you\'ve pressed the button1 enough.</string>
-    <string name="all_invalid_data">Error: all of the data is invalid. Please edit your data and try again.</string>
+    <string name="all_invalid_data">Please check if you\'ve selected a valid name and at least one day of the week for each station.</string>
     <string name="done">Done</string>
     <string name="help_blurb">
-        In order to present information about BART that best suits you, it\'s required to enter in some information about the stations you are about.
-        \n\nIn addition to the name, it\'s also required to enter:\n
-        - The direction from the station\n
-        - The days of the week which you\'re interested the station\n
+        We want to show the stations best suited to your preferences every day. In order to do so, we also need to know:
+        \n\n- The direction from that station you\'re interested in
+        \n- The days of the week you want to track that station
     </string>
 
     <string name="enter_days">Enter the days you want to track this station on:</string>
@@ -31,7 +30,7 @@
     <string name="starting_timer">Timer started.</string>
     <string name="too_late">The train probably left already.</string>
     <string name="tip_1">Did you know? If you press on a estimate, you can set a timer to notify you when that train leaves!</string>
-    <string name="tip_2">Unsure what station an abbreviation stands for? Hold your finger over the abbreviation!</string>
+    <string name="tip_2">Unsure what station an abbreviation stands for? Press on it!</string>
 
     <!-- Timer dialog -->
     <string name="timer_notif_title">How many minutes early do you want the timer to trigger?</string>

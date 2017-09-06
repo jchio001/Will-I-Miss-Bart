@@ -13,6 +13,7 @@ import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.app.jonathan.willimissbart.Adapters.SimpleLargeTextListAdapter;
 import com.app.jonathan.willimissbart.Adapters.StringAdapter;
 import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog;
+import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog.DeleteDataElemListener;
 import com.app.jonathan.willimissbart.Enums.StyleEnum;
 import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.app.jonathan.willimissbart.R;
@@ -34,7 +35,7 @@ public class BartDataElemViewHolder {
     @Bind(R.id.divider) View divider;
 
     private Context context;
-    private DeleteAlertDialog.DeleteDataElemListener listener;
+    private DeleteDataElemListener listener;
     private StyleEnum style = StyleEnum.BART_STYLE;
 
     private int index;
@@ -43,7 +44,7 @@ public class BartDataElemViewHolder {
 
     public BartDataElemViewHolder(View v,
                                   Context context,
-                                  DeleteAlertDialog.DeleteDataElemListener listener,
+                                  DeleteDataElemListener listener,
                                   int index) {
         ButterKnife.bind(this, v);
         this.context = context;
@@ -54,12 +55,14 @@ public class BartDataElemViewHolder {
     @OnClick({R.id.sunday_box, R.id.monday_box, R.id.tuesday_box, R.id.wednesday_box,
             R.id.thursday_box, R.id.friday_box, R.id.saturday_box})
     public void onDayBoxClicked(TextView v) {
+        v.setEnabled(false);
         int backgroundColor = ((ColorDrawable) v.getBackground()).getColor();
         if (backgroundColor == colorNotSelected) {
             v.setBackgroundColor(colorSelected);
         } else {
             v.setBackgroundColor(colorNotSelected);
         }
+        v.setEnabled(true);
     }
 
     @OnLongClick(R.id.bart_data_elem_parent)
@@ -68,7 +71,7 @@ public class BartDataElemViewHolder {
         return true;
     }
 
-    //ghetto builder pattern
+    // ghetto builder pattern
     public BartDataElemViewHolder build(UserBartData data) {
         colorNotSelected = ContextCompat.getColor(context, android.R.color.transparent);
         if (style != StyleEnum.BART_STYLE) {
@@ -98,6 +101,10 @@ public class BartDataElemViewHolder {
             directionSpinner.setSelection(data.getDirectionIndex());
             for (int i = 0; i < data.getDays().length; ++i) {
                 dayBoxes[i].setBackgroundColor(data.getDays()[i] ? colorSelected : colorNotSelected);
+            }
+        } else {
+            for (int i = 1; i < dayBoxes.length - 1; ++i) {
+                dayBoxes[i].setBackgroundColor(colorSelected);
             }
         }
 

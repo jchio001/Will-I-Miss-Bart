@@ -2,7 +2,6 @@ package com.app.jonathan.willimissbart.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -24,7 +23,7 @@ import com.app.jonathan.willimissbart.Misc.SharedEtdDataBundle;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.app.jonathan.willimissbart.R;
-import com.app.jonathan.willimissbart.ViewHolders.MainEtdsViewHolder;
+import com.app.jonathan.willimissbart.ViewHolders.DeparturesViewHolder;
 import com.google.common.collect.Lists;
 
 import org.greenrobot.eventbus.EventBus;
@@ -54,7 +53,7 @@ public class DeparturesFragment extends Fragment {
 
     private List<UserBartData> userBartData;
     private List<UserBartData> filteredUserBartData;
-    private List<MainEtdsViewHolder> mainElemViewHolders = Lists.newArrayList();
+    private List<DeparturesViewHolder> mainElemViewHolders = Lists.newArrayList();
 
     // Data for setting the the feed of ETD's
     private EtdStation[] stationArr = new EtdStation[5];
@@ -204,7 +203,7 @@ public class DeparturesFragment extends Fragment {
             EtdStation s = stations[i];
             View mainBartDataElem = vi.inflate(R.layout.main_departure_layout, null);
             if (s != null) {
-                MainEtdsViewHolder viewHolder = new MainEtdsViewHolder(
+                DeparturesViewHolder viewHolder = new DeparturesViewHolder(
                     mainBartDataElem,
                     getActivity(),
                     s,

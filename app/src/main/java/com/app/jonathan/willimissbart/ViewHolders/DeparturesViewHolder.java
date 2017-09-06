@@ -1,6 +1,5 @@
 package com.app.jonathan.willimissbart.ViewHolders;
 
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +17,9 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnLongClick;
+import butterknife.OnClick;
 
-public class MainEtdsViewHolder {
+public class DeparturesViewHolder {
     @Bind(R.id.parent_station_abbr) TextView parentAbbr;
     @Bind(R.id.main_bart_data_layout) LinearLayout mainBartDataLayout;
 
@@ -31,12 +30,12 @@ public class MainEtdsViewHolder {
     private String name;
     private boolean success;
 
-    public MainEtdsViewHolder(View v,
-                              Context context,
-                              EtdStation station,
-                              UserBartData data,
-                              boolean success,
-                              long timeInSeconds) {
+    public DeparturesViewHolder(View v,
+                                Context context,
+                                EtdStation station,
+                                UserBartData data,
+                                boolean success,
+                                long timeInSeconds) {
         ButterKnife.bind(this, v);
         this.context = context;
         this.success = success;
@@ -64,9 +63,8 @@ public class MainEtdsViewHolder {
         }
     }
 
-    @OnLongClick(R.id.parent_station_abbr)
-    public boolean onAbbrLongPress() {
+    @OnClick(R.id.parent_station_abbr)
+    public void onAbbrLongPress() {
         Toast.makeText(context, name, Toast.LENGTH_LONG).show();
-        return true;
     }
 }

@@ -195,6 +195,6 @@ public class Utils {
                                            View parent,
                                            int colorId) {
         int tipId = Constants.TIP_IDS[new Random().nextInt(2)];
-        return showSnackbar(context, parent, colorId, tipId, 10000);
+        return showSnackbar(context, parent, colorId, tipId, 5000);
     }
 }

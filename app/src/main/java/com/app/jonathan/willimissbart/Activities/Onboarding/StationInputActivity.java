@@ -148,8 +148,7 @@ public class StationInputActivity extends AppCompatActivity
         newDataElem.setVisibility(View.GONE);
         bartDataElemViewHolders.add(
                 new BartDataElemViewHolder(newDataElem, this, this, nextIndex)
-                        .setColorSelected(getResources().getColor(R.color.colorPrimaryDark))
-                        .setColorNotSelected(getResources().getColor(android.R.color.transparent))
+                        .build(null)
         );
         bartDataElemViewHolders.get(nextIndex)
                 .setBartSpinnerAdapter(simpleLargeTextListAdapter)
@@ -182,6 +181,8 @@ public class StationInputActivity extends AppCompatActivity
         } else {
             Utils.showSnackbar(this, parent, R.color.red, R.string.all_invalid_data);
         }
+
+        doneButton.setEnabled(true);
     }
 
     @Subscribe
@@ -230,12 +231,12 @@ public class StationInputActivity extends AppCompatActivity
         List<UserBartData> userBartData = new ArrayList<>();
 
         for (BartDataElemViewHolder bartDataElemViewHolder : bartDataElemViewHolders) {
-            String name = bartDataElemViewHolder.getStationName();
+            String abbr = bartDataElemViewHolder.getStationAbbr();
             boolean[] days = bartDataElemViewHolder.getDaysOfWeekOfInterest();
-            if (!name.equals("Select a station") && !Utils.noDaysSelected(days)) {
+            if (!abbr.equals("Select a station") && !Utils.noDaysSelected(days)) {
                 userBartData.add(
                         new UserBartData()
-                                .setStation(name)
+                                .setStation(bartDataElemViewHolder.getStationName())
                                 .setStationIndex(bartDataElemViewHolder.getStationIndex())
                                 .setAbbr(bartDataElemViewHolder.getStationAbbr())
                                 .setDirection(bartDataElemViewHolder.getDirection())

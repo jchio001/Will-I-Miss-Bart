@@ -3,25 +3,27 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="10dp">
 
-    <TextView
+    <com.joanzapata.iconify.widget.IconTextView
         android:id="@+id/cancel"
         android:layout_gravity="end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="X"
+        android:padding="2dp"
+        android:text="@string/fa_times"
         android:textColor="@color/black"
-        android:textSize="12sp"/>
+        android:textSize="22sp"/>
     
     <TextView
         android:gravity="start"
         android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/help_blurb"
         android:textColor="@color/black"
-        android:textSize="12sp" />
+        android:textSize="16sp" />
 
 </LinearLayout>
