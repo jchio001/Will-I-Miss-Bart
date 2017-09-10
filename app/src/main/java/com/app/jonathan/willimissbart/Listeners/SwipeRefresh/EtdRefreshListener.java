@@ -37,7 +37,7 @@ public class EtdRefreshListener extends BaseRefreshListener {
                 return;
             }
 
-            //prevents the user from spamming refresh
+            //prevents the user from spamming refreshOnNewData
             long now = System.currentTimeMillis() / 1000;
             if (now - lastRefreshTime < 45) {
                 Log.i("EtfRefreshListener", "Stop spamming idiot");
@@ -48,6 +48,14 @@ public class EtdRefreshListener extends BaseRefreshListener {
             lastRefreshTime = now;
         }
 
+        sharedEtdDataBundle.stationCntr = 0;
+        Utils.fetchEtds(userBartData);
+    }
+
+    // Forcefully makes API calls needed to refresh the feed (ignores the 45 second cooldown)
+    // This method should only be used to load the feed as a last resort
+    public synchronized void forceRefresh() {
+        lastRefreshTime = System.currentTimeMillis() / 1000;
         sharedEtdDataBundle.stationCntr = 0;
         Utils.fetchEtds(userBartData);
     }

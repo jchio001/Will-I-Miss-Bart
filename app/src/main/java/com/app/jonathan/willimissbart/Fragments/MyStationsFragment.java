@@ -3,6 +3,7 @@ package com.app.jonathan.willimissbart.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,10 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
+import com.app.jonathan.willimissbart.Activities.AppActivities.MainActivity;
 import com.app.jonathan.willimissbart.Adapters.SimpleLargeTextListAdapter;
 import com.app.jonathan.willimissbart.Adapters.StringAdapter;
 import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog;
 import com.app.jonathan.willimissbart.Enums.StyleEnum;
+import com.app.jonathan.willimissbart.Misc.MyApplication;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
@@ -25,6 +28,8 @@ import com.app.jonathan.willimissbart.ViewHolders.BartDataElemViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.OptionsElemViewHolder;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -39,12 +44,9 @@ import butterknife.OnClick;
 public class MyStationsFragment extends Fragment
         implements DeleteAlertDialog.DeleteDataElemListener {
     @Bind(R.id.my_stations_parent) LinearLayout parent;
-    @Bind(R.id.options) LinearLayout optionsLayout;
-    @Bind(R.id.add_widget) LinearLayout addWidget;
-    @Bind(R.id.undo_widget) LinearLayout undoWidget;
-    @Bind(R.id.save_widget) LinearLayout saveWidget;
+    @Bind(R.id.add) FloatingActionButton add;
 
-    private List<UserBartData> userData;
+    private List<UserBartData> userData = Lists.newArrayList();
     private List<BartDataElemViewHolder> bartDataElemViewHolders = Lists.newArrayList();
     private LayoutInflater vi;
     private SimpleLargeTextListAdapter<Station> stationsAdapter;
@@ -61,6 +63,9 @@ public class MyStationsFragment extends Fragment
         Log.i("MyStationsFragment", "OnCreateView");
         View v = inflater.inflate(R.layout.fragment_my_stations, container, false);
         ButterKnife.bind(this, v);
+        add.setImageDrawable(new IconDrawable(getActivity(), FontAwesomeIcons.fa_plus)
+            .colorRes(R.color.white));
+
         vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         stationsAdapter = new SimpleLargeTextListAdapter(
                 getActivity(),
@@ -73,16 +78,19 @@ public class MyStationsFragment extends Fragment
 
         Bundle bundle = getArguments();
         userData = Utils.convertToList(
-                Utils.getUserBartData(bundle, getActivity().getApplicationContext())
-        );
-
+                Utils.getUserBartData(bundle, getActivity().getApplicationContext()));
         loadFeed(userData);
-
-        new OptionsElemViewHolder(addWidget, R.string.fa_plus, "Add");
-        new OptionsElemViewHolder(undoWidget, R.string.fa_undo, "Reset");
-        new OptionsElemViewHolder(saveWidget, R.string.fa_save, "Save");
-
         return v;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        List<UserBartData> freshData = extractNewData();
+        if (freshData != null) {
+            SPSingleton.getInstance(MyApplication.getContext()).persistUserData(
+                new Gson().toJson(freshData));
+        }
     }
 
     @Override
@@ -99,32 +107,27 @@ public class MyStationsFragment extends Fragment
             bartDataElemViewHolders.get(i).decrementIndex();
         }
         bartDataElemViewHolders.remove(index);
-        parent.removeViewAt(index + 1);
+        parent.removeViewAt(index);
     }
 
-    // Associating all 3 items with the same onclick listener so that they can all be debounced
-    // together
-    @OnClick({R.id.add_widget, R.id.undo_widget, R.id.save_widget})
-    public void onOptionChosen(View v) {
-        if (v.getId() == R.id.add_widget) {
-            addDataElem();
-        } else if (v.getId() == R.id.undo_widget) {
-            loadFeed(userData);
-        } else {
-            save();
+    @OnClick(R.id.add)
+    public synchronized void onAddDataElem() {
+        if (bartDataElemViewHolders.size() < 5) {
+            View bartDataView = vi.inflate(R.layout.bart_data_elem, null);
+            bartDataElemViewHolders.add(
+                new BartDataElemViewHolder(
+                    bartDataView, getActivity(), this, bartDataElemViewHolders.size())
+                    .setBartSpinnerAdapter(stationsAdapter)
+                    .setDirectionSpinnerAdapter(directionsAdapter)
+                    .setStyle(StyleEnum.NO_STYLE)
+                    .build(null)
+            );
+            parent.addView(bartDataView, bartDataElemViewHolders.size() - 1);
         }
     }
 
-    // Loading the feed is now smart enough to reuse views! We did it reddit!
     public void loadFeed(List<UserBartData> data) {
-        // Loop 1: Reuse existing bartDataElemViewHolders
-        int i = 0;
-        for (; i < Math.min(data.size(), bartDataElemViewHolders.size()); ++i) {
-            bartDataElemViewHolders.get(i).build(data.get(i));
-        }
-
-        // Loop 2: Create new bartDataElemViewHolders when there's not enough
-        for (; i < data.size(); ++i) {
+        for (int i = 0; i < data.size(); ++i) {
             View bartDataView = vi.inflate(R.layout.bart_data_elem, null);
             bartDataElemViewHolders.add(
                     new BartDataElemViewHolder(bartDataView, getActivity(), this, i)
@@ -133,43 +136,12 @@ public class MyStationsFragment extends Fragment
                             .setStyle(StyleEnum.NO_STYLE)
                             .build(data.get(i))
             );
-            parent.addView(bartDataView, i + 1);
-        }
-
-        // Loop 3: Delete excess bartDataElemViewHolders. It could be argued that I can just keep
-        // them in memory, but it'll make it more difficult maintaining the information
-        // since I need to utilize more indexes in order to do so
-        int numViewsToRemove = bartDataElemViewHolders.size() - data.size();
-        for (int j = 0; j < numViewsToRemove; ++j) {
-            bartDataElemViewHolders.remove(data.size());
-            parent.removeViewAt(data.size() + 1);
-        }
-    }
-
-    public void addDataElem() {
-        if (bartDataElemViewHolders.size() < 5) {
-            View bartDataView = vi.inflate(R.layout.bart_data_elem, null);
-            bartDataElemViewHolders.add(
-                    new BartDataElemViewHolder(
-                            bartDataView, getActivity(), this, bartDataElemViewHolders.size())
-                            .setBartSpinnerAdapter(stationsAdapter)
-                            .setDirectionSpinnerAdapter(directionsAdapter)
-                            .setStyle(StyleEnum.NO_STYLE)
-                            .build(null)
-            );
-            parent.addView(bartDataView, bartDataElemViewHolders.size());
+            parent.addView(bartDataView, i);
         }
     }
 
     //TODO: Check user data to see that they didn't do something stupid
-    public void save() {
-        long now = System.currentTimeMillis() / 1000;
-        if (now - lastSaveTime < 60) {
-            Log.i("MyStationsFragment", "Stop spamming idiot.");
-            Toast.makeText(getActivity(), "Please try again later.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
+    public List<UserBartData> extractNewData() {
         List<UserBartData> newUserData = new ArrayList<>();
         for (BartDataElemViewHolder viewHolder : bartDataElemViewHolders) {
             newUserData.add(viewHolder.getDataFromView());
@@ -179,17 +151,17 @@ public class MyStationsFragment extends Fragment
             newUserData = Utils.filterBadData(newUserData);
         } catch (IllegalArgumentException e) {
             Toast.makeText(getActivity(), "Error: duplicate station.", Toast.LENGTH_SHORT).show();
-            return;
+            return null;
         }
 
         if (Utils.didDataChange(userData, newUserData)) {
             userData = newUserData;
+            Toast.makeText(getActivity(), "Changes saved!", Toast.LENGTH_SHORT).show();
             SPSingleton.getInstance(getActivity()).persistUserData(new Gson().toJson(newUserData));
-            EventBus.getDefault().post(userData);
-            Toast.makeText(getActivity(), "Updated your data.", Toast.LENGTH_SHORT).show();
-            lastSaveTime = now;
+            return userData;
         } else {
-            Toast.makeText(getActivity(), "No changes made.", Toast.LENGTH_SHORT).show();
+            Log.i("MyStationsFragment", "No changes made.");
+            return null;
         }
     }
 }

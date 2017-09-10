@@ -17,6 +17,7 @@ import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdFailure;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdRespBundle;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdStation;
+import com.app.jonathan.willimissbart.Activities.AppActivities.MainActivity;
 import com.app.jonathan.willimissbart.Enums.RefreshStateEnum;
 import com.app.jonathan.willimissbart.Listeners.SwipeRefresh.EtdRefreshListener;
 import com.app.jonathan.willimissbart.Misc.SharedEtdDataBundle;
@@ -51,8 +52,8 @@ public class DeparturesFragment extends Fragment {
 
     private EtdRefreshListener etdRefreshListener;
 
-    private List<UserBartData> userBartData;
-    private List<UserBartData> filteredUserBartData;
+    private List<UserBartData> userBartData = Lists.newArrayList();
+    private List<UserBartData> filteredUserBartData = Lists.newArrayList();
     private List<DeparturesViewHolder> mainElemViewHolders = Lists.newArrayList();
 
     // Data for setting the the feed of ETD's
@@ -63,15 +64,11 @@ public class DeparturesFragment extends Fragment {
     // keeps track of when each call is received (in epoch seconds)
     // this is so that better timer intervals can be generated
     private long[] timeOfResponse = new long[5];
-
-    private int day = -1;
-    private SharedEtdDataBundle sharedEtdDataBundle = new SharedEtdDataBundle();
     DateFormat format = new SimpleDateFormat("h:mm a", Locale.US);
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    private SharedEtdDataBundle sharedEtdDataBundle = new SharedEtdDataBundle();
+
+    private int day = -1;
 
     @Nullable
     @Override
@@ -84,6 +81,10 @@ public class DeparturesFragment extends Fragment {
         EventBus.getDefault().register(this);
 
         mainSWL.setEnabled(false);
+        etdRefreshListener = new EtdRefreshListener(mainSWL)
+            .setUserBartData(filteredUserBartData)
+            .setSharedEtdDataBundle(sharedEtdDataBundle);
+        mainSWL.setOnRefreshListener(etdRefreshListener);
         return v;
     }
 
@@ -99,8 +100,6 @@ public class DeparturesFragment extends Fragment {
         } else {
             handleNothingToFetch();
         }
-
-        Utils.showTipSnackBar(getActivity(), parent, R.color.bartBlue);
     }
 
     @Override
@@ -131,7 +130,7 @@ public class DeparturesFragment extends Fragment {
             synchronized (this) {
                 timeOfResponse[failure.index] = System.currentTimeMillis() / 1000;
                 stationArr[failure.index] = new EtdStation(failure.data);
-                // only need the user data for failure since I want to user to be able to refresh
+                // only need the user data for failure since I want to user to be able to refreshOnNewData
                 // each item individually
                 associatedData[failure.index] = failure.data;
                 successArr[failure.index] = false;
@@ -181,6 +180,7 @@ public class DeparturesFragment extends Fragment {
 
     private void handleNothingToFetch() {
         progressBar.setVisibility(View.INVISIBLE);
+        mainSWL.setVisibility(View.INVISIBLE);
         nothingToDisplayTV.setVisibility(View.VISIBLE);
     }
 
@@ -220,13 +220,6 @@ public class DeparturesFragment extends Fragment {
         mainSWL.setVisibility(View.VISIBLE);
         mainFeedLayout.setVisibility(View.VISIBLE);
 
-        if (etdRefreshListener == null) {
-            etdRefreshListener = new EtdRefreshListener(mainSWL)
-                .setUserBartData(filteredUserBartData)
-                .setSharedEtdDataBundle(sharedEtdDataBundle);
-            mainSWL.setOnRefreshListener(etdRefreshListener);
-        }
-
         etdRefreshListener.setRefreshState(RefreshStateEnum.INACTIVE);
         mainSWL.setEnabled(true);
     }
@@ -237,5 +230,26 @@ public class DeparturesFragment extends Fragment {
                 getString(R.string.departures_as_of),
                 format.format(Calendar.getInstance().getTime()))
         );
+    }
+
+    public void refreshOnNewData(List<UserBartData> freshData) {
+        int oldFilteredDataSize = filteredUserBartData.size();
+        if (freshData != null) {
+            userBartData = freshData;
+            filteredUserBartData = filterUserBartData(freshData);
+            etdRefreshListener.setUserBartData(filteredUserBartData);
+            if (filteredUserBartData.size() > 0) {
+                if (oldFilteredDataSize == 0) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    nothingToDisplayTV.setVisibility(View.INVISIBLE);
+                    etdRefreshListener.forceRefresh();
+                } else {
+                    // Lazy loading (request to refresh is affected by the cooldown)
+                    etdRefreshListener.onRefresh();
+                }
+            } else {
+                handleNothingToFetch();
+            }
+        }
     }
 }

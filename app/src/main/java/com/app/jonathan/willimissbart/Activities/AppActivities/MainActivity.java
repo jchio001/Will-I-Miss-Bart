@@ -1,6 +1,8 @@
 package com.app.jonathan.willimissbart.Activities.AppActivities;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -29,17 +31,24 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.tabs) TabLayout tabs;
     @Bind(R.id.view_pager) ViewPager viewPager;
 
+    private DeparturesFragment departuresFragment = new DeparturesFragment();
+    private BsaFragment bsaFragment = new BsaFragment();
+    private MyStationsFragment myStationsFragment = new MyStationsFragment();
+    private Handler handler = new Handler();
+
+    protected final Context context = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        setOnPageListener();
 
         Bundle bundle = getIntent().getExtras();
         Utils.loadStations(
-                SPSingleton.getInstance(getApplicationContext()).getPersistedStations()
-        );
+                SPSingleton.getInstance(getApplicationContext()).getPersistedStations());
 
         setUpViewPager(Utils.getUserBartData(bundle, getApplicationContext()));
         tabs.setupWithViewPager(viewPager);
@@ -67,6 +76,35 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void setOnPageListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            private int lastPage = 0;
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(final int position) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (lastPage != 0 && position == 0) {
+                            departuresFragment.refreshOnNewData(myStationsFragment.extractNewData());
+                        }
+                        lastPage = position;
+                    }
+                });
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
     private void setUpViewPager(String serializedUserData) {
         System.out.println(serializedUserData);
         ArrayList<String> titles = new ArrayList<String>(Arrays.asList(getResources()
@@ -75,11 +113,9 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Fragment> fragments = new ArrayList<>();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.USER_DATA, serializedUserData);
-        DeparturesFragment departuresFragment = new DeparturesFragment();
         departuresFragment.setArguments(bundle);
         fragments.add(departuresFragment);
-        fragments.add(new BsaFragment());
-        MyStationsFragment myStationsFragment = new MyStationsFragment();
+        fragments.add(bsaFragment);
         myStationsFragment.setArguments(bundle);
         fragments.add(myStationsFragment);
 

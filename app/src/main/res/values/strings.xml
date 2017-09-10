@@ -44,7 +44,7 @@
 
     <string name="failed_to_get_bsa">Unable to fetch bsa\'s. Please try again later.</string>
 
-    <string name="my_stations_blurb">This is a list of information about the stations you\'re currently tracking. Here, you can add more stations to track or change information about the stations you\'re currently tracking.</string>
+    <string name="my_stations_blurb">You can view and edit information about the stations you\'re tracking here.</string>
     <string name="save">Save</string>
 
     <string name="action_settings">Settings</string>

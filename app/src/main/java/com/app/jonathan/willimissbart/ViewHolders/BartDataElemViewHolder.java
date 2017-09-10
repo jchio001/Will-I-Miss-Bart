@@ -31,6 +31,7 @@ public class BartDataElemViewHolder {
             R.id.tuesday_box, R.id.wednesday_box,
             R.id.thursday_box, R.id.friday_box,
             R.id.saturday_box}) public TextView[] dayBoxes;
+    @Bind(R.id.remove) TextView remove;
     @Bind(R.id.enter_days) TextView daysBlurb;
     @Bind(R.id.divider) View divider;
 
@@ -65,10 +66,9 @@ public class BartDataElemViewHolder {
         v.setEnabled(true);
     }
 
-    @OnLongClick(R.id.bart_data_elem_parent)
-    public boolean onLongClickParent() {
+    @OnClick(R.id.remove)
+    public void onRemoveClicked() {
         new DeleteAlertDialog(context, listener, index).show();
-        return true;
     }
 
     // ghetto builder pattern
@@ -84,6 +84,7 @@ public class BartDataElemViewHolder {
                             R.drawable.white_rounded_background
                     );
             drawable.setStroke(2, black);
+            remove.setTextColor(black);
             bartSpinner.setBackground(drawable);
             directionSpinner.setBackground(drawable);
             daysBlurb.setTextColor(black);
