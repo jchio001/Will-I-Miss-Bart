@@ -13,6 +13,10 @@ import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
+import com.app.jonathan.willimissbart.API.Models.DeparturesFeedModels.FlattenedEstimate;
+import com.app.jonathan.willimissbart.API.Models.EtdModels.Estimate;
+import com.app.jonathan.willimissbart.API.Models.EtdModels.Etd;
+import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdStation;
 import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Notification.TimerNotificationBuilder;
@@ -136,7 +140,7 @@ public class Utils {
     }
 
     // Converts seconds into a string of format: %d min(s) %d seconds
-    public static String secondsToString(int seconds) {
+    public static String secondsToFormattedString(int seconds) {
         return String.format(Locale.ENGLISH,
             "%d min" + (seconds / 60 > 1 ? "s" : "") + " %d seconds",
             seconds / 60,
@@ -157,13 +161,44 @@ public class Utils {
                         new TimerNotificationBuilder(title, time).build(time < 0));
     }
 
-    // Converts a minute into a timer estimate
+    // Converts a minute into a timer estimate given:
+    // - A estimate in minutes
+    // - The time at which an estimate is fetched
     // Dampening factor is smaller for smaller intervals as the train will be more likely
     // to leave earlier
     public static int getTimerDuration(String min, long timeInSeconds) {
         int minAsInt = Integer.valueOf(min);
         return minAsInt * 60 * ((minAsInt > 5) ? 95 : 90) / 100
             - ((int) ((System.currentTimeMillis() / 1000) - timeInSeconds));
+    }
+
+    public static List<FlattenedEstimate> flattenEstimates(EtdStation[] etdStations,
+                                                           UserBartData[] associatedData,
+                                                           long[] timeOfResponse,
+                                                           boolean[] successArr,
+                                                           int size) {
+        List<FlattenedEstimate> flattenedEstimates = Lists.newArrayList();
+        for (int i = 0; i < size; ++i) {
+            if (successArr[i]) {
+                if (!etdStations[i].getEtds().isEmpty()) {
+                    for (Etd etd : etdStations[i].getEtds()) {
+                        flattenedEstimates.add(
+                            new FlattenedEstimate(etdStations[i], etd, timeOfResponse[i], null));
+                        for (Estimate estimate : etd.getEstimates()) {
+                            flattenedEstimates.add(
+                                new FlattenedEstimate(
+                                    etdStations[i], etd, timeOfResponse[i], estimate));
+                        }
+                    }
+                } else {
+                    flattenedEstimates.add(new FlattenedEstimate(
+                        etdStations[i], null, timeOfResponse[i], null));
+                }
+            } else {
+                flattenedEstimates.add(new FlattenedEstimate(associatedData[i]));
+            }
+        }
+        return flattenedEstimates;
     }
 
     public static Snackbar showSnackbar(Context context, View parent, int colorId, int stringId) {

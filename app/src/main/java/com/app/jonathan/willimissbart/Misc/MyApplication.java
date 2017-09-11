@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
+import com.joanzapata.iconify.fonts.IoniconsModule;
 
 
 public class MyApplication extends Application {
@@ -13,7 +14,8 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Iconify.with(new FontAwesomeModule());
+        Iconify.with(new FontAwesomeModule()) // TODO: remove font awesome
+            .with(new IoniconsModule());
         context = this;
     }
 

@@ -28,14 +28,14 @@ public class EstimateViewHolder {
     private final View view;
     private String estimateMins;
 
-    private long timeInSeconds;
+    private long respTimeInSeconds;
 
     public EstimateViewHolder(View v, Context context, Estimate estimate, long timeInSeconds) {
         ButterKnife.bind(this, v);
         this.context = context;
         this.view = v;
         this.estimateMins = estimate.getMinutes();
-        this.timeInSeconds = timeInSeconds;
+        this.respTimeInSeconds = timeInSeconds;
         colorView.setBackground(getDrawable(estimate.getHexcolor()));
         estimateTV.setText(getEstimateText(estimateMins));
     }
@@ -43,15 +43,15 @@ public class EstimateViewHolder {
     @OnClick(R.id.estimate_parent)
     public void promptForNotification() {
         if (!estimateMins.equals("Leaving")) {
-            int estimate = Utils.getTimerDuration(estimateMins, timeInSeconds);
-            if (estimate < 30) {
+            int estimate = Utils.getTimerDuration(estimateMins, respTimeInSeconds);
+            if (estimate < 45) {
                 Toast.makeText(context, R.string.too_late, Toast.LENGTH_SHORT).show();
                 return;
             }
 
             // Passed in estimate already factors in current time!
             parent.setEnabled(false);
-            new NotificationAlertDialog(this, estimate).show();
+            // new NotificationAlertDialog(this, estimateMins, respTimeInSeconds).show();
         } else {
             Toast.makeText(context, R.string.r_u_stupid, Toast.LENGTH_SHORT).show();
         }
@@ -74,8 +74,7 @@ public class EstimateViewHolder {
 
     public String getTitle() {
         ViewGroup parent = (ViewGroup) view.getParent();
-        return parent.getTag(R.string.origin) + " to " +
-            parent.getTag(R.string.destination) + " leaving in:";
+        return parent.getTag(R.string.origin) + " to " + parent.getTag(R.string.destination) + " leaving in:";
     }
 
     public void enable() {

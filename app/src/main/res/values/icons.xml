@@ -6,6 +6,8 @@
     <string name="fa_times">{fa-times}</string>
     <string name="fa_caret_up">{fa-caret-up}</string>
     <string name="fa_caret_down">{fa-caret-down}</string>
+    <string name="ion_android_subway">{ion-android-subway}</string>
+    <string name="ion_android_alarm_clock">{ion-android-alarm-clock}</string>
 
     <string name="help">Need help?    {fa-info-circle}</string>
 </resources>

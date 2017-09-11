@@ -4,8 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/departures_parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/activity_vertical_margin">
+    android:layout_height="match_parent">
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -25,34 +24,32 @@
         android:textSize="28sp"
         android:visibility="gone"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/main_swl"
+    <TextView
+        android:id="@+id/departures_as_of"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_vertical_margin"
+        android:textColor="@color/black"
+        android:textSize="22sp"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/main_swl"
+        android:layout_below="@+id/departures_as_of"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone">
 
-        <android.support.v4.widget.NestedScrollView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/main_feed_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true">
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/main_feed_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/departures_as_of"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:textColor="@color/black"
-                    android:textSize="22sp"/>
-
-            </LinearLayout>
-
-        </android.support.v4.widget.NestedScrollView>
+        </android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

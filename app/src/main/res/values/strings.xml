@@ -4,6 +4,8 @@
     <string name="home">Home</string>
 
     <!-- Notification -->
+    <string name="notif_blurb_format">This train from %1$s to %2$s is leaving in around %3$s</string>
+    <string name="notif_title_format">%1$s to %2$s leaving in:</string>
     <string name="train_leaving">Your train is leaving!</string>
     <string name="close">Tap here to close</string>
     <string name="imageview_desc">App icon</string>
@@ -29,6 +31,8 @@
     <string name="r_u_stupid">You don\'t need a timer for a leaving train.</string>
     <string name="starting_timer">Timer started.</string>
     <string name="too_late">The train probably left already.</string>
+    <string name="departures_title_format">From %1$s to %2$s</string>
+    <string name="departures_departure_format">Train from %1$s to %2$s %3$s</string>
     <string name="tip_1">Did you know? If you press on a estimate, you can set a timer to notify you when that train leaves!</string>
     <string name="tip_2">Unsure what station an abbreviation stands for? Press on it!</string>
 

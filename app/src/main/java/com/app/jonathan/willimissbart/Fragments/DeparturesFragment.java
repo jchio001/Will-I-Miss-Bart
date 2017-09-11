@@ -4,20 +4,21 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
+import com.app.jonathan.willimissbart.API.Models.DeparturesFeedModels.FlattenedEstimate;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdFailure;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdRespBundle;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdStation;
-import com.app.jonathan.willimissbart.Activities.AppActivities.MainActivity;
+import com.app.jonathan.willimissbart.Adapters.DeparturesAdapter;
 import com.app.jonathan.willimissbart.Enums.RefreshStateEnum;
 import com.app.jonathan.willimissbart.Listeners.SwipeRefresh.EtdRefreshListener;
 import com.app.jonathan.willimissbart.Misc.SharedEtdDataBundle;
@@ -45,12 +46,13 @@ import butterknife.ButterKnife;
 public class DeparturesFragment extends Fragment {
     @Bind(R.id.departures_parent) RelativeLayout parent;
     @Bind(R.id.main_swl) SwipeRefreshLayout mainSWL;
-    @Bind(R.id.main_feed_layout) LinearLayout mainFeedLayout;
+    @Bind(R.id.main_feed_layout) RecyclerView mainFeedLayout;
     @Bind(R.id.progressBar) ProgressBar progressBar;
     @Bind(R.id.no_etds_to_display) TextView nothingToDisplayTV;
     @Bind(R.id.departures_as_of) TextView departuresAsOf;
 
     private EtdRefreshListener etdRefreshListener;
+    private DeparturesAdapter departuresAdapter;
 
     private List<UserBartData> userBartData = Lists.newArrayList();
     private List<UserBartData> filteredUserBartData = Lists.newArrayList();
@@ -81,9 +83,15 @@ public class DeparturesFragment extends Fragment {
         EventBus.getDefault().register(this);
 
         mainSWL.setEnabled(false);
+        departuresAdapter = new DeparturesAdapter(
+            Lists.<FlattenedEstimate>newArrayList(), getActivity());
         etdRefreshListener = new EtdRefreshListener(mainSWL)
             .setUserBartData(filteredUserBartData)
             .setSharedEtdDataBundle(sharedEtdDataBundle);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(
+            getActivity(), LinearLayoutManager.VERTICAL, false);
+        mainFeedLayout.setLayoutManager(layoutManager);
+        mainFeedLayout.setAdapter(departuresAdapter);
         mainSWL.setOnRefreshListener(etdRefreshListener);
         return v;
     }
@@ -189,33 +197,11 @@ public class DeparturesFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
         mainSWL.setRefreshing(false);
         mainFeedLayout.setVisibility(View.INVISIBLE);
-        int curChildCnt = mainFeedLayout.getChildCount();
 
-        for (int i = 0; i < curChildCnt - 1; ++i) {
-            mainFeedLayout.removeViewAt(1);
-        }
         setUpRetrievalTimeText();
-
-        mainElemViewHolders.clear();
-        LayoutInflater vi = LayoutInflater.from(getActivity());
-
-        for (int i = 0; i < filteredUserBartData.size(); ++i) {
-            EtdStation s = stations[i];
-            View mainBartDataElem = vi.inflate(R.layout.main_departure_layout, null);
-            if (s != null) {
-                DeparturesViewHolder viewHolder = new DeparturesViewHolder(
-                    mainBartDataElem,
-                    getActivity(),
-                    s,
-                    associatedData[i],
-                    successArr[i],
-                    timeOfResponse[i]);
-                mainElemViewHolders.add(viewHolder);
-                mainFeedLayout.addView(mainBartDataElem);
-            } else {
-                Log.e("DeparturesFragment", "EtdStation is null");
-            }
-        }
+        List<FlattenedEstimate> flattenedEstimates = Utils.flattenEstimates(
+            stations, associatedData, timeOfResponse, successArr, filteredUserBartData.size());
+        departuresAdapter.refresh(flattenedEstimates);
 
         mainSWL.setVisibility(View.VISIBLE);
         mainFeedLayout.setVisibility(View.VISIBLE);

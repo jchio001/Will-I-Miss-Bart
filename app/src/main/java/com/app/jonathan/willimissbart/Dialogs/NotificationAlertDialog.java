@@ -12,12 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.jonathan.willimissbart.API.Models.DeparturesFeedModels.FlattenedEstimate;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.Service.TimerService;
 import com.app.jonathan.willimissbart.ViewHolders.DigitViewHolder;
-import com.app.jonathan.willimissbart.ViewHolders.EstimateViewHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,24 +31,23 @@ public class NotificationAlertDialog extends AlertDialog {
     @Bind(R.id.ones_digit) LinearLayout onesDigit;
     @Bind(R.id.error_tv) TextView errorTV;
 
-    private EstimateViewHolder estimateViewHolder;
     private AlertDialog alertDialog;
     private DigitViewHolder tensDigitViewHolder;
     private DigitViewHolder onesDigitViewHolder;
+    private FlattenedEstimate flattenedEstimate;
     private String title;
 
-    private int baseAlarmDuration;
-
-    public NotificationAlertDialog(final EstimateViewHolder estimateViewHolder,
-                                   int baseAlarmDuration) {
-        super(estimateViewHolder.getContext());
-        this.estimateViewHolder = estimateViewHolder;
-        this.title = estimateViewHolder.getTitle();
-        this.baseAlarmDuration = baseAlarmDuration;
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_timer_interval, null);
+    public NotificationAlertDialog(Context context, FlattenedEstimate flattenedEstimate) {
+        super(context);
+        this.flattenedEstimate = flattenedEstimate;
+        this.title = context.getString(
+            R.string.notif_title_format,
+            flattenedEstimate.getOriginAbbr(),
+            flattenedEstimate.getDestAbbr());
+        View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_set_timer_layout, null);
         ButterKnife.bind(this, v);
-        infoBlurb.setText(getContext().getString(R.string.info_blurb,
-            Utils.secondsToString(baseAlarmDuration)));
+
+        infoBlurb.setText(getBlurb());
         tensDigitViewHolder = new DigitViewHolder(tensDigit, errorTV, 6);
         onesDigitViewHolder = new DigitViewHolder(onesDigit, errorTV, 10);
         alertDialog = new Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogTheme))
@@ -56,13 +55,12 @@ public class NotificationAlertDialog extends AlertDialog {
             .setNegativeButton("CANCEL", new OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    estimateViewHolder.enable();
                 }
             })
             .setOnCancelListener(new OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
-                   estimateViewHolder.enable();
+                   //estimateViewHolder.enable();
                 }
             })
             .setTitle(R.string.timer_notif_title)
@@ -86,11 +84,12 @@ public class NotificationAlertDialog extends AlertDialog {
                 positive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int minutes = getMinutes();
-                        if (baseAlarmDuration - minutes * 60 >= 45) {
-                            showNotification(minutes);
+                        int estimateInSeconds = flattenedEstimate.getRealTimeEstimate() -
+                            getMinutes() * 60;
+                        if (estimateInSeconds >= 45) {
+                            showNotification(estimateInSeconds);
                             alertDialog.dismiss();
-                            estimateViewHolder.enable();
+                            //estimateViewHolder.enable();
                         } else {
                             errorTV.setVisibility(View.VISIBLE);
                         }
@@ -104,11 +103,19 @@ public class NotificationAlertDialog extends AlertDialog {
         return tensDigitViewHolder.getValue() * 10 + onesDigitViewHolder.getValue();
     }
 
-    private void showNotification(int minutesEarly) {
+    private String getBlurb() {
+        return getContext().getString(
+            R.string.notif_blurb_format,
+            flattenedEstimate.getOriginAbbr(),
+            flattenedEstimate.getDestAbbr(),
+            Utils.secondsToFormattedString(flattenedEstimate.getRealTimeEstimate()));
+    }
+
+    private void showNotification(int estimateInSeconds) {
         Intent intent = new Intent(getContext(), TimerService.class);
         intent.setAction(Constants.UPDATE);
         intent.putExtra(Constants.TITLE, title);
-        intent.putExtra(Constants.SECONDS, baseAlarmDuration - minutesEarly * 60);
+        intent.putExtra(Constants.SECONDS, estimateInSeconds);
         getContext().startService(intent);
         Toast.makeText(getContext(), R.string.starting_timer, Toast.LENGTH_SHORT).show();
     }
