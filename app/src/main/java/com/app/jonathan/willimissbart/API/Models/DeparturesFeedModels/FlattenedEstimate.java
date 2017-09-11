@@ -19,6 +19,7 @@ public class FlattenedEstimate {
     private Estimate estimate;
 
     private long respTime;
+    private boolean successful = true;
 
     public FlattenedEstimate(EtdStation etdStation, Etd etd, long respTime, Estimate estimate) {
         this.originAbbr = etdStation.getAbbr();
@@ -43,7 +44,8 @@ public class FlattenedEstimate {
     public FlattenedEstimate(UserBartData userBartData) {
         this.originAbbr = userBartData.getAbbr();
         this.originName = userBartData.getStation();
-        this.title = "Failure to get departures for " + this.originAbbr;
+        this.title = "Failed to get departures for " + this.originAbbr;
+        this.successful = false;
     }
 
     private String getEstimateText(String minutes) {
@@ -66,16 +68,16 @@ public class FlattenedEstimate {
         return destName;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     public Estimate getEstimate() {
         return estimate;
     }
 
-    public long getRespTime() {
-        return respTime;
-    }
-
-    public String getTitle() {
-        return title;
+    public boolean isSuccessful() {
+        return successful;
     }
 
     public String getHexColor() {

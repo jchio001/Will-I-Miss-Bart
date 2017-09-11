@@ -40,7 +40,7 @@ public class EtdRefreshListener extends BaseRefreshListener {
             //prevents the user from spamming refreshOnNewData
             long now = System.currentTimeMillis() / 1000;
             if (now - lastRefreshTime < 45) {
-                Log.i("EtfRefreshListener", "Stop spamming idiot");
+                Log.i("EtdRefreshListener", "Stop spamming idiot");
                 refreshState = RefreshStateEnum.INACTIVE;
                 swipeRefreshLayout.setRefreshing(false);
                 return;

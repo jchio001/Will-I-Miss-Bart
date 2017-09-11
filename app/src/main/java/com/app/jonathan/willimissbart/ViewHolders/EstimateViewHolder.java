@@ -19,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+@Deprecated
 public class EstimateViewHolder {
     @Bind(R.id.estimate_parent) LinearLayout parent;
     @Bind(R.id.color) View colorView;

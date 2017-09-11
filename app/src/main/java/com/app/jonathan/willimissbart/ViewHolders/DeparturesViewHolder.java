@@ -19,6 +19,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+// No longer being used; now using BartDataElemViewHolder
+@Deprecated
 public class DeparturesViewHolder {
     @Bind(R.id.parent_station_abbr) TextView parentAbbr;
     @Bind(R.id.main_bart_data_layout) LinearLayout mainBartDataLayout;

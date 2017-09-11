@@ -86,8 +86,8 @@ public class DeparturesFragment extends Fragment {
         departuresAdapter = new DeparturesAdapter(
             Lists.<FlattenedEstimate>newArrayList(), getActivity());
         etdRefreshListener = new EtdRefreshListener(mainSWL)
-            .setUserBartData(filteredUserBartData)
             .setSharedEtdDataBundle(sharedEtdDataBundle);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(
             getActivity(), LinearLayoutManager.VERTICAL, false);
         mainFeedLayout.setLayoutManager(layoutManager);
@@ -102,6 +102,7 @@ public class DeparturesFragment extends Fragment {
 
         Bundle bundle = getArguments();
         deserializeAndFilter(Utils.getUserBartData(bundle, getActivity().getApplicationContext()));
+        etdRefreshListener.setUserBartData(filteredUserBartData);
 
         if (!filteredUserBartData.isEmpty()) {
             Utils.fetchEtds(filteredUserBartData);

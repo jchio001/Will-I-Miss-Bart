@@ -19,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnLongClick;
 
+@Deprecated
 public class EtdsViewHolder {
     @Bind(R.id.etd_layout) LinearLayout etdLayout;
     @Bind(R.id.station_abbr) TextView stationAbbrTv;
