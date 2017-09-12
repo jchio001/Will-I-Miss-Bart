@@ -83,8 +83,8 @@ public class DeparturesFragment extends Fragment {
         EventBus.getDefault().register(this);
 
         mainSWL.setEnabled(false);
-        departuresAdapter = new DeparturesAdapter(
-            Lists.<FlattenedEstimate>newArrayList(), getActivity());
+        departuresAdapter = new DeparturesAdapter(Lists.<FlattenedEstimate>newArrayList());
+        departuresAdapter.setHasStableIds(true);
         etdRefreshListener = new EtdRefreshListener(mainSWL)
             .setSharedEtdDataBundle(sharedEtdDataBundle);
 

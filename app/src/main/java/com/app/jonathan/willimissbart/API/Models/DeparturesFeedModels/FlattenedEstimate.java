@@ -90,7 +90,8 @@ public class FlattenedEstimate {
 
     // Returns # of seconds before the train leaves;
     public int getRealTimeEstimate() {
-        return Utils.getTimerDuration(estimate.getMinutes(), respTime);
+        return getMinutes().equals("Leaving") ? 0 :
+            Utils.getTimerDuration(estimate.getMinutes(), respTime);
     }
 
     public String getFormattedRealTimeEstimate() {

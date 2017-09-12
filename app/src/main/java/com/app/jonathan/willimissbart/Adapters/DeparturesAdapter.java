@@ -14,11 +14,9 @@ import java.util.List;
 
 public class DeparturesAdapter extends Adapter<DeparturesCardViewHolder> {
     private List<FlattenedEstimate> estimates;
-    private Context context;
 
-    public DeparturesAdapter(List<FlattenedEstimate> estimates, Context context) {
+    public DeparturesAdapter(List<FlattenedEstimate> estimates) {
         this.estimates = estimates;
-        this.context = context;
     }
 
     @Override
@@ -33,9 +31,9 @@ public class DeparturesAdapter extends Adapter<DeparturesCardViewHolder> {
 
     @Override
     public DeparturesCardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context)
+        View v = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.departures_card_layout, parent, false);
-        return new DeparturesCardViewHolder(v, context);
+        return new DeparturesCardViewHolder(v, parent.getContext());
     }
 
     @Override
