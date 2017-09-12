@@ -74,7 +74,8 @@ public class DeparturesCardViewHolder extends ViewHolder {
             }
 
             // Passed in estimate already factors in current time!
-            new NotificationAlertDialog(context, flattenedEstimate).show();
+            setAlarm.setEnabled(false);
+            new NotificationAlertDialog(context, setAlarm, flattenedEstimate).show();
         } else {
             Toast.makeText(context, R.string.r_u_stupid, Toast.LENGTH_SHORT).show();
         }

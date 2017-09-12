@@ -18,6 +18,7 @@ import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.Service.TimerService;
 import com.app.jonathan.willimissbart.ViewHolders.DigitViewHolder;
+import com.joanzapata.iconify.widget.IconTextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,14 +32,18 @@ public class NotificationAlertDialog extends AlertDialog {
     @Bind(R.id.ones_digit) LinearLayout onesDigit;
     @Bind(R.id.error_tv) TextView errorTV;
 
+    private IconTextView alarmIcon;
     private AlertDialog alertDialog;
     private DigitViewHolder tensDigitViewHolder;
     private DigitViewHolder onesDigitViewHolder;
     private FlattenedEstimate flattenedEstimate;
     private String title;
 
-    public NotificationAlertDialog(Context context, FlattenedEstimate flattenedEstimate) {
+    public NotificationAlertDialog(Context context,
+                                   final IconTextView alarmIcon,
+                                   FlattenedEstimate flattenedEstimate) {
         super(context);
+        this.alarmIcon = alarmIcon;
         this.flattenedEstimate = flattenedEstimate;
         this.title = context.getString(
             R.string.notif_title_format,
@@ -55,12 +60,13 @@ public class NotificationAlertDialog extends AlertDialog {
             .setNegativeButton("CANCEL", new OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    alarmIcon.setEnabled(true);
                 }
             })
             .setOnCancelListener(new OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
-                   //estimateViewHolder.enable();
+                   alarmIcon.setEnabled(true);
                 }
             })
             .setTitle(R.string.timer_notif_title)

@@ -232,6 +232,7 @@ public class DeparturesFragment extends Fragment {
                     etdRefreshListener.forceRefresh();
                 } else {
                     // Lazy loading (request to refresh is affected by the cooldown)
+                    mainSWL.setRefreshing(true);
                     etdRefreshListener.onRefresh();
                 }
             } else {
