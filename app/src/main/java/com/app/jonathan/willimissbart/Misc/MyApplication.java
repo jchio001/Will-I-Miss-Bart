@@ -14,8 +14,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Iconify.with(new FontAwesomeModule()) // TODO: remove font awesome
-            .with(new IoniconsModule());
+        Iconify.with(new IoniconsModule());
         context = this;
     }
 

@@ -10,7 +10,7 @@
         android:id="@+id/increment"
         style="@style/NotificationArrowTheme"
         android:paddingTop="2dp"
-        android:text="@string/fa_caret_up"/>
+        android:text="@string/ion_arrow_up_b"/>
 
     <TextView
         android:id="@+id/digit"
@@ -25,6 +25,6 @@
         android:id="@+id/decrement"
         style="@style/NotificationArrowTheme"
         android:paddingBottom="2dp"
-        android:text="@string/fa_caret_down"/>
+        android:text="@string/ion_arrow_down_b"/>
 
 </LinearLayout>

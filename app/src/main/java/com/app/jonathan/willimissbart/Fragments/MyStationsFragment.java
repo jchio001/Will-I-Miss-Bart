@@ -30,6 +30,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.fonts.IoniconsIcons;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -63,7 +64,7 @@ public class MyStationsFragment extends Fragment
         Log.i("MyStationsFragment", "OnCreateView");
         View v = inflater.inflate(R.layout.fragment_my_stations, container, false);
         ButterKnife.bind(this, v);
-        add.setImageDrawable(new IconDrawable(getActivity(), FontAwesomeIcons.fa_plus)
+        add.setImageDrawable(new IconDrawable(getActivity(), IoniconsIcons.ion_plus_round)
             .colorRes(R.color.white));
 
         vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

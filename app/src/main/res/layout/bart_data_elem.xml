@@ -14,7 +14,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:padding="4dp"
-        android:text="@string/fa_times"
+        android:text="@string/ion_close_round"
         android:textColor="@color/white"
         android:textSize="22sp"/>
 
