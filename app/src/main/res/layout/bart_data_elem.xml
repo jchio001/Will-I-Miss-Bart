@@ -16,7 +16,7 @@
         android:padding="4dp"
         android:text="@string/ion_close_round"
         android:textColor="@color/white"
-        android:textSize="22sp"/>
+        android:textSize="18sp"/>
 
     <Spinner
         style="@style/OnboardingSpinner"

@@ -1,5 +1,6 @@
 package com.app.jonathan.willimissbart.API;
 
+import com.app.jonathan.willimissbart.API.Callbacks.BsaCallback;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -26,7 +27,7 @@ public class RetrofitClient {
         Gson gson = new GsonBuilder().serializeNulls().create();
 
         Dispatcher dispatcher = new Dispatcher();
-        dispatcher.setMaxRequests(5);
+        dispatcher.setMaxRequests(6);
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -49,5 +50,12 @@ public class RetrofitClient {
 
     public MatchingService getMatchingService() {
         return matchingService;
+    }
+
+    public static void getBsas() {
+        RetrofitClient.getInstance()
+            .getMatchingService()
+            .getBsa("bsa", APIConstants.API_KEY, 'y')
+            .enqueue(new BsaCallback());
     }
 }

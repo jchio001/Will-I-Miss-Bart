@@ -11,20 +11,16 @@ import com.app.jonathan.willimissbart.R;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+
 public class InfoPopUpWindow extends PopupWindow {
     public InfoPopUpWindow(Context context) {
         super(LayoutInflater.from(context).inflate(R.layout.pop_up_window_info, null),
-                800, WindowManager.LayoutParams.WRAP_CONTENT);
+                800, WRAP_CONTENT);
         setBackgroundDrawable(
                 ContextCompat.getDrawable(context, R.drawable.background_pop_up_window));
         ButterKnife.bind(this, getContentView());
         setFocusable(true);
-    }
-
-    @Override
-    public void dismiss() {
-        super.dismiss();
-        ButterKnife.unbind(this);
     }
 
     @OnClick(R.id.cancel)

@@ -3,38 +3,54 @@ package com.app.jonathan.willimissbart.Activities.AppActivities;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.app.jonathan.willimissbart.API.Models.BSAModels.Bsa;
+import com.app.jonathan.willimissbart.API.Models.BSAModels.BsaResp;
+import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.ViewPagerAdapter;
-import com.app.jonathan.willimissbart.Fragments.BsaFragment;
 import com.app.jonathan.willimissbart.Fragments.DeparturesFragment;
 import com.app.jonathan.willimissbart.Fragments.MyStationsFragment;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
+import com.app.jonathan.willimissbart.PopUpWindows.NotificationPopUpWindow;
 import com.app.jonathan.willimissbart.R;
+import com.google.common.collect.Lists;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+    @Bind(R.id.drawer_layout) CoordinatorLayout parent;
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.tabs) TabLayout tabs;
     @Bind(R.id.view_pager) ViewPager viewPager;
 
+    private View notifIcon;
+    private View redCircle;
+
     private DeparturesFragment departuresFragment = new DeparturesFragment();
-    private BsaFragment bsaFragment = new BsaFragment();
     private MyStationsFragment myStationsFragment = new MyStationsFragment();
     private Handler handler = new Handler();
+    private List<Bsa> bsas = Lists.newArrayList();
 
     protected final Context context = this;
 
@@ -43,15 +59,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         setSupportActionBar(toolbar);
+
         setOnPageListener();
 
         Bundle bundle = getIntent().getExtras();
         Utils.loadStations(
-                SPSingleton.getInstance(getApplicationContext()).getPersistedStations());
+            SPSingleton.getInstance(getApplicationContext()).getPersistedStations());
 
         setUpViewPager(Utils.getUserBartData(bundle, getApplicationContext()));
         tabs.setupWithViewPager(viewPager);
+        RetrofitClient.getBsas();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -61,21 +86,29 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Don't need a menu as of now, so this does nothing
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main, menu);
+        setUpNotifIcon(menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressWarnings("unchecked")
+    @Subscribe
+    public void onBsaResponse(BsaResp bsaResp) {
+        if (bsaResp.getRoot().getBsaList().size() > 1 ||
+            !bsaResp.getRoot().getBsaList().get(0).getStation().isEmpty()) {
+            redCircle.setVisibility(View.VISIBLE);
+        }
+
+        bsas = bsaResp.getRoot().getBsaList();
+    }
+
+    // TODO: can butterknife this
     private void setOnPageListener() {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             private int lastPage = 0;
@@ -108,22 +141,40 @@ public class MainActivity extends AppCompatActivity {
     private void setUpViewPager(String serializedUserData) {
         System.out.println(serializedUserData);
         ArrayList<String> titles = new ArrayList<String>(Arrays.asList(getResources()
-                .getStringArray(R.array.tab_headers)));
+            .getStringArray(R.array.tab_headers)));
 
         ArrayList<Fragment> fragments = new ArrayList<>();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.USER_DATA, serializedUserData);
         departuresFragment.setArguments(bundle);
         fragments.add(departuresFragment);
-        fragments.add(bsaFragment);
         myStationsFragment.setArguments(bundle);
         fragments.add(myStationsFragment);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager())
-                .setTitles(titles)
-                .setFragments(fragments);
+            .setTitles(titles)
+            .setFragments(fragments);
 
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
+    }
+
+    private void setUpNotifIcon(Menu menu) {
+        MenuItem notifItem = menu.findItem(R.id.notifications);
+        notifItem.setActionView(R.layout.layout_notif);
+        notifIcon = MenuItemCompat.getActionView(notifItem);
+        notifIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int[] pos = new int[2];
+                notifIcon.getLocationOnScreen(pos);
+                NotificationPopUpWindow popUpWindow =
+                    new NotificationPopUpWindow(v.getContext(), bsas);
+                redCircle.setVisibility(View.INVISIBLE);
+                popUpWindow.showAtLocation(parent, Gravity.NO_GRAVITY,
+                    pos[0] - notifIcon.getWidth(), pos[1] + notifIcon.getHeight() + 10);
+            }
+        });
+        redCircle = notifIcon.findViewById(R.id.notif_circle);
     }
 }

@@ -8,7 +8,6 @@
     
     <string-array name="tab_headers">
         <item>Departures</item>
-        <item>BSA</item>
         <item>My Stations</item>
     </string-array>
 </resources>
