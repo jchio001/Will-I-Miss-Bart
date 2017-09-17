@@ -32,12 +32,6 @@ public class StationsSingleton {
     }
 
     public void setStationElems(List<Station> stationElems) {
-        //prevents redundant adding of "Select a station" dud elements
-        if (stationElems.size() > 0 &&
-                !stationElems.get(0).getAbbr().equals("Select a station")) {
-            this.stationElems.add(new Station().setAbbr("Select a station"));
-        }
-
         this.stationElems.addAll(stationElems);
     }
 }

@@ -9,7 +9,7 @@ public class Constants {
 
     // ANIMATION DURATION
     public static final int LONG_DURATION = 700;
-    public static final int STANDARD_DURATION = 600;
+    public static final int STANDARD_DURATION = 500;
 
     // INTENT KEY
     public static final String TITLE = "title";

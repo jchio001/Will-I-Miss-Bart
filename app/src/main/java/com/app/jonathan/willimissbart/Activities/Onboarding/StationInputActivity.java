@@ -1,17 +1,14 @@
 package com.app.jonathan.willimissbart.Activities.Onboarding;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.CardView;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,11 +19,8 @@ import com.app.jonathan.willimissbart.API.Callbacks.StationsCallback;
 import com.app.jonathan.willimissbart.API.Models.Generic.FailureEvent;
 import com.app.jonathan.willimissbart.API.Models.StationModels.StationsResp;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
-import com.app.jonathan.willimissbart.Activities.AppActivities.MainActivity;
-import com.app.jonathan.willimissbart.Adapters.SimpleLargeTextListAdapter;
-import com.app.jonathan.willimissbart.Adapters.StringAdapter;
+import com.app.jonathan.willimissbart.Adapters.StationsAdapter;
 import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog;
-import com.app.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.AddDataElemAnimation.HideAddButtonAnimListener;
 import com.app.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.InitialAnimation.HideProgressBarAnimListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
@@ -36,54 +30,44 @@ import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
 import com.app.jonathan.willimissbart.PopUpWindows.InfoPopUpWindow;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.BartDataElemViewHolder;
+import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemClick;
 
 public class StationInputActivity extends AppCompatActivity
         implements DeleteAlertDialog.DeleteDataElemListener {
     @Bind(R.id.activity_station_input) CoordinatorLayout parent;
     @Bind(R.id.info_layout) LinearLayout infoLayout;
-    @Bind(R.id.data_elem_layout) LinearLayout dataElemLayout;
-    @Bind(R.id.bart_data_elem_parent) LinearLayout firstSelectBartLayout;
+    @Bind(R.id.stn_grid) GridView stationGrid;
+    @Bind(R.id.stations_footer) CardView stationsFooter;
     @Bind(R.id.progressBar) ProgressBar progressBar;
-    @Bind(R.id.add_station) Button addStationButton;
-    @Bind(R.id.done) Button doneButton;
     @Bind(R.id.help_tv) TextView helpTextView;
 
-    private SimpleLargeTextListAdapter simpleLargeTextListAdapter;
-    private StringAdapter directionsAdapter;
-    private List<BartDataElemViewHolder> bartDataElemViewHolders;
+    // View modules
+    private StationsFooterViewHolder footer;
 
+    StationsAdapter adapter;
     Point point;
-
-    private int nextIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_input);
         ButterKnife.bind(this);
+        footer = new StationsFooterViewHolder(stationsFooter);
+        footer.done.setEnabled(false);
         EventBus.getDefault().register(this);
-
-        directionsAdapter = new StringAdapter(
-                this, Arrays.asList(getResources().getStringArray(R.array.directions))
-        );
-
-        bartDataElemViewHolders = new ArrayList<>();
-        bartDataElemViewHolders.add(
-                new BartDataElemViewHolder(firstSelectBartLayout, this, this, nextIndex++)
-                        .build(null)
-        );
 
         String stationsJSON =
                 SPSingleton.getInstance(getApplicationContext()).getPersistedStations();
@@ -113,15 +97,16 @@ public class StationInputActivity extends AppCompatActivity
                 loc[1] + helpTextView.getMeasuredHeight() + 10);
     }
 
+    @Deprecated
     @Override
     public void deleteDataElem(int index) {
-        Log.i("StationInputActivity", String.format("Deleting %d", index));
+        /*Log.i("StationInputActivity", String.format("Deleting %d", index));
         for (int i = index + 1; i < bartDataElemViewHolders.size(); ++i) {
             bartDataElemViewHolders.get(i).decrementIndex();
         }
         bartDataElemViewHolders.remove(index);
         dataElemLayout.removeViewAt(index);
-        --nextIndex;
+        --nextIndex;*/
     }
 
     @OnClick(R.id.help_tv)
@@ -130,47 +115,14 @@ public class StationInputActivity extends AppCompatActivity
         info.showAtLocation(parent, Gravity.NO_GRAVITY, point.x, point.y);
     }
 
-    @OnClick(R.id.add_station)
-    public void addDataElem() {
-        addStationButton.setEnabled(false);
-        doneButton.setEnabled(false);
-
-        // stop spamming the button idiot
-        if (bartDataElemViewHolders.size() >= 5) {
-            Utils.showSnackbar(this, parent, R.color.red, R.string.plz_stop);
-            addStationButton.setEnabled(true);
-            doneButton.setEnabled(true);
-            return;
-        }
-
-        LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout newDataElem = (LinearLayout) vi.inflate(R.layout.bart_data_elem, null);
-        newDataElem.setVisibility(View.GONE);
-        bartDataElemViewHolders.add(
-                new BartDataElemViewHolder(newDataElem, this, this, nextIndex)
-                        .build(null)
-        );
-        bartDataElemViewHolders.get(nextIndex)
-                .setBartSpinnerAdapter(simpleLargeTextListAdapter)
-                .setDirectionSpinnerAdapter(directionsAdapter);
-        dataElemLayout.addView(newDataElem, nextIndex);
-        ++nextIndex;
-
-        AlphaAnimation hideAddMoreButton = new AlphaAnimation(1.0f, 0.0f);
-        hideAddMoreButton.setDuration(Constants.STANDARD_DURATION);
-        hideAddMoreButton.setAnimationListener(
-                new HideAddButtonAnimListener()
-                        .setButton(addStationButton)
-                        .setButton2(doneButton)
-                        .setLinearLayout(newDataElem)
-        );
-
-        addStationButton.startAnimation(hideAddMoreButton);
+    @OnItemClick(R.id.stn_grid)
+    public void onItemSelected(AdapterView<?> parent, int position) {
+        adapter.setOriginOrDest(position);
     }
 
-    @OnClick(R.id.done)
+    /*@OnClick(R.id.done)
     public void done() {
-        doneButton.setEnabled(false);
+        *//*doneButton.setEnabled(false);
 
         String serializedUserData = parseAndPersistData(bartDataElemViewHolders);
         if (!serializedUserData.isEmpty()) {
@@ -182,8 +134,8 @@ public class StationInputActivity extends AppCompatActivity
             Utils.showSnackbar(this, parent, R.color.red, R.string.all_invalid_data);
         }
 
-        doneButton.setEnabled(true);
-    }
+        doneButton.setEnabled(true);*//*
+    }*/
 
     @Subscribe
     public void onStationsListEvent(StationsResp stationsResp) {
@@ -201,23 +153,15 @@ public class StationInputActivity extends AppCompatActivity
 
     @SuppressWarnings("unchecked")
     private void setUpActivityLayout() {
-        simpleLargeTextListAdapter = new SimpleLargeTextListAdapter(
-                this, StationsSingleton.getInstance().getStationElems()
-        );
-        bartDataElemViewHolders.get(0)
-                .setBartSpinnerAdapter(simpleLargeTextListAdapter)
-                .setDirectionSpinnerAdapter(directionsAdapter);
-
+        adapter = new StationsAdapter(StationsSingleton.getInstance().getStationElems(), footer);
+        stationGrid.setAdapter(adapter);
         AlphaAnimation hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
         hideProgressBar.setDuration(Constants.LONG_DURATION);
-        hideProgressBar.setAnimationListener(
-                new HideProgressBarAnimListener()
-                        .setProgressBar(progressBar)
-                        .setLinearLayout1(infoLayout)
-                        .setLinearLayout2(firstSelectBartLayout)
-                        .setButton1(addStationButton)
-                        .setButton2(doneButton)
-        );
+        hideProgressBar.setAnimationListener(new HideProgressBarAnimListener()
+            .setProgressBar(progressBar)
+            .setLinearLayout(infoLayout)
+            .setGrid(stationGrid)
+            .setFooter(footer));
         progressBar.startAnimation(hideProgressBar);
     }
 
@@ -225,34 +169,5 @@ public class StationInputActivity extends AppCompatActivity
         SPSingleton.getInstance(getApplicationContext()).persistStations(
                 new Gson().toJson(StationsSingleton.getInstance().getStationElems())
         );
-    }
-
-    private String parseAndPersistData(List<BartDataElemViewHolder> bartDataElemViewHolders) {
-        List<UserBartData> userBartData = new ArrayList<>();
-
-        for (BartDataElemViewHolder bartDataElemViewHolder : bartDataElemViewHolders) {
-            String abbr = bartDataElemViewHolder.getStationAbbr();
-            boolean[] days = bartDataElemViewHolder.getDaysOfWeekOfInterest();
-            if (!abbr.equals("Select a station") && !Utils.noDaysSelected(days)) {
-                userBartData.add(
-                        new UserBartData()
-                                .setStation(bartDataElemViewHolder.getStationName())
-                                .setStationIndex(bartDataElemViewHolder.getStationIndex())
-                                .setAbbr(bartDataElemViewHolder.getStationAbbr())
-                                .setDirection(bartDataElemViewHolder.getDirection())
-                                .setDirectionIndex(bartDataElemViewHolder.getDirectionIndex())
-                                .setDays(days)
-                );
-            }
-        }
-
-        if (!userBartData.isEmpty()) {
-            String serializedUserData = new Gson().toJson(userBartData);
-            SPSingleton.getInstance(getApplicationContext())
-                    .persistUserData(new Gson().toJson(userBartData));
-            return serializedUserData;
-        } else {
-            return "";
-        }
     }
 }

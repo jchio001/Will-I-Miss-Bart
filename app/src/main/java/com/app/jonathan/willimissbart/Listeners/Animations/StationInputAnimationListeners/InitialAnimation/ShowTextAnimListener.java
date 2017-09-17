@@ -4,34 +4,30 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 
 import com.app.jonathan.willimissbart.Misc.Constants;
+import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 
 
 public class ShowTextAnimListener implements Animation.AnimationListener {
-    private LinearLayout linearLayout1;
-    private LinearLayout linearLayout2;
-    private Button button;
-    private Button button2;
+    private LinearLayout linearLayout;
+    private GridView grid;
+    private StationsFooterViewHolder footer;
 
-    public ShowTextAnimListener setLinearLayout1(LinearLayout linearLayout1) {
-        this.linearLayout1 = linearLayout1;
+    public ShowTextAnimListener setLinearLayout(LinearLayout linearLayout) {
+        this.linearLayout = linearLayout;
         return this;
     }
 
-    public ShowTextAnimListener setLinearLayout2(LinearLayout linearLayout2) {
-        this.linearLayout2 = linearLayout2;
+    public ShowTextAnimListener setGrid(GridView grid) {
+        this.grid = grid;
         return this;
     }
 
-    public ShowTextAnimListener setButton(Button button) {
-        this.button = button;
-        return this;
-    }
-
-    public ShowTextAnimListener setButton2(Button button) {
-        this.button2 = button;
+    public ShowTextAnimListener setFooter(StationsFooterViewHolder footer) {
+        this.footer = footer;
         return this;
     }
 
@@ -41,17 +37,12 @@ public class ShowTextAnimListener implements Animation.AnimationListener {
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        linearLayout1.setVisibility(View.VISIBLE);
-
-        AlphaAnimation showFirstDataElem = new AlphaAnimation(0.0f, 1.0f);
-        showFirstDataElem.setDuration(Constants.LONG_DURATION);
-        showFirstDataElem.setAnimationListener(
-                new ShowFirstDataElemAnimListener()
-                        .setLinearLayout(linearLayout2)
-                        .setButton(button)
-                        .setButton2(button2)
-        );
-        linearLayout2.startAnimation(showFirstDataElem);
+        linearLayout.setVisibility(View.VISIBLE);
+        AlphaAnimation showGridAnim = new AlphaAnimation(0.0f, 1.0f);
+        showGridAnim.setDuration(Constants.LONG_DURATION);
+        showGridAnim.setAnimationListener(new ShowGridAnimListener()
+            .setGrid(grid).setFooter(footer));
+        grid.startAnimation(showGridAnim);
     }
 
     @Override

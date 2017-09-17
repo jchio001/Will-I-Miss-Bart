@@ -107,4 +107,17 @@
         <item name="android:layout_marginRight">-9dp</item>
     </style>
 
+    <style name="StationFooterTextBase">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="StationFooterAbbrTheme" parent="StationFooterTextBase">
+        <item name="android:layout_width">110dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 </resources>

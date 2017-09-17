@@ -5,40 +5,36 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.app.jonathan.willimissbart.Misc.Constants;
+import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 
 public class HideProgressBarAnimListener implements Animation.AnimationListener {
     private ProgressBar progressBar;
-    private LinearLayout linearLayout1;
-    private LinearLayout linearLayout2;
-    private Button button1;
-    private Button button2;
+    private LinearLayout linearLayout;
+    private GridView grid;
+    private StationsFooterViewHolder footer;
 
     public HideProgressBarAnimListener setProgressBar(ProgressBar progressBar) {
         this.progressBar = progressBar;
         return this;
     }
 
-    public HideProgressBarAnimListener setLinearLayout1(LinearLayout linearLayout1) {
-        this.linearLayout1 = linearLayout1;
+    public HideProgressBarAnimListener setLinearLayout(LinearLayout linearLayout) {
+        this.linearLayout = linearLayout;
         return this;
     }
 
-    public HideProgressBarAnimListener setLinearLayout2(LinearLayout linearLayout2) {
-        this.linearLayout2 = linearLayout2;
+    public HideProgressBarAnimListener setGrid(GridView grid) {
+        this.grid = grid;
         return this;
     }
 
-    public HideProgressBarAnimListener setButton1(Button button1) {
-        this.button1 = button1;
-        return this;
-    }
-
-    public HideProgressBarAnimListener setButton2(Button button2) {
-        this.button2 = button2;
+    public HideProgressBarAnimListener setFooter(StationsFooterViewHolder footer) {
+        this.footer = footer;
         return this;
     }
 
@@ -53,13 +49,12 @@ public class HideProgressBarAnimListener implements Animation.AnimationListener 
         AlphaAnimation showTextAnim = new AlphaAnimation(0.0f, 1.0f);
         showTextAnim.setDuration(Constants.LONG_DURATION);
         showTextAnim.setAnimationListener(
-                new ShowTextAnimListener()
-                        .setLinearLayout1(linearLayout1)
-                        .setLinearLayout2(linearLayout2)
-                        .setButton(button1)
-                        .setButton2(button2)
+            new ShowTextAnimListener()
+                .setLinearLayout(linearLayout)
+                .setGrid(grid)
+                .setFooter(footer)
         );
-        linearLayout1.startAnimation(showTextAnim);
+        linearLayout.startAnimation(showTextAnim);
     }
 
     @Override

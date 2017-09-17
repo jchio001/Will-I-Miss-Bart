@@ -3,6 +3,12 @@
 
     <string name="home">Home</string>
 
+    <!-- Stations Grid -->
+    <string name="stn_origin">Origin</string>
+    <string name="stn_dest">Dest.</string>
+    <string name="stn_from">From: %s</string>
+    <string name="stn_to">To: %s</string>
+
     <!-- Notification -->
     <string name="notif_blurb_format">This train from %1$s to %2$s is leaving in around %3$s</string>
     <string name="notif_title_format">%1$s to %2$s leaving in:</string>
@@ -10,7 +16,7 @@
     <string name="close">Tap here to close</string>
     <string name="imageview_desc">App icon</string>
 
-    <string name="enter_bart_data">What stations are you interested in tracking? </string>
+    <string name="enter_bart_data">Select an origin station and a destination station</string>
     <string name="another_bart">Track another station</string>
     <string name="plz_stop">I think you\'ve pressed the button1 enough.</string>
     <string name="all_invalid_data">Please check if you\'ve selected a valid name and at least one day of the week for each station.</string>
