@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
     private DeparturesFragment departuresFragment = new DeparturesFragment();
     private MyStationsFragment myStationsFragment = new MyStationsFragment();
-    private Handler handler = new Handler();
     private List<Bsa> bsas = Lists.newArrayList();
 
     protected final Context context = this;
@@ -62,13 +61,9 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
         setSupportActionBar(toolbar);
 
-        setOnPageListener();
+        Utils.loadStations(SPSingleton.getInstance(getApplicationContext()).getPersistedStations());
 
-        Bundle bundle = getIntent().getExtras();
-        Utils.loadStations(
-            SPSingleton.getInstance(getApplicationContext()).getPersistedStations());
-
-        setUpViewPager(Utils.getUserBartData(bundle, getApplicationContext()));
+        setUpViewPager(getIntent().getExtras());
         tabs.setupWithViewPager(viewPager);
         RetrofitClient.getBsas();
     }
@@ -108,9 +103,9 @@ public class MainActivity extends AppCompatActivity {
         bsas = bsaResp.getRoot().getBsaList();
     }
 
-    // TODO: can butterknife this
+    // TODO: probably don't need this anymore
     private void setOnPageListener() {
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        /*viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             private int lastPage = 0;
 
             @Override
@@ -135,20 +130,16 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
 
             }
-        });
+        });*/
     }
 
-    private void setUpViewPager(String serializedUserData) {
-        System.out.println(serializedUserData);
+    private void setUpViewPager(Bundle bundle) {
         ArrayList<String> titles = new ArrayList<String>(Arrays.asList(getResources()
             .getStringArray(R.array.tab_headers)));
 
         ArrayList<Fragment> fragments = new ArrayList<>();
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.USER_DATA, serializedUserData);
         departuresFragment.setArguments(bundle);
         fragments.add(departuresFragment);
-        myStationsFragment.setArguments(bundle);
         fragments.add(myStationsFragment);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager())

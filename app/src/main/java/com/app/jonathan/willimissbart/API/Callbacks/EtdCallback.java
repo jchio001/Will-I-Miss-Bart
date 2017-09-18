@@ -7,7 +7,7 @@ import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdFailure;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdResp;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdRespBundle;
-import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -17,7 +17,7 @@ import retrofit2.Response;
 
 public class EtdCallback implements Callback<EtdResp> {
     public static final String tag = "EtdCallback";
-    private UserBartData data;
+    private UserStationData data;
     private int index;
     private boolean retryAfterFailure = false;
 
@@ -25,11 +25,11 @@ public class EtdCallback implements Callback<EtdResp> {
         return tag;
     }
 
-    public UserBartData getData() {
+    public UserStationData getData() {
         return data;
     }
 
-    public EtdCallback setData(UserBartData data) {
+    public EtdCallback setData(UserStationData data) {
         this.data = data;
         return this;
     }

@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.app.jonathan.willimissbart.API.Models.EtdModels.Etd;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdStation;
-import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class DeparturesViewHolder {
     public DeparturesViewHolder(View v,
                                 Context context,
                                 EtdStation station,
-                                UserBartData data,
+                                UserStationData data,
                                 boolean success,
                                 long timeInSeconds) {
         ButterKnife.bind(this, v);
@@ -47,7 +47,7 @@ public class DeparturesViewHolder {
         setUpEtds(station.getEtds(), data, timeInSeconds);
     }
 
-    private void setUpEtds(List<Etd> etds, UserBartData data, long timeInSeconds) {
+    private void setUpEtds(List<Etd> etds, UserStationData data, long timeInSeconds) {
         LayoutInflater vi = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
 

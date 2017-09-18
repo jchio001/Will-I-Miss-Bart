@@ -5,7 +5,7 @@ import com.app.jonathan.willimissbart.API.Models.EtdModels.Etd;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdStation;
 import com.app.jonathan.willimissbart.Misc.MyApplication;
 import com.app.jonathan.willimissbart.Misc.Utils;
-import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
 
 // Wraps around estimate and gives origin & destination information as well
@@ -41,9 +41,9 @@ public class FlattenedEstimate {
         }
     }
 
-    public FlattenedEstimate(UserBartData userBartData) {
-        this.originAbbr = userBartData.getAbbr();
-        this.originName = userBartData.getStation();
+    public FlattenedEstimate(UserStationData userStationData) {
+        this.originAbbr = userStationData.getAbbr();
+        this.originName = userStationData.getStation();
         this.title = "Failed to get departures for " + this.originAbbr;
         this.successful = false;
     }

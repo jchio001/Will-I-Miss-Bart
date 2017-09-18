@@ -107,7 +107,7 @@
         <item name="android:layout_marginRight">-9dp</item>
     </style>
 
-    <style name="StationFooterTextBase">
+    <style name="BlackTextBase">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
@@ -115,8 +115,15 @@
         <item name="android:textSize">22sp</item>
     </style>
 
-    <style name="StationFooterAbbrTheme" parent="StationFooterTextBase">
+    <style name="AbbrTextTheme" parent="BlackTextBase">
         <item name="android:layout_width">110dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="UserRouteInputTextTheme" parent="BlackTextBase">
+        <item name="android:background">@drawable/black_rectangular_border</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">70dp</item>
         <item name="android:textSize">18sp</item>
     </style>
 

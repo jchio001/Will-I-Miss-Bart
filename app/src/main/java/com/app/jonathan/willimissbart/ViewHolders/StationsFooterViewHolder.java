@@ -1,21 +1,20 @@
 package com.app.jonathan.willimissbart.ViewHolders;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.app.jonathan.willimissbart.Activities.AppActivities.MainActivity;
 import com.app.jonathan.willimissbart.Adapters.StationsAdapter;
 import com.app.jonathan.willimissbart.Misc.Constants;
-import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.R;
-import com.google.gson.Gson;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -55,17 +54,16 @@ public class StationsFooterViewHolder {
 
     @OnClick(R.id.done)
     public void done() {
-        List<UserBartData> userBartData = adapter.getUserBartData();
-        if (userBartData == null) {
+        UserStationData[] userData = adapter.getUserBartData();
+        if (userData == null) {
             return;
         }
 
         Activity context = (Activity) contentView.getContext();
-        String serializedUserData = new Gson().toJson(userBartData);
         SPSingleton.getInstance(context)
-            .persistUserData(new Gson().toJson(userBartData));
+            .persistUserData(userData);
         Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra(Constants.USER_DATA, serializedUserData);
+        intent.putExtra(Constants.USER_DATA, userData);
         contentView.getContext().startActivity(intent);
         context.finish();
     }

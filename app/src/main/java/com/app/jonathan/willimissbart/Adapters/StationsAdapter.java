@@ -6,11 +6,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
-import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.StationsCardViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
-import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -99,30 +98,21 @@ public class StationsAdapter extends BaseAdapter {
             destIndex >= 0 ? stations.get(destIndex).getAbbr() : "");
     }
 
-    public List<UserBartData> getUserBartData() {
+    public UserStationData[] getUserBartData() {
         if (originIndex == -1 || destIndex == -1) {
             return null;
         }
 
-        Station fromStation = stations.get(originIndex);
-        Station toStation = stations.get(destIndex);
-
-        UserBartData fromData = new UserBartData()
-            .setStation(fromStation.getName())
-            .setStationIndex(originIndex)
-            .setAbbr(fromStation.getAbbr())
-            .setDirection("Both")
-            .setDirectionIndex(2)
-            .setDays(new boolean[]{true, true, true, true, true, true, true});
-
-        UserBartData toData = new UserBartData()
-            .setStation(toStation.getName())
-            .setStationIndex(destIndex)
-            .setAbbr(toStation.getAbbr())
-            .setDirection("Both")
-            .setDirectionIndex(2)
-            .setDays(new boolean[]{true, true, true, true, true, true, true});
-
-        return Lists.newArrayList(fromData, toData);
+        Station originStn = stations.get(originIndex);
+        Station destStn = stations.get(destIndex);
+        return new UserStationData[]{
+            new UserStationData()
+                .setStation(originStn.getName())
+                .setAbbr(originStn.getAbbr())
+                .setStationIndex(originIndex),
+            new UserStationData()
+                .setStation(destStn.getName())
+                .setAbbr(destStn.getAbbr())
+                .setStationIndex(destIndex)};
     }
 }

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,11 +22,13 @@ import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdStation;
 import com.app.jonathan.willimissbart.Adapters.DeparturesAdapter;
 import com.app.jonathan.willimissbart.Enums.RefreshStateEnum;
 import com.app.jonathan.willimissbart.Listeners.SwipeRefresh.EtdRefreshListener;
+import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.SharedEtdDataBundle;
 import com.app.jonathan.willimissbart.Misc.Utils;
-import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
+import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.R;
-import com.app.jonathan.willimissbart.ViewHolders.DeparturesViewHolder;
+import com.app.jonathan.willimissbart.ViewHolders.UserRouteFooterViewHolder;
 import com.google.common.collect.Lists;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,7 +36,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -50,18 +52,19 @@ public class DeparturesFragment extends Fragment {
     @Bind(R.id.progressBar) ProgressBar progressBar;
     @Bind(R.id.no_etds_to_display) TextView nothingToDisplayTV;
     @Bind(R.id.departures_as_of) TextView departuresAsOf;
+    @Bind(R.id.footer_wrapper) LinearLayout footerLayout;
+
+    private UserRouteFooterViewHolder footer;
 
     private EtdRefreshListener etdRefreshListener;
     private DeparturesAdapter departuresAdapter;
 
-    private List<UserBartData> userBartData = Lists.newArrayList();
-    private List<UserBartData> filteredUserBartData = Lists.newArrayList();
-    private List<DeparturesViewHolder> mainElemViewHolders = Lists.newArrayList();
+    UserStationData[] userData;
 
     // Data for setting the the feed of ETD's
     private EtdStation[] stationArr = new EtdStation[5];
     // Need the user data to make retry calls. TODO: use this
-    private UserBartData[] associatedData = new UserBartData[5];
+    private UserStationData[] associatedData = new UserStationData[5];
     private boolean[] successArr = new boolean[5]; // keeps track of if API calls are successful
     // keeps track of when each call is received (in epoch seconds)
     // this is so that better timer intervals can be generated
@@ -69,8 +72,6 @@ public class DeparturesFragment extends Fragment {
     DateFormat format = new SimpleDateFormat("h:mm a", Locale.US);
 
     private SharedEtdDataBundle sharedEtdDataBundle = new SharedEtdDataBundle();
-
-    private int day = -1;
 
     @Nullable
     @Override
@@ -80,9 +81,23 @@ public class DeparturesFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_departures, container, false);
         ButterKnife.bind(this, v);
+        if (getArguments() != null) {
+            userData = (UserStationData[]) getArguments().getParcelableArray(Constants.USER_DATA);
+        } else {
+            userData = SPSingleton.getUserData(getActivity());
+        }
+        /*userData = Lists.newArrayList(SPSingleton.getString(getActivity(), Constants.ORIGIN),
+            SPSingleton.getString(getActivity(), Constants.DESTINATION));*/
+        footer = new UserRouteFooterViewHolder(footerLayout, userData);
         EventBus.getDefault().register(this);
 
         mainSWL.setEnabled(false);
+        footerLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)
+            mainSWL.getLayoutParams();
+        params.setMargins(0, 0, 0, footerLayout.getMeasuredHeight());
+        mainSWL.setLayoutParams(params);
+
         departuresAdapter = new DeparturesAdapter(Lists.<FlattenedEstimate>newArrayList());
         departuresAdapter.setHasStableIds(true);
         etdRefreshListener = new EtdRefreshListener(mainSWL)
@@ -99,16 +114,8 @@ public class DeparturesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        Bundle bundle = getArguments();
-        deserializeAndFilter(Utils.getUserBartData(bundle, getActivity().getApplicationContext()));
-        etdRefreshListener.setUserBartData(filteredUserBartData);
-
-        if (!filteredUserBartData.isEmpty()) {
-            Utils.fetchEtds(filteredUserBartData);
-        } else {
-            handleNothingToFetch();
-        }
+        etdRefreshListener.setUserBartData(userData);
+        Utils.fetchEtds(userData);
     }
 
     @Override
@@ -127,7 +134,7 @@ public class DeparturesFragment extends Fragment {
             successArr[etdRespBundle.getIndex()] = true;
             ++sharedEtdDataBundle.stationCntr;
         }
-        if (sharedEtdDataBundle.stationCntr == filteredUserBartData.size()) {
+        if (sharedEtdDataBundle.stationCntr == 2) {
             loadFeed(stationArr);
         }
     }
@@ -146,45 +153,10 @@ public class DeparturesFragment extends Fragment {
                 ++sharedEtdDataBundle.stationCntr;
             }
 
-            if (sharedEtdDataBundle.stationCntr == filteredUserBartData.size()) {
+            if (sharedEtdDataBundle.stationCntr == 2) {
                 loadFeed(stationArr);
             }
         }
-    }
-
-    @Subscribe
-    public void onUpdatedUserData(List<UserBartData> newUserData) {
-        mainSWL.setVisibility(View.VISIBLE);
-        mainSWL.setRefreshing(true);
-        userBartData = newUserData;
-        filteredUserBartData = filterUserBartData(newUserData);
-        nothingToDisplayTV.setVisibility(View.GONE);
-        sharedEtdDataBundle.stationCntr = 0;
-
-        if (!filteredUserBartData.isEmpty()) {
-            Utils.fetchEtds(userBartData);
-        } else {
-            mainSWL.setVisibility(View.INVISIBLE);
-            mainSWL.setRefreshing(false);
-            handleNothingToFetch();
-        }
-    }
-
-    private void deserializeAndFilter(String serializedUserData) {
-        userBartData = Utils.convertToList(serializedUserData);
-        filteredUserBartData = filterUserBartData(userBartData);
-    }
-
-    private List<UserBartData> filterUserBartData(List<UserBartData> userBartData) {
-        day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
-        List<UserBartData> filteredByToday = new ArrayList<>();
-        for (UserBartData data : userBartData) {
-            if (data.getDays()[day]) {
-                filteredByToday.add(data);
-            }
-        }
-
-        return filteredByToday;
     }
 
     private void handleNothingToFetch() {
@@ -201,7 +173,7 @@ public class DeparturesFragment extends Fragment {
 
         setUpRetrievalTimeText();
         List<FlattenedEstimate> flattenedEstimates = Utils.flattenEstimates(
-            stations, associatedData, timeOfResponse, successArr, filteredUserBartData.size());
+            stations, associatedData, timeOfResponse, successArr, 2);
         departuresAdapter.refresh(flattenedEstimates);
 
         mainSWL.setVisibility(View.VISIBLE);
@@ -217,27 +189,5 @@ public class DeparturesFragment extends Fragment {
                 getString(R.string.departures_as_of),
                 format.format(Calendar.getInstance().getTime()))
         );
-    }
-
-    public void refreshOnNewData(List<UserBartData> freshData) {
-        int oldFilteredDataSize = filteredUserBartData.size();
-        if (freshData != null) {
-            userBartData = freshData;
-            filteredUserBartData = filterUserBartData(freshData);
-            etdRefreshListener.setUserBartData(filteredUserBartData);
-            if (filteredUserBartData.size() > 0) {
-                if (oldFilteredDataSize == 0) {
-                    progressBar.setVisibility(View.VISIBLE);
-                    nothingToDisplayTV.setVisibility(View.INVISIBLE);
-                    etdRefreshListener.forceRefresh();
-                } else {
-                    // Lazy loading (request to refresh is affected by the cooldown)
-                    mainSWL.setRefreshing(true);
-                    etdRefreshListener.onRefresh();
-                }
-            } else {
-                handleNothingToFetch();
-            }
-        }
     }
 }

@@ -5,7 +5,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.app.jonathan.willimissbart.Misc.Constants;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
+import com.google.gson.Gson;
+
+import java.util.List;
 
 public class SPSingleton {
     private static SPSingleton instance = null;
@@ -27,21 +32,28 @@ public class SPSingleton {
         return sp;
     }
 
-    public String getUserData() {
-        return sp.getString(Constants.USER_DATA, "");
+    public static UserStationData[] getUserData(Context context) {
+        String userData = getInstance(context).getSp()
+            .getString(Constants.USER_DATA, "");
+        return !userData.isEmpty() ? new Gson().fromJson(userData, UserStationData[].class) : null;
     }
 
     public String getPersistedStations() {
         return sp.getString(Constants.STATION_LIST_KEY, "");
     }
 
-    public void persistUserData(String userData) {
-        sp.edit().putString(Constants.USER_DATA, userData).commit();
+    public static String getString(Context context, String key) {
+        return SPSingleton.getInstance(context).getSp().getString(key, null);
     }
 
+    public void persistUserData(UserStationData[] userData) {
+        sp.edit()
+            .putString(Constants.USER_DATA, new Gson().toJson(userData))
+            .apply();
+    }
 
     public void persistStations(String stationsJsonArr) {
-        sp.edit().putString(Constants.STATION_LIST_KEY, stationsJsonArr).commit();
+        sp.edit()
+            .putString(Constants.STATION_LIST_KEY, stationsJsonArr).apply();
     }
-
 }

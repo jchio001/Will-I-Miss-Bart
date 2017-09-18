@@ -2,13 +2,13 @@ package com.app.jonathan.willimissbart.API.Models.EtdModels;
 
 
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
-import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 
 public class EtdFailure {
     public String tag;
     public int errorCode;
     public boolean retryAfterFailure;
-    public UserBartData data;
+    public UserStationData data;
     public int index;
 
     public EtdFailure(EtdCallback etdCallback, int errorCode) {

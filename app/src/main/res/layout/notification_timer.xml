@@ -18,8 +18,8 @@
 
         <ImageView
             android:contentDescription="@string/imageview_desc"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             android:layout_marginRight="6dp"
             android:src="@mipmap/ic_launcher"/>
 
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="12sp" />
 
     </LinearLayout>
 
@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:textSize="26sp"/>
+        android:textSize="20sp"/>
 
     <TextView
         android:id="@+id/notif_close"
@@ -48,6 +48,6 @@
         android:layout_height="wrap_content"
         android:text="@string/close"
         android:textColor="@color/white"
-        android:textSize="14sp"/>
+        android:textSize="12sp"/>
 
 </LinearLayout>

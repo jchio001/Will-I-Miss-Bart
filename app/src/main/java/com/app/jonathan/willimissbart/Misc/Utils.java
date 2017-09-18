@@ -1,6 +1,6 @@
 package com.app.jonathan.willimissbart.Misc;
 
-
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.media.AudioManager;
@@ -9,6 +9,7 @@ import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
@@ -20,7 +21,8 @@ import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdStation;
 import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Notification.TimerNotificationBuilder;
-import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
 import com.app.jonathan.willimissbart.R;
@@ -38,22 +40,8 @@ import java.util.Set;
 
 // Random utility functions
 public class Utils {
-    public static boolean noDaysSelected(boolean[] days) {
-        for (boolean b : days) {
-            if (b) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public static Character directionToUrlParam(String direction) {
         return direction.equals("Both") ? null : direction.charAt(0);
-    }
-
-    public static String getUserBartData(Bundle b, Context context) {
-        return (b == null) ? SPSingleton.getInstance(context).getUserData() :
-                b.getString(Constants.USER_DATA, "");
     }
 
     public static void loadStations(String stationsJSON) {
@@ -66,66 +54,19 @@ public class Utils {
         }
     }
 
-    public static List<UserBartData> convertToList(String serializedUserData) {
-        if (!serializedUserData.isEmpty()) {
-            Gson gson = new Gson();
-            Type listType = new TypeToken<List<UserBartData>>() {}.getType();
-            return gson.fromJson(serializedUserData, listType);
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
     //usually filtered
-    public static void fetchEtds(List<UserBartData> userBartData) {
-        for (int i = 0; i < userBartData.size(); ++i) {
-            UserBartData data = userBartData.get(i);
+    public static void fetchEtds(UserStationData[] userStationData) {
+        for (int i = 0; i < userStationData.length; ++i) {
+            UserStationData data = userStationData[i];
             RetrofitClient.getInstance()
-                    .getMatchingService()
-                    .getEtd("etd", APIConstants.API_KEY, 'y', data.getAbbr(),
-                            Utils.directionToUrlParam(data.getDirection())
-                    )
-                    .clone()
-                    .enqueue(
-                            new EtdCallback()
-                                    .setData(userBartData.get(i))
-                                    .setIndex(i)
-                    );
+                .getMatchingService()
+                .getEtd("etd", APIConstants.API_KEY, 'y', data.getAbbr(), null)
+                .clone()
+                .enqueue(
+                    new EtdCallback()
+                        .setData(userStationData[i])
+                        .setIndex(i));
         }
-    }
-
-    public static List<UserBartData> filterBadData(List<UserBartData> userData) {
-        Set<String> stationAbbrSet = Sets.newHashSet();
-        List<UserBartData> filteredList = Lists.newArrayList();
-        for (UserBartData dataElem : userData) {
-            if (!dataElem.getAbbr().equals("Select a station")) {
-                if (stationAbbrSet.contains(dataElem.getAbbr())) {
-                    // can't have duplicates
-                    throw new IllegalArgumentException();
-                } else {
-                    stationAbbrSet.add(dataElem.getAbbr());
-                    filteredList.add(dataElem);
-                }
-            }
-        }
-
-        return filteredList;
-    }
-
-    public static boolean didDataChange(List<UserBartData> oldUserData,
-                                        List<UserBartData> newUserData) {
-        if (oldUserData.size() != newUserData.size()) {
-            return true;
-        }
-
-        for (int i = 0; i < oldUserData.size(); ++i) {
-
-            if (!oldUserData.get(i).equals(newUserData.get(i))) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public static String generateTimerText(int seconds) {
@@ -173,7 +114,7 @@ public class Utils {
     }
 
     public static List<FlattenedEstimate> flattenEstimates(EtdStation[] etdStations,
-                                                           UserBartData[] associatedData,
+                                                           UserStationData[] associatedData,
                                                            long[] timeOfResponse,
                                                            boolean[] successArr,
                                                            int size) {
@@ -201,6 +142,15 @@ public class Utils {
         return flattenedEstimates;
     }
 
+    public static void hideKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    // May use this
     public static Snackbar showSnackbar(Context context, View parent, int colorId, int stringId) {
         Snackbar snackbar = Snackbar.make(parent, stringId, Snackbar.LENGTH_LONG);
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, colorId));

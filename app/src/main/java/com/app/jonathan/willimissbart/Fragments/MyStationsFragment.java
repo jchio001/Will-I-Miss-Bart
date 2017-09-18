@@ -10,31 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
-import com.app.jonathan.willimissbart.Activities.AppActivities.MainActivity;
 import com.app.jonathan.willimissbart.Adapters.SimpleLargeTextListAdapter;
 import com.app.jonathan.willimissbart.Adapters.StringAdapter;
 import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog;
 import com.app.jonathan.willimissbart.Enums.StyleEnum;
-import com.app.jonathan.willimissbart.Misc.MyApplication;
 import com.app.jonathan.willimissbart.Misc.Utils;
-import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
-import com.app.jonathan.willimissbart.Persistence.SPSingleton;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.BartDataElemViewHolder;
-import com.app.jonathan.willimissbart.ViewHolders.OptionsElemViewHolder;
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
 import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,7 +37,7 @@ public class MyStationsFragment extends Fragment
     @Bind(R.id.my_stations_parent) LinearLayout parent;
     @Bind(R.id.add) FloatingActionButton add;
 
-    private List<UserBartData> userData = Lists.newArrayList();
+    private List<UserStationData> userData = Lists.newArrayList();
     private List<BartDataElemViewHolder> bartDataElemViewHolders = Lists.newArrayList();
     private LayoutInflater vi;
     private SimpleLargeTextListAdapter<Station> stationsAdapter;
@@ -78,20 +68,9 @@ public class MyStationsFragment extends Fragment
                 .setStyle(StyleEnum.NO_STYLE);
 
         Bundle bundle = getArguments();
-        userData = Utils.convertToList(
-                Utils.getUserBartData(bundle, getActivity().getApplicationContext()));
+        userData = Lists.newArrayList();
         loadFeed(userData);
         return v;
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        List<UserBartData> freshData = extractNewData();
-        if (freshData != null) {
-            SPSingleton.getInstance(MyApplication.getContext()).persistUserData(
-                new Gson().toJson(freshData));
-        }
     }
 
     @Override
@@ -127,8 +106,8 @@ public class MyStationsFragment extends Fragment
         }
     }
 
-    public void loadFeed(List<UserBartData> data) {
-        for (int i = 0; i < data.size(); ++i) {
+    public void loadFeed(List<UserStationData> data) {
+        /*for (int i = 0; i < data.size(); ++i) {
             View bartDataView = vi.inflate(R.layout.bart_data_elem, null);
             bartDataElemViewHolders.add(
                     new BartDataElemViewHolder(bartDataView, getActivity(), this, i)
@@ -138,31 +117,6 @@ public class MyStationsFragment extends Fragment
                             .build(data.get(i))
             );
             parent.addView(bartDataView, i);
-        }
-    }
-
-    //TODO: Check user data to see that they didn't do something stupid
-    public List<UserBartData> extractNewData() {
-        List<UserBartData> newUserData = new ArrayList<>();
-        for (BartDataElemViewHolder viewHolder : bartDataElemViewHolders) {
-            newUserData.add(viewHolder.getDataFromView());
-        }
-
-        try {
-            newUserData = Utils.filterBadData(newUserData);
-        } catch (IllegalArgumentException e) {
-            Toast.makeText(getActivity(), "Error: duplicate station.", Toast.LENGTH_SHORT).show();
-            return null;
-        }
-
-        if (Utils.didDataChange(userData, newUserData)) {
-            userData = newUserData;
-            Toast.makeText(getActivity(), "Changes saved!", Toast.LENGTH_SHORT).show();
-            SPSingleton.getInstance(getActivity()).persistUserData(new Gson().toJson(newUserData));
-            return userData;
-        } else {
-            Log.i("MyStationsFragment", "No changes made.");
-            return null;
-        }
+        }*/
     }
 }

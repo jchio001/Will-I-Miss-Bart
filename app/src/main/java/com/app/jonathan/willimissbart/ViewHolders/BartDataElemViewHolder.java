@@ -15,7 +15,7 @@ import com.app.jonathan.willimissbart.Adapters.StringAdapter;
 import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog;
 import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog.DeleteDataElemListener;
 import com.app.jonathan.willimissbart.Enums.StyleEnum;
-import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
 
 import butterknife.Bind;
@@ -72,7 +72,7 @@ public class BartDataElemViewHolder {
     }
 
     // ghetto builder pattern
-    public BartDataElemViewHolder build(UserBartData data) {
+    public BartDataElemViewHolder build(UserStationData data) {
         colorNotSelected = ContextCompat.getColor(context, android.R.color.transparent);
         if (style != StyleEnum.BART_STYLE) {
             colorSelected = ContextCompat.getColor(context, R.color.lightGrey);
@@ -99,10 +99,7 @@ public class BartDataElemViewHolder {
 
         if (data != null) {
             bartSpinner.setSelection(data.getStationIndex());
-            directionSpinner.setSelection(data.getDirectionIndex());
-            for (int i = 0; i < data.getDays().length; ++i) {
-                dayBoxes[i].setBackgroundColor(data.getDays()[i] ? colorSelected : colorNotSelected);
-            }
+            directionSpinner.setSelection(2);
         } else {
             for (int i = 1; i < dayBoxes.length - 1; ++i) {
                 dayBoxes[i].setBackgroundColor(colorSelected);
@@ -165,17 +162,6 @@ public class BartDataElemViewHolder {
                     ((ColorDrawable) dayBoxes[i].getBackground()).getColor() == colorSelected;
         }
         return daysOfWeek;
-    }
-
-    public UserBartData getDataFromView() {
-        Station selectedStation = (Station) bartSpinner.getSelectedItem();
-        return new UserBartData()
-                .setStation(selectedStation.getName())
-                .setStationIndex(bartSpinner.getSelectedItemPosition())
-                .setAbbr(selectedStation.getAbbr())
-                .setDirection((String) directionSpinner.getSelectedItem())
-                .setDirectionIndex(directionSpinner.getSelectedItemPosition())
-                .setDays(getDaysOfWeekOfInterest());
     }
 
     public void decrementIndex() {

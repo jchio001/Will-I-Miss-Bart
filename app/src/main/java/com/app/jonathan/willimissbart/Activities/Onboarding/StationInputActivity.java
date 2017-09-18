@@ -4,7 +4,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.view.Gravity;
 import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
@@ -24,21 +23,15 @@ import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog;
 import com.app.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.InitialAnimation.HideProgressBarAnimListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
-import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
 import com.app.jonathan.willimissbart.PopUpWindows.InfoPopUpWindow;
 import com.app.jonathan.willimissbart.R;
-import com.app.jonathan.willimissbart.ViewHolders.BartDataElemViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,7 +43,7 @@ public class StationInputActivity extends AppCompatActivity
     @Bind(R.id.activity_station_input) CoordinatorLayout parent;
     @Bind(R.id.info_layout) LinearLayout infoLayout;
     @Bind(R.id.stn_grid) GridView stationGrid;
-    @Bind(R.id.stations_footer) CardView stationsFooter;
+    @Bind(R.id.stations_footer) LinearLayout stationsFooter;
     @Bind(R.id.progressBar) ProgressBar progressBar;
     @Bind(R.id.help_tv) TextView helpTextView;
 
@@ -58,7 +51,7 @@ public class StationInputActivity extends AppCompatActivity
     private StationsFooterViewHolder footer;
 
     StationsAdapter adapter;
-    Point point;
+    Point point; //TODO don't really need this
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

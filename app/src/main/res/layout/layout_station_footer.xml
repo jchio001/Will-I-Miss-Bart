@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/stations_footer"
-    card_view:cardElevation="6dp"
+    android:background="@color/white"
     android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true">
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/shadow" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,24 +24,24 @@
 
         <TextView
             android:id="@+id/origin"
-            style="@style/StationFooterAbbrTheme"
+            style="@style/AbbrTextTheme"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="2dp"/>
 
         <com.joanzapata.iconify.widget.IconTextView
             android:id="@+id/swap"
-            style="@style/StationFooterTextBase"
+            style="@style/BlackTextBase"
             android:layout_toRightOf="@+id/origin"
             android:padding="6dp"
             android:text="@string/ion_arrow_swap"/>
 
         <TextView
             android:id="@+id/dest"
-            style="@style/StationFooterAbbrTheme"
+            style="@style/AbbrTextTheme"
             android:layout_toRightOf="@+id/swap"/>
 
         <Button
-            style="@style/StationFooterTextBase"
+            style="@style/BlackTextBase"
             android:id="@+id/done"
             android:layout_alignParentRight="true"
             android:text="@string/done"
@@ -44,4 +49,4 @@
 
     </RelativeLayout>
 
-</android.support.v7.widget.CardView>
+</LinearLayout>

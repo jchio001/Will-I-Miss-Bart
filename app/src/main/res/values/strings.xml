@@ -16,6 +16,11 @@
     <string name="close">Tap here to close</string>
     <string name="imageview_desc">App icon</string>
 
+    <!-- User route footer -->
+    <string name="leaving_in">"Leaving in: "</string>
+    <string name="include_destination">Include destination</string>
+    <string name="update">Update</string>
+
     <string name="enter_bart_data">Select an origin station and a destination station</string>
     <string name="another_bart">Track another station</string>
     <string name="plz_stop">I think you\'ve pressed the button1 enough.</string>
@@ -32,8 +37,8 @@
     <string name="departures_as_of">Departures as of %s. Swipe up to refresh.</string>
     <string name="no_etds">No etds for this station.</string>
     <string name="failed_to_get_etds">Failed to fetch etds. Press here to try again.</string>
-    <string name="origin">From</string>
-    <string name="destination">To</string>
+    <string name="origin">From\u0020</string>
+    <string name="destination">To\u0020</string>
     <string name="r_u_stupid">You don\'t need a timer for a leaving train.</string>
     <string name="starting_timer">Timer started.</string>
     <string name="too_late">The train probably left already.</string>

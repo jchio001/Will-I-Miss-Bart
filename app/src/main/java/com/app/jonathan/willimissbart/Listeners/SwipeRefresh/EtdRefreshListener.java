@@ -6,13 +6,11 @@ import android.util.Log;
 import com.app.jonathan.willimissbart.Enums.RefreshStateEnum;
 import com.app.jonathan.willimissbart.Misc.SharedEtdDataBundle;
 import com.app.jonathan.willimissbart.Misc.Utils;
-import com.app.jonathan.willimissbart.Persistence.Models.UserBartData;
-
-import java.util.List;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 
 public class EtdRefreshListener extends BaseRefreshListener {
     private SharedEtdDataBundle sharedEtdDataBundle;
-    private List<UserBartData> userBartData;
+    private UserStationData[] userData;
 
     public EtdRefreshListener(SwipeRefreshLayout swipeRefreshLayout) {
         super(swipeRefreshLayout);
@@ -23,8 +21,8 @@ public class EtdRefreshListener extends BaseRefreshListener {
         return this;
     }
 
-    public EtdRefreshListener setUserBartData(List<UserBartData> userBartData) {
-        this.userBartData = userBartData;
+    public EtdRefreshListener setUserBartData(UserStationData[] userData) {
+        this.userData = userData;
         return this;
     }
 
@@ -49,7 +47,7 @@ public class EtdRefreshListener extends BaseRefreshListener {
         }
 
         sharedEtdDataBundle.stationCntr = 0;
-        Utils.fetchEtds(userBartData);
+        Utils.fetchEtds(userData);
     }
 
     // Forcefully makes API calls needed to refresh the feed (ignores the 45 second cooldown)
@@ -57,6 +55,6 @@ public class EtdRefreshListener extends BaseRefreshListener {
     public synchronized void forceRefresh() {
         lastRefreshTime = System.currentTimeMillis() / 1000;
         sharedEtdDataBundle.stationCntr = 0;
-        Utils.fetchEtds(userBartData);
+        Utils.fetchEtds(userData);
     }
 }
