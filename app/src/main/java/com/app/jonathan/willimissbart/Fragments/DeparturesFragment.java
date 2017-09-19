@@ -59,7 +59,7 @@ public class DeparturesFragment extends Fragment {
     private EtdRefreshListener etdRefreshListener;
     private DeparturesAdapter departuresAdapter;
 
-    UserStationData[] userData;
+    List<UserStationData> userData;
 
     // Data for setting the the feed of ETD's
     private EtdStation[] stationArr = new EtdStation[5];
@@ -82,7 +82,7 @@ public class DeparturesFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_departures, container, false);
         ButterKnife.bind(this, v);
         if (getArguments() != null) {
-            userData = (UserStationData[]) getArguments().getParcelableArray(Constants.USER_DATA);
+            userData = getArguments().getParcelableArrayList(Constants.USER_DATA);
         } else {
             userData = SPSingleton.getUserData(getActivity());
         }

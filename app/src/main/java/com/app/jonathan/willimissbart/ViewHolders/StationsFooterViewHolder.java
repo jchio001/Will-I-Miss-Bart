@@ -3,7 +3,6 @@ package com.app.jonathan.willimissbart.ViewHolders;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,9 +13,8 @@ import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.R;
-import com.google.common.collect.Lists;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,7 +52,7 @@ public class StationsFooterViewHolder {
 
     @OnClick(R.id.done)
     public void done() {
-        UserStationData[] userData = adapter.getUserBartData();
+        ArrayList<UserStationData> userData = adapter.getUserBartData();
         if (userData == null) {
             return;
         }
@@ -63,7 +61,7 @@ public class StationsFooterViewHolder {
         SPSingleton.getInstance(context)
             .persistUserData(userData);
         Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra(Constants.USER_DATA, userData);
+        intent.putParcelableArrayListExtra(Constants.USER_DATA, userData);
         contentView.getContext().startActivity(intent);
         context.finish();
     }

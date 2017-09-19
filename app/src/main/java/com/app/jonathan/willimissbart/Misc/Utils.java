@@ -55,16 +55,16 @@ public class Utils {
     }
 
     //usually filtered
-    public static void fetchEtds(UserStationData[] userStationData) {
-        for (int i = 0; i < userStationData.length; ++i) {
-            UserStationData data = userStationData[i];
+    public static void fetchEtds(List<UserStationData> userStationData) {
+        for (int i = 0; i < userStationData.size(); ++i) {
+            UserStationData data = userStationData.get(i);
             RetrofitClient.getInstance()
                 .getMatchingService()
                 .getEtd("etd", APIConstants.API_KEY, 'y', data.getAbbr(), null)
                 .clone()
                 .enqueue(
                     new EtdCallback()
-                        .setData(userStationData[i])
+                        .setData(userStationData.get(i))
                         .setIndex(i));
         }
     }

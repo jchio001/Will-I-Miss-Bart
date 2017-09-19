@@ -10,7 +10,9 @@ import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.StationsCardViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
+import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StationsAdapter extends BaseAdapter {
@@ -98,14 +100,14 @@ public class StationsAdapter extends BaseAdapter {
             destIndex >= 0 ? stations.get(destIndex).getAbbr() : "");
     }
 
-    public UserStationData[] getUserBartData() {
+    public ArrayList<UserStationData> getUserBartData() {
         if (originIndex == -1 || destIndex == -1) {
             return null;
         }
 
         Station originStn = stations.get(originIndex);
         Station destStn = stations.get(destIndex);
-        return new UserStationData[]{
+        return Lists.newArrayList(
             new UserStationData()
                 .setStation(originStn.getName())
                 .setAbbr(originStn.getAbbr())
@@ -113,6 +115,6 @@ public class StationsAdapter extends BaseAdapter {
             new UserStationData()
                 .setStation(destStn.getName())
                 .setAbbr(destStn.getAbbr())
-                .setStationIndex(destIndex)};
+                .setStationIndex(destIndex));
     }
 }

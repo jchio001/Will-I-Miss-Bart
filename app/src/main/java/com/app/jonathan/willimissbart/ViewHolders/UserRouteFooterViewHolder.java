@@ -2,11 +2,13 @@ package com.app.jonathan.willimissbart.ViewHolders;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.app.jonathan.willimissbart.Activities.AppActivities.SelectStationActivity;
 import com.app.jonathan.willimissbart.Listeners.Animations.Footers.FooterAnimListener;
 import com.app.jonathan.willimissbart.Listeners.Animations.Footers.FooterUpdateListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
@@ -14,6 +16,8 @@ import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
 import com.joanzapata.iconify.widget.IconTextView;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,10 +33,10 @@ public class UserRouteFooterViewHolder {
     private ValueAnimator expandAnimation;
     private ValueAnimator collapseAnimation;
 
-    public UserRouteFooterViewHolder(View v, UserStationData[] userData) {
+    public UserRouteFooterViewHolder(View v, List<UserStationData> userData) {
         ButterKnife.bind(this, v);
-        origin.setText(userData[0].getAbbr());
-        destination.setText(userData[1].getAbbr());
+        origin.setText(userData.get(0).getAbbr());
+        destination.setText(userData.get(1).getAbbr());
         initAnimations();
     }
 
@@ -51,6 +55,12 @@ public class UserRouteFooterViewHolder {
         } else {
             collapseAnimation.start();
         }
+    }
+
+    @OnClick({R.id.user_route_origin, R.id.user_route_dest})
+    public void onChangeStationReq() {
+        Intent intent = new Intent(footerBody.getContext(), SelectStationActivity.class);
+        footerBody.getContext().startActivity(intent);
     }
 
     public void initAnimations() {

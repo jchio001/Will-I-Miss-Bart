@@ -23,6 +23,7 @@ import com.app.jonathan.willimissbart.Fragments.DeparturesFragment;
 import com.app.jonathan.willimissbart.Fragments.MyStationsFragment;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.PopUpWindows.NotificationPopUpWindow;
 import com.app.jonathan.willimissbart.R;

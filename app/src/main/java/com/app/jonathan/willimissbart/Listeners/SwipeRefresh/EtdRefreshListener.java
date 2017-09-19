@@ -8,9 +8,11 @@ import com.app.jonathan.willimissbart.Misc.SharedEtdDataBundle;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 
+import java.util.List;
+
 public class EtdRefreshListener extends BaseRefreshListener {
     private SharedEtdDataBundle sharedEtdDataBundle;
-    private UserStationData[] userData;
+    private List<UserStationData> userData;
 
     public EtdRefreshListener(SwipeRefreshLayout swipeRefreshLayout) {
         super(swipeRefreshLayout);
@@ -21,7 +23,7 @@ public class EtdRefreshListener extends BaseRefreshListener {
         return this;
     }
 
-    public EtdRefreshListener setUserBartData(UserStationData[] userData) {
+    public EtdRefreshListener setUserBartData(List<UserStationData> userData) {
         this.userData = userData;
         return this;
     }

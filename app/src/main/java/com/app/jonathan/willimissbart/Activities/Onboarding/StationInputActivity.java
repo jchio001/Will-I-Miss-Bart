@@ -113,23 +113,6 @@ public class StationInputActivity extends AppCompatActivity
         adapter.setOriginOrDest(position);
     }
 
-    /*@OnClick(R.id.done)
-    public void done() {
-        *//*doneButton.setEnabled(false);
-
-        String serializedUserData = parseAndPersistData(bartDataElemViewHolders);
-        if (!serializedUserData.isEmpty()) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(Constants.USER_DATA, parseAndPersistData(bartDataElemViewHolders));
-            startActivity(intent);
-            finish();
-        } else {
-            Utils.showSnackbar(this, parent, R.color.red, R.string.all_invalid_data);
-        }
-
-        doneButton.setEnabled(true);*//*
-    }*/
-
     @Subscribe
     public void onStationsListEvent(StationsResp stationsResp) {
         StationsSingleton.getInstance().setStationElems(

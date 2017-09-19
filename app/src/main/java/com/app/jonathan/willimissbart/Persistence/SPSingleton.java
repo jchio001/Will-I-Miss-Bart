@@ -5,11 +5,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SPSingleton {
@@ -32,10 +33,15 @@ public class SPSingleton {
         return sp;
     }
 
-    public static UserStationData[] getUserData(Context context) {
+    public static ArrayList<UserStationData> getUserData(Context context) {
         String userData = getInstance(context).getSp()
             .getString(Constants.USER_DATA, "");
-        return !userData.isEmpty() ? new Gson().fromJson(userData, UserStationData[].class) : null;
+        if (userData.isEmpty()) {
+            return null;
+        } else {
+            return new Gson().fromJson(userData,
+                new TypeToken<ArrayList<UserStationData>>(){}.getType());
+        }
     }
 
     public String getPersistedStations() {
@@ -46,7 +52,7 @@ public class SPSingleton {
         return SPSingleton.getInstance(context).getSp().getString(key, null);
     }
 
-    public void persistUserData(UserStationData[] userData) {
+    public void persistUserData(List<UserStationData> userData) {
         sp.edit()
             .putString(Constants.USER_DATA, new Gson().toJson(userData))
             .apply();
