@@ -17,6 +17,7 @@ import com.app.jonathan.willimissbart.R;
 import com.google.common.collect.ImmutableSet;
 import com.joanzapata.iconify.widget.IconTextView;
 
+import java.util.Map;
 import java.util.Set;
 
 import butterknife.Bind;
@@ -35,6 +36,8 @@ public class DeparturesCardViewHolder extends ViewHolder {
 
     private final Context context;
     private FlattenedEstimate flattenedEstimate;
+
+    public static Map<String, GradientDrawable> hexToDrawableMap;
 
     public DeparturesCardViewHolder(View v, Context context) {
         super(v);
@@ -92,7 +95,7 @@ public class DeparturesCardViewHolder extends ViewHolder {
             subwayIcon.setTextColor(ContextCompat.getColor(context,
                 LIGHT_HEX_CODES.contains(
                     flattenedEstimate.getHexColor()) ? R.color.black : R.color.white));
-            subwayIcon.setBackground(getDrawable(flattenedEstimate.getHexColor()));
+            subwayIcon.setBackground(getDrawable(subwayIcon, flattenedEstimate.getHexColor()));
             departureInfo.setText(flattenedEstimate.getTitle());
         } else {
             if (flattenedEstimate.isSuccessful()) {
@@ -111,9 +114,8 @@ public class DeparturesCardViewHolder extends ViewHolder {
         }
     }
 
-    private Drawable getDrawable(String color) {
-        GradientDrawable drawable = (GradientDrawable) ContextCompat.getDrawable(context,
-            R.drawable.black_rectangular_border);
+    private Drawable getDrawable(View v, String color) {
+        GradientDrawable drawable = (GradientDrawable) v.getBackground();
         drawable.setColor(Color.parseColor(color));
         return drawable;
     }
