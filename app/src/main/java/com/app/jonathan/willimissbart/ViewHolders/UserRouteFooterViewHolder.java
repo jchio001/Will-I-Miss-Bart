@@ -58,8 +58,10 @@ public class UserRouteFooterViewHolder {
     }
 
     @OnClick({R.id.user_route_origin, R.id.user_route_dest})
-    public void onChangeStationReq() {
+    public void onChangeStationReq(View v) {
         Intent intent = new Intent(footerBody.getContext(), SelectStationActivity.class);
+        intent.putExtra(Constants.TITLE, v.getId() == R.id.user_route_origin ?
+            R.string.select_origin : R.string.select_dest);
         footerBody.getContext().startActivity(intent);
     }
 

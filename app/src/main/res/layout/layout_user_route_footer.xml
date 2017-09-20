@@ -31,16 +31,25 @@
                 android:text="@string/origin"
                 android:textSize="18sp" />
 
-            <TextView
-                style="@style/UserRouteInputTextTheme"
-                android:id="@+id/user_route_origin"
-                android:layout_toRightOf="@+id/from"
-                android:text=" " />
+            <LinearLayout
+                style="@style/UserRouteWrapperTheme"
+                android:id="@+id/origin_wrapper"
+                android:layout_toRightOf="@+id/from">
+
+                <TextView
+                    style="@style/UserRouteInputTextTheme"
+                    android:id="@+id/user_route_origin"
+                    android:text=" " />
+
+                <com.joanzapata.iconify.widget.IconTextView
+                    style="@style/UserRouteEditIconTheme" />
+
+            </LinearLayout>
 
             <com.joanzapata.iconify.widget.IconTextView
                 style="@style/BlackTextBase"
                 android:id="@+id/user_route_swap"
-                android:layout_toRightOf="@+id/user_route_origin"
+                android:layout_toRightOf="@+id/origin_wrapper"
                 android:padding="8dp"
                 android:text="@string/ion_arrow_swap"/>
 
@@ -51,11 +60,19 @@
                 android:text="@string/destination"
                 android:textSize="18sp" />
 
-            <TextView
-                style="@style/UserRouteInputTextTheme"
-                android:id="@+id/user_route_dest"
-                android:layout_toRightOf="@+id/to"
-                android:text=" " />
+            <LinearLayout
+                style="@style/UserRouteWrapperTheme"
+                android:layout_toRightOf="@+id/to">
+
+                <TextView
+                    style="@style/UserRouteInputTextTheme"
+                    android:id="@+id/user_route_dest"
+                    android:text=" " />
+
+                <com.joanzapata.iconify.widget.IconTextView
+                    style="@style/UserRouteEditIconTheme" />
+
+            </LinearLayout>
 
             <com.joanzapata.iconify.widget.IconTextView
                 style="@style/BlackTextBase"
@@ -73,7 +90,6 @@
             android:orientation="vertical"
             android:padding="8dp"
             android:visibility="gone">
-
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -103,7 +119,7 @@
                 style="@style/BlackTextBase"
                 android:id="@+id/include_destination"
                 android:layout_gravity="end"
-                android:text="@string/include_destination"
+                android:text="@string/include_return_route"
                 android:textSize="18sp" />
 
             <Button

@@ -18,7 +18,7 @@ import com.app.jonathan.willimissbart.API.Callbacks.StationsCallback;
 import com.app.jonathan.willimissbart.API.Models.Generic.FailureEvent;
 import com.app.jonathan.willimissbart.API.Models.StationModels.StationsResp;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
-import com.app.jonathan.willimissbart.Adapters.StationsAdapter;
+import com.app.jonathan.willimissbart.Adapters.OriginDestStationsAdapter;
 import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog;
 import com.app.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.InitialAnimation.HideProgressBarAnimListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
@@ -50,7 +50,7 @@ public class StationInputActivity extends AppCompatActivity
     // View modules
     private StationsFooterViewHolder footer;
 
-    StationsAdapter adapter;
+    OriginDestStationsAdapter adapter;
     Point point; //TODO don't really need this
 
     @Override
@@ -115,7 +115,7 @@ public class StationInputActivity extends AppCompatActivity
 
     @Subscribe
     public void onStationsListEvent(StationsResp stationsResp) {
-        StationsSingleton.getInstance().setStationElems(
+        StationsSingleton.getInstance().setStations(
                 stationsResp.getStationsRoot().getStations().getStationList()
         );
         persistStations();
@@ -129,7 +129,7 @@ public class StationInputActivity extends AppCompatActivity
 
     @SuppressWarnings("unchecked")
     private void setUpActivityLayout() {
-        adapter = new StationsAdapter(StationsSingleton.getInstance().getStationElems(), footer);
+        adapter = new OriginDestStationsAdapter(StationsSingleton.getInstance().getStations(), footer);
         stationGrid.setAdapter(adapter);
         AlphaAnimation hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
         hideProgressBar.setDuration(Constants.LONG_DURATION);
@@ -143,7 +143,7 @@ public class StationInputActivity extends AppCompatActivity
 
     private void persistStations() {
         SPSingleton.getInstance(getApplicationContext()).persistStations(
-                new Gson().toJson(StationsSingleton.getInstance().getStationElems())
+                new Gson().toJson(StationsSingleton.getInstance().getStations())
         );
     }
 }

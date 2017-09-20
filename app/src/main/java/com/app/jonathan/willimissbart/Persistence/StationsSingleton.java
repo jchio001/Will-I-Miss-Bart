@@ -9,10 +9,10 @@ import java.util.List;
 
 public class StationsSingleton {
     private static StationsSingleton instance;
-    private List<Station> stationElems = Lists.newArrayList();
+    private List<Station> stations = Lists.newArrayList();
 
     private StationsSingleton() {
-        stationElems = new ArrayList<>();
+        stations = new ArrayList<>();
     }
 
     public static StationsSingleton getInstance() {
@@ -23,15 +23,11 @@ public class StationsSingleton {
         return instance;
     }
 
-    public static void setInstance(StationsSingleton instance) {
-        StationsSingleton.instance = instance;
+    public static List<Station> getStations() {
+        return getInstance().stations;
     }
 
-    public List<Station> getStationElems() {
-        return stationElems;
-    }
-
-    public void setStationElems(List<Station> stationElems) {
-        this.stationElems.addAll(stationElems);
+    public void setStations(List<Station> stations) {
+        this.stations.addAll(stations);
     }
 }

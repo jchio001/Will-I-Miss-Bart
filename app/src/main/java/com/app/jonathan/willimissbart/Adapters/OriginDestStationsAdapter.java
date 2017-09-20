@@ -1,9 +1,7 @@
 package com.app.jonathan.willimissbart.Adapters;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
@@ -15,48 +13,24 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StationsAdapter extends BaseAdapter {
-    private List<Station> stations;
+public class OriginDestStationsAdapter extends AbstractStationsAdapter {
     private StationsFooterViewHolder footer;
 
     private boolean pickingOrigin = true;
     private int originIndex = -1;
     private int destIndex = -1;
 
-    public StationsAdapter(List<Station> stations, StationsFooterViewHolder footer) {
-        this.stations = stations;
+    public OriginDestStationsAdapter(List<Station> stations, StationsFooterViewHolder footer) {
+        super(stations);
         this.footer = footer.setAdapter(this);
     }
 
     @Override
-    public int getCount() {
-        return stations.size();
-    }
-
-    @Override
-    public Station getItem(int position) {
-        return stations.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        StationsCardViewHolder viewHolder;
-        if (convertView == null) {
-            convertView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.station_grid_elem, parent, false);
-            viewHolder = new StationsCardViewHolder(convertView);
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (StationsCardViewHolder) convertView.getTag();
-        }
+        convertView = super.getView(position, convertView, parent);
+        StationsCardViewHolder viewHolder = (StationsCardViewHolder) convertView.getTag();
 
         viewHolder.abbr.setText(stations.get(position).getAbbr());
-
         if (position == originIndex) {
             viewHolder.originOrDest.setText(R.string.stn_origin);
         } else if (position == destIndex) {

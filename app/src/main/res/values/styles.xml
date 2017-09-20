@@ -17,7 +17,12 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="colorAccent">@color/white</item>
+    </style>
 
+    <style name="PureBlueTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/bartBlue</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/bartBlue</item>
     </style>
 
     <style name="AppTheme.NoActionBar2" parent="AppTheme">
@@ -121,10 +126,24 @@
     </style>
 
     <style name="UserRouteInputTextTheme" parent="BlackTextBase">
-        <item name="android:background">@drawable/black_rectangular_border</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_width">70dp</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="UserRouteEditIconTheme" parent="BlackTextBase">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:text">@string/ion_edit</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="UserRouteWrapperTheme">
+        <item name="android:background">@drawable/black_rectangular_border</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
     </style>
 
 </resources>

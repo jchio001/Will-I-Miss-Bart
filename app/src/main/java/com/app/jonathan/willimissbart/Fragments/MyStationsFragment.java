@@ -16,7 +16,6 @@ import com.app.jonathan.willimissbart.Adapters.SimpleLargeTextListAdapter;
 import com.app.jonathan.willimissbart.Adapters.StringAdapter;
 import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog;
 import com.app.jonathan.willimissbart.Enums.StyleEnum;
-import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
 import com.app.jonathan.willimissbart.R;
@@ -60,7 +59,7 @@ public class MyStationsFragment extends Fragment
         vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         stationsAdapter = new SimpleLargeTextListAdapter(
                 getActivity(),
-                StationsSingleton.getInstance().getStationElems())
+                StationsSingleton.getInstance().getStations())
                 .setStyle(StyleEnum.NO_STYLE);
         directionsAdapter = new StringAdapter(
                 getActivity(),

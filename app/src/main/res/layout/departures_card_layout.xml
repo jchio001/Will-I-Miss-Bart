@@ -34,8 +34,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.joanzapata.iconify.widget.IconTextView
-                android:id="@+id/subway_icon"
+            <!-- deals with dynamically changing xml shenanigans -->
+            <FrameLayout
+                android:id="@+id/icon_wrapper"
                 android:background="@drawable/black_rectangular_border"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
@@ -44,10 +45,18 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginRight="6dp"
-                android:padding="4dp"
-                android:text="@string/ion_android_subway"
-                android:textColor="@color/white"
-                android:textSize="36sp"/>
+                android:padding="1dp">
+
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:id="@+id/subway_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="@string/ion_android_subway"
+                    android:textColor="@color/white"
+                    android:textSize="36sp"/>
+
+            </FrameLayout>
 
             <com.joanzapata.iconify.widget.IconTextView
                 android:id="@+id/set_alarm"
@@ -58,8 +67,8 @@
                 android:text="@string/ion_android_alarm_clock"
                 android:textColor="@color/black"
                 android:textSize="36sp"
-                android:layout_alignBaseline="@+id/subway_icon"
-                android:layout_alignBottom="@+id/subway_icon"
+                android:layout_alignBaseline="@+id/icon_wrapper"
+                android:layout_alignBottom="@+id/icon_wrapper"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:padding="4dp"/>
@@ -69,12 +78,12 @@
                 android:background="?selectableItemBackground"
                 android:gravity="center_vertical"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/subway_icon"
+                android:layout_toLeftOf="@+id/set_alarm"
+                android:layout_toRightOf="@id/icon_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:textSize="22sp"
-                android:layout_toLeftOf="@+id/set_alarm"/>
+                android:textSize="22sp"/>
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

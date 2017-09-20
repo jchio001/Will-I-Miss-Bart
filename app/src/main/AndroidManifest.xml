@@ -42,8 +42,11 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar2"/>
-        <activity android:name=".Activities.AppActivities.SelectStationActivity">
-        </activity>
+        <activity
+            android:name=".Activities.AppActivities.SelectStationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/PureBlueTheme"
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@ package com.app.jonathan.willimissbart.ViewHolders;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
@@ -15,6 +16,7 @@ import com.app.jonathan.willimissbart.API.Models.DeparturesFeedModels.FlattenedE
 import com.app.jonathan.willimissbart.Dialogs.NotificationAlertDialog;
 import com.app.jonathan.willimissbart.R;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.Map;
@@ -37,7 +39,7 @@ public class DeparturesCardViewHolder extends ViewHolder {
     private final Context context;
     private FlattenedEstimate flattenedEstimate;
 
-    public static Map<String, GradientDrawable> hexToDrawableMap;
+    public static Map<String, ColorDrawable> hexToDrawableMap = Maps.newHashMap();
 
     public DeparturesCardViewHolder(View v, Context context) {
         super(v);
@@ -95,7 +97,7 @@ public class DeparturesCardViewHolder extends ViewHolder {
             subwayIcon.setTextColor(ContextCompat.getColor(context,
                 LIGHT_HEX_CODES.contains(
                     flattenedEstimate.getHexColor()) ? R.color.black : R.color.white));
-            subwayIcon.setBackground(getDrawable(subwayIcon, flattenedEstimate.getHexColor()));
+            subwayIcon.setBackground(getDrawable(flattenedEstimate.getHexColor()));
             departureInfo.setText(flattenedEstimate.getTitle());
         } else {
             if (flattenedEstimate.isSuccessful()) {
@@ -114,9 +116,15 @@ public class DeparturesCardViewHolder extends ViewHolder {
         }
     }
 
-    private Drawable getDrawable(View v, String color) {
-        GradientDrawable drawable = (GradientDrawable) v.getBackground();
-        drawable.setColor(Color.parseColor(color));
+    private Drawable getDrawable(String color) {
+        ColorDrawable drawable;
+        if (hexToDrawableMap.containsKey(color)) {
+            drawable = hexToDrawableMap.get(color);
+        } else {
+            drawable = new ColorDrawable(Color.parseColor(color));
+            drawable.setColor(Color.parseColor(color));
+            hexToDrawableMap.put(color, drawable);
+        }
         return drawable;
     }
 }

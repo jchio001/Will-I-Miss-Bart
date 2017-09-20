@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.media.AudioManager;
-import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -22,21 +21,16 @@ import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Notification.TimerNotificationBuilder;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
-import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
-import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
 import com.app.jonathan.willimissbart.R;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-import java.util.Set;
 
 // Random utility functions
 public class Utils {
@@ -45,12 +39,12 @@ public class Utils {
     }
 
     public static void loadStations(String stationsJSON) {
-        if (StationsSingleton.getInstance().getStationElems().isEmpty()) {
+        if (StationsSingleton.getInstance().getStations().isEmpty()) {
             Gson gson = new Gson();
             Type listType = new TypeToken<List<Station>>() {
             }.getType();
             List<Station> stations = gson.fromJson(stationsJSON, listType);
-            StationsSingleton.getInstance().setStationElems(stations);
+            StationsSingleton.getInstance().setStations(stations);
         }
     }
 

@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.Activities.AppActivities.MainActivity;
-import com.app.jonathan.willimissbart.Adapters.StationsAdapter;
+import com.app.jonathan.willimissbart.Adapters.OriginDestStationsAdapter;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
@@ -26,7 +26,7 @@ public class StationsFooterViewHolder {
     @Bind(R.id.done) public Button done;
 
     public View contentView;
-    private StationsAdapter adapter;
+    private OriginDestStationsAdapter adapter;
 
     public StationsFooterViewHolder(View v) {
         ButterKnife.bind(this, v);
@@ -34,7 +34,7 @@ public class StationsFooterViewHolder {
         updateFooterText("","");
     }
 
-    public StationsFooterViewHolder setAdapter(StationsAdapter adapter) {
+    public StationsFooterViewHolder setAdapter(OriginDestStationsAdapter adapter) {
         this.adapter = adapter;
         return this;
     }
