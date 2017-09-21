@@ -58,8 +58,7 @@ public class StationsFooterViewHolder {
         }
 
         Activity context = (Activity) contentView.getContext();
-        SPSingleton.getInstance(context)
-            .persistUserData(userData);
+        SPSingleton.persistUserData(context, userData);
         Intent intent = new Intent(context, MainActivity.class);
         intent.putParcelableArrayListExtra(Constants.USER_DATA, userData);
         contentView.getContext().startActivity(intent);

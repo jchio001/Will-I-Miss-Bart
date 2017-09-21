@@ -16,6 +16,10 @@ public class SingleElemStationsAdapter extends AbstractStationsAdapter {
         this.selectingOrigin = selectingOrigin;
     }
 
+    public boolean isSelectingOrigin() {
+        return selectingOrigin;
+    }
+
     public SingleElemStationsAdapter setSelectingOrigin(boolean selectingOrigin) {
         this.selectingOrigin = selectingOrigin;
         return this;

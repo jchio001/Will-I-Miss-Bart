@@ -18,13 +18,11 @@
 
     <!-- User route footer -->
     <string name="leaving_in">"Leaving in: "</string>
-    <string name="include_return_route">Also include return route</string>
+    <string name="include_return_route">Include return route</string>
     <string name="update">Update</string>
 
+    <!-- Onboarding Activity -->
     <string name="enter_bart_data">Select an origin station and a destination station</string>
-    <string name="another_bart">Track another station</string>
-    <string name="plz_stop">I think you\'ve pressed the button1 enough.</string>
-    <string name="all_invalid_data">Please check if you\'ve selected a valid name and at least one day of the week for each station.</string>
     <string name="done">Done</string>
     <string name="help_blurb">
         We want to show the stations best suited to your preferences every day. In order to do so, we also need to know:
@@ -35,6 +33,7 @@
     <string name="enter_days">Enter the days you want to track this station on:</string>
 
     <string name="departures_as_of">Departures as of %s. Swipe up to refresh.</string>
+    <string name="updated_data">Updated your route.</string>
     <string name="no_etds">No etds for this station.</string>
     <string name="failed_to_get_etds">Failed to fetch etds. Press here to try again.</string>
     <string name="origin">From\u0020</string>
@@ -71,4 +70,5 @@
     <!-- SelectStationActivity -->
     <string name="select_origin">Select an origin station</string>
     <string name="select_dest">Select a destination station</string>
+    <string name="going_in_a_loop">You can\'t be leaving and going to the same station.</string>
 </resources>

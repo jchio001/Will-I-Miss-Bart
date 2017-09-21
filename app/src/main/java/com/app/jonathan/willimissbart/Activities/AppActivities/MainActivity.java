@@ -1,6 +1,7 @@
 package com.app.jonathan.willimissbart.Activities.AppActivities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
@@ -93,6 +94,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.UPDATING_STATIONS && data != null) {
+            departuresFragment.updateUserStations(resultCode,
+                data.getIntExtra(Constants.STATION_INDEX, -1));
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Subscribe
     public void onBsaResponse(BsaResp bsaResp) {
@@ -102,36 +112,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         bsas = bsaResp.getRoot().getBsaList();
-    }
-
-    // TODO: probably don't need this anymore
-    private void setOnPageListener() {
-        /*viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            private int lastPage = 0;
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(final int position) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (lastPage != 0 && position == 0) {
-                            departuresFragment.refreshOnNewData(myStationsFragment.extractNewData());
-                        }
-                        lastPage = position;
-                    }
-                });
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });*/
     }
 
     private void setUpViewPager(Bundle bundle) {

@@ -9,7 +9,6 @@ import android.widget.BaseAdapter;
 import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.StationsCardViewHolder;
-import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 
 import java.util.List;
 

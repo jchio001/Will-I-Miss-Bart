@@ -15,6 +15,8 @@ public class Constants {
     // INTENT KEY
     public static final String TITLE = "title";
     public static final String SECONDS = "seconds";
+    public static final String STATION_INDEX = "station_index";
+    public static final String NOT_THIS_INDEX = "not_this_index";
 
     // INTENT TAGS
     public static final String DISMISS = "WillIMissBart.dismiss";
@@ -24,8 +26,15 @@ public class Constants {
     public static final int TIMER_NOTIF_ID = 1;
 
     // VIBRATION PATTERN
-    public static long[] VIBRATION_PATTERN = {0, 1000, 1000};
+    public static final long[] VIBRATION_PATTERN = {0, 1000, 1000};
 
-    // TIPS
-    public static int[] TIP_IDS = {R.string.tip_1, R.string.tip_2};
+    // INTENT REQUEST CODES
+    public static final int UPDATING_STATIONS = 0;
+    public static final int UPDATED_ORIGIN = 1;
+    public static final int UPDATED_DEST = 2;
+
+    // REFRESH STATE ENUMS
+    public static final int REFRESH_STATE_INACTIVE = 0;
+    public static final int REFRESH_STATE_REFRESHING = 1;
+    public static final int REFRESH_STATE_RELOADING = 2; // TODO: may not need this
 }

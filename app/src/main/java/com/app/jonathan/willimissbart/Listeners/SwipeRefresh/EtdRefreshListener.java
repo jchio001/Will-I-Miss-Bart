@@ -3,7 +3,7 @@ package com.app.jonathan.willimissbart.Listeners.SwipeRefresh;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
-import com.app.jonathan.willimissbart.Enums.RefreshStateEnum;
+import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.SharedEtdDataBundle;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
@@ -31,8 +31,8 @@ public class EtdRefreshListener extends BaseRefreshListener {
     @Override
     public void onRefresh() {
         synchronized (this) {
-            if (refreshState == RefreshStateEnum.INACTIVE) {
-                refreshState = RefreshStateEnum.REFRESHING;
+            if (refreshState == Constants.REFRESH_STATE_INACTIVE) {
+                refreshState = Constants.REFRESH_STATE_REFRESHING;
             } else {
                 return;
             }
@@ -41,7 +41,7 @@ public class EtdRefreshListener extends BaseRefreshListener {
             long now = System.currentTimeMillis() / 1000;
             if (now - lastRefreshTime < 45) {
                 Log.i("EtdRefreshListener", "Stop spamming idiot");
-                refreshState = RefreshStateEnum.INACTIVE;
+                refreshState = Constants.REFRESH_STATE_INACTIVE;
                 swipeRefreshLayout.setRefreshing(false);
                 return;
             }
@@ -57,6 +57,7 @@ public class EtdRefreshListener extends BaseRefreshListener {
     public synchronized void forceRefresh() {
         lastRefreshTime = System.currentTimeMillis() / 1000;
         sharedEtdDataBundle.stationCntr = 0;
+        refreshState = Constants.REFRESH_STATE_REFRESHING;
         Utils.fetchEtds(userData);
     }
 }

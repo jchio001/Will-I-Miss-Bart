@@ -20,13 +20,13 @@ import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdFailure;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdRespBundle;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdStation;
 import com.app.jonathan.willimissbart.Adapters.DeparturesAdapter;
-import com.app.jonathan.willimissbart.Enums.RefreshStateEnum;
 import com.app.jonathan.willimissbart.Listeners.SwipeRefresh.EtdRefreshListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.SharedEtdDataBundle;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
+import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.UserRouteFooterViewHolder;
 import com.google.common.collect.Lists;
@@ -60,6 +60,7 @@ public class DeparturesFragment extends Fragment {
     private DeparturesAdapter departuresAdapter;
 
     List<UserStationData> userData;
+    List<UserStationData> updatedUserData; // Clone for updating purposes
 
     // Data for setting the the feed of ETD's
     private EtdStation[] stationArr = new EtdStation[5];
@@ -86,9 +87,8 @@ public class DeparturesFragment extends Fragment {
         } else {
             userData = SPSingleton.getUserData(getActivity());
         }
-        /*userData = Lists.newArrayList(SPSingleton.getString(getActivity(), Constants.ORIGIN),
-            SPSingleton.getString(getActivity(), Constants.DESTINATION));*/
-        footer = new UserRouteFooterViewHolder(footerLayout, userData);
+        updatedUserData = Lists.newArrayList(userData);
+        footer = new UserRouteFooterViewHolder(footerLayout, this, updatedUserData);
         EventBus.getDefault().register(this);
 
         mainSWL.setEnabled(false);
@@ -114,7 +114,7 @@ public class DeparturesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        etdRefreshListener.setUserBartData(userData);
+        etdRefreshListener.setUserBartData(updatedUserData);
         Utils.fetchEtds(userData);
     }
 
@@ -159,6 +159,18 @@ public class DeparturesFragment extends Fragment {
         }
     }
 
+    public void updateUserStations(int resultCode, int stationIndex) {
+        updatedUserData.set(resultCode - 1, UserStationData.fromStationIndex(stationIndex));
+        footer.updateStations(resultCode, StationsSingleton.getStations()
+            .get(stationIndex).getAbbr());
+    }
+
+    public void persistUpdatesAndRefresh() {
+        SPSingleton.persistUserData(getActivity(), updatedUserData);
+        etdRefreshListener.forceRefresh();
+        Utils.showSnackbar(getActivity(), parent, R.color.bartBlue, R.string.updated_data);
+    }
+
     private void handleNothingToFetch() {
         progressBar.setVisibility(View.INVISIBLE);
         mainSWL.setVisibility(View.INVISIBLE);
@@ -179,7 +191,7 @@ public class DeparturesFragment extends Fragment {
         mainSWL.setVisibility(View.VISIBLE);
         mainFeedLayout.setVisibility(View.VISIBLE);
 
-        etdRefreshListener.setRefreshState(RefreshStateEnum.INACTIVE);
+        etdRefreshListener.setRefreshState(Constants.REFRESH_STATE_INACTIVE);
         mainSWL.setEnabled(true);
     }
 

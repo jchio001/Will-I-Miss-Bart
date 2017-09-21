@@ -52,8 +52,8 @@ public class SPSingleton {
         return SPSingleton.getInstance(context).getSp().getString(key, null);
     }
 
-    public void persistUserData(List<UserStationData> userData) {
-        sp.edit()
+    public static void persistUserData(Context context, List<UserStationData> userData) {
+        getInstance(context).getSp().edit()
             .putString(Constants.USER_DATA, new Gson().toJson(userData))
             .apply();
     }

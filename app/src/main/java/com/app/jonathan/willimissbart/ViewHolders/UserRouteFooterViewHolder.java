@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.Activities.AppActivities.SelectStationActivity;
+import com.app.jonathan.willimissbart.Fragments.DeparturesFragment;
 import com.app.jonathan.willimissbart.Listeners.Animations.Footers.FooterAnimListener;
 import com.app.jonathan.willimissbart.Listeners.Animations.Footers.FooterUpdateListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
@@ -30,13 +31,19 @@ public class UserRouteFooterViewHolder {
     @Bind(R.id.user_route_dest) public TextView destination;
     @Bind(R.id.user_route_minutes) public EditText minutes;
 
+    private DeparturesFragment departuresFragment;
     private ValueAnimator expandAnimation;
     private ValueAnimator collapseAnimation;
+    // userData is the user's data with pending changes which may or mat not have been persisted
+    private List<UserStationData> userData;
 
-    public UserRouteFooterViewHolder(View v, List<UserStationData> userData) {
+    public UserRouteFooterViewHolder(View v, DeparturesFragment departuresFragment,
+                                     List<UserStationData> userData) {
         ButterKnife.bind(this, v);
+        this.departuresFragment = departuresFragment;
         origin.setText(userData.get(0).getAbbr());
         destination.setText(userData.get(1).getAbbr());
+        this.userData = userData;
         initAnimations();
     }
 
@@ -60,9 +67,22 @@ public class UserRouteFooterViewHolder {
     @OnClick({R.id.user_route_origin, R.id.user_route_dest})
     public void onChangeStationReq(View v) {
         Intent intent = new Intent(footerBody.getContext(), SelectStationActivity.class);
-        intent.putExtra(Constants.TITLE, v.getId() == R.id.user_route_origin ?
-            R.string.select_origin : R.string.select_dest);
-        footerBody.getContext().startActivity(intent);
+        boolean isOrigin = v.getId() == R.id.user_route_origin;
+        intent.putExtra(Constants.TITLE, isOrigin ? R.string.select_origin : R.string.select_dest);
+        intent.putExtra(Constants.NOT_THIS_INDEX, isOrigin ?
+            userData.get(1).getStationIndex() : userData.get(0).getStationIndex());
+        ((Activity) footerBody.getContext())
+            .startActivityForResult(intent, Constants.UPDATING_STATIONS);
+    }
+
+    @OnClick(R.id.user_route_update)
+    public void onUserRouteUpdate() {
+        departuresFragment.persistUpdatesAndRefresh();
+    }
+
+    public void updateStations(int resultCode, String newAbbr) {
+        TextView abbrTextView = (resultCode == Constants.UPDATED_ORIGIN) ? origin : destination;
+        abbrTextView.setText(newAbbr);
     }
 
     public void initAnimations() {

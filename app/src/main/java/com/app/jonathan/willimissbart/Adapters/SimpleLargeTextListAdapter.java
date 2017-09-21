@@ -28,12 +28,6 @@ public class SimpleLargeTextListAdapter<T extends SimpleListItem> extends BaseAd
         return this;
     }
 
-    public void refresh(List<T> items) {
-        this.items.clear();
-        this.items.addAll(items);
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getCount() {
         return items.size();

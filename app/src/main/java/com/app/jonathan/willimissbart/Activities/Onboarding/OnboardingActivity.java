@@ -38,7 +38,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 
-public class StationInputActivity extends AppCompatActivity
+public class OnboardingActivity extends AppCompatActivity
         implements DeleteAlertDialog.DeleteDataElemListener {
     @Bind(R.id.activity_station_input) CoordinatorLayout parent;
     @Bind(R.id.info_layout) LinearLayout infoLayout;
@@ -56,7 +56,7 @@ public class StationInputActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_station_input);
+        setContentView(R.layout.activity_onboarding);
         ButterKnife.bind(this);
         footer = new StationsFooterViewHolder(stationsFooter);
         footer.done.setEnabled(false);
@@ -93,7 +93,7 @@ public class StationInputActivity extends AppCompatActivity
     @Deprecated
     @Override
     public void deleteDataElem(int index) {
-        /*Log.i("StationInputActivity", String.format("Deleting %d", index));
+        /*Log.i("OnboardingActivity", String.format("Deleting %d", index));
         for (int i = index + 1; i < bartDataElemViewHolders.size(); ++i) {
             bartDataElemViewHolders.get(i).decrementIndex();
         }
@@ -129,7 +129,7 @@ public class StationInputActivity extends AppCompatActivity
 
     @SuppressWarnings("unchecked")
     private void setUpActivityLayout() {
-        adapter = new OriginDestStationsAdapter(StationsSingleton.getInstance().getStations(), footer);
+        adapter = new OriginDestStationsAdapter(StationsSingleton.getStations(), footer);
         stationGrid.setAdapter(adapter);
         AlphaAnimation hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
         hideProgressBar.setDuration(Constants.LONG_DURATION);
@@ -143,7 +143,7 @@ public class StationInputActivity extends AppCompatActivity
 
     private void persistStations() {
         SPSingleton.getInstance(getApplicationContext()).persistStations(
-                new Gson().toJson(StationsSingleton.getInstance().getStations())
+                new Gson().toJson(StationsSingleton.getStations())
         );
     }
 }

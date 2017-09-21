@@ -5,6 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
+import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -93,6 +95,14 @@ public class UserStationData implements Serializable, Parcelable {
     public UserStationData setAbbr(String abbr) {
         this.abbr = abbr;
         return this;
+    }
+
+    public static UserStationData fromStationIndex(int stationIndex) {
+        Station station = StationsSingleton.getStations().get(stationIndex);
+        return new UserStationData()
+            .setStation(station.getName())
+            .setAbbr(station.getAbbr())
+            .setStationIndex(stationIndex);
     }
 
 }

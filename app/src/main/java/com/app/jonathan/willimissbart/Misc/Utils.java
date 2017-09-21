@@ -144,7 +144,6 @@ public class Utils {
         }
     }
 
-    // May use this
     public static Snackbar showSnackbar(Context context, View parent, int colorId, int stringId) {
         Snackbar snackbar = Snackbar.make(parent, stringId, Snackbar.LENGTH_LONG);
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, colorId));
@@ -153,27 +152,5 @@ public class Utils {
         tv.setTextColor(ContextCompat.getColor(context, R.color.white));
         snackbar.show();
         return snackbar;
-    }
-
-    public static Snackbar showSnackbar(Context context,
-                                        View parent,
-                                        int colorId,
-                                        int stringId,
-                                        int duration) {
-        Snackbar snackbar = Snackbar.make(parent, stringId, Snackbar.LENGTH_LONG);
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, colorId));
-        snackbar.setDuration(duration);
-        View rootView = snackbar.getView();
-        TextView tv = (TextView) rootView.findViewById(android.support.design.R.id.snackbar_text);
-        tv.setTextColor(ContextCompat.getColor(context, R.color.white));
-        snackbar.show();
-        return snackbar;
-    }
-
-    public static Snackbar showTipSnackBar(Context context,
-                                           View parent,
-                                           int colorId) {
-        int tipId = Constants.TIP_IDS[new Random().nextInt(2)];
-        return showSnackbar(context, parent, colorId, tipId, 5000);
     }
 }
