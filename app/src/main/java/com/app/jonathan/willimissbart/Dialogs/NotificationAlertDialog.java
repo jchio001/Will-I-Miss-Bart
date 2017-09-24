@@ -99,6 +99,7 @@ public class NotificationAlertDialog extends AlertDialog {
                         } else {
                             errorTV.setVisibility(View.VISIBLE);
                         }
+                        alarmIcon.setEnabled(true);
                     }
                 });
             }

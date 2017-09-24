@@ -81,6 +81,16 @@ public class UserRouteFooterViewHolder {
         departuresFragment.persistUpdatesAndRefresh();
     }
 
+    @OnClick(R.id.user_route_swap)
+    public void onSwap() {
+        UserStationData tmp = userData.get(0);
+        userData.set(0, userData.get(1));
+        userData.set(1, tmp);
+
+        origin.setText(userData.get(0).getAbbr());
+        destination.setText(userData.get(1).getAbbr());
+    }
+
     public void updateStations(int resultCode, String newAbbr) {
         TextView abbrTextView = (resultCode == Constants.UPDATED_ORIGIN) ? origin : destination;
         abbrTextView.setText(newAbbr);

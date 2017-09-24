@@ -1,7 +1,5 @@
 package com.app.jonathan.willimissbart.Misc;
 
-import com.app.jonathan.willimissbart.R;
-
 public class Constants {
     // SHARED PREFERENCE KEYS
     public static final String STATION_LIST_KEY = "STATION_LIST";
@@ -9,8 +7,8 @@ public class Constants {
     public static final String MUTE_NOTIF = "MUTE_NOTIF";
 
     // ANIMATION DURATION
-    public static final int LONG_DURATION = 700;
-    public static final int STANDARD_DURATION = 500;
+    public static final int LONG_DURATION = 600;
+    public static final int STANDARD_DURATION = 400;
     public static final int SHORT_DURATION = 200;
 
     // INTENT KEY
