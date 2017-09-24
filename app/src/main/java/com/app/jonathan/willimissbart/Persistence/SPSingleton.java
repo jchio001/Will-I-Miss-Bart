@@ -50,7 +50,11 @@ public class SPSingleton {
     }
 
     public static String getString(Context context, String key) {
-        return SPSingleton.getInstance(context).getSp().getString(key, null);
+        return SPSingleton.getInstance(context).getSp().getString(key, "");
+    }
+
+    public static void putString(Context context, String key, String value) {
+        SPSingleton.getInstance(context).getSp().edit().putString(key, value).apply();
     }
 
     public static void persistUserData(Context context, List<UserStationData> userData) {

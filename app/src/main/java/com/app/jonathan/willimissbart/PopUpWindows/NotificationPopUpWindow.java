@@ -1,23 +1,27 @@
 package com.app.jonathan.willimissbart.PopUpWindows;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.app.jonathan.willimissbart.API.Models.BSAModels.Bsa;
 import com.app.jonathan.willimissbart.Activities.AppActivities.AnnouncementsActivity;
 import com.app.jonathan.willimissbart.Misc.Constants;
+import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.NotifBlurbViewHolder;
 import com.google.common.collect.Lists;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,13 +31,19 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class NotificationPopUpWindow extends PopupWindow {
     @Bind(R.id.notif_blurb_feed) LinearLayout notifFeed;
+    @Bind(R.id.mute_notif) CheckBox muteNotifCheckBox;
+
     private List<Bsa> bsaList;
+    public static boolean isChecked = false;
+    public final static SimpleDateFormat dateFormat = new SimpleDateFormat(
+        "yyyy/MM/dd", Locale.ENGLISH);
 
     public NotificationPopUpWindow(Context context, List<Bsa> bsaList) {
         super(LayoutInflater.from(context)
             .inflate(R.layout.pop_up_window_notif, null),
             800, WRAP_CONTENT);
         ButterKnife.bind(this, getContentView());
+        muteNotifCheckBox.setChecked(isChecked);
         this.bsaList = bsaList;
         setBackgroundDrawable(
             ContextCompat.getDrawable(context, R.drawable.background_pop_up_window));
@@ -58,5 +68,16 @@ public class NotificationPopUpWindow extends PopupWindow {
         Intent intent = new Intent(notifFeed.getContext(), AnnouncementsActivity.class);
         intent.putStringArrayListExtra(Constants.ANNOUNCEMENTS, announcementText);
         context.startActivity(intent);
+    }
+
+    @OnClick(R.id.mute_notif)
+    public void onChangeMuteSettings() {
+        isChecked = !isChecked;
+        if (isChecked) {
+            SPSingleton.putString(notifFeed.getContext(), Constants.MUTE_NOTIF,
+                dateFormat.format(new Date()));
+        } else {
+            SPSingleton.putString(notifFeed.getContext(), Constants.MUTE_NOTIF, "");
+        }
     }
 }

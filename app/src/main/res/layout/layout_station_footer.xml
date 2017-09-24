@@ -30,7 +30,7 @@
 
         <com.joanzapata.iconify.widget.IconTextView
             android:id="@+id/swap"
-            style="@style/BlackTextBase"
+            style="@style/DarkGreyTextBase"
             android:layout_toRightOf="@+id/origin"
             android:padding="6dp"
             android:text="@string/ion_arrow_swap"/>
@@ -41,7 +41,7 @@
             android:layout_toRightOf="@+id/swap"/>
 
         <Button
-            style="@style/BlackTextBase"
+            style="@style/DarkGreyTextBase"
             android:id="@+id/done"
             android:layout_alignParentRight="true"
             android:text="@string/done"

@@ -6,6 +6,7 @@ public class Constants {
     // SHARED PREFERENCE KEYS
     public static final String STATION_LIST_KEY = "STATION_LIST";
     public static final String USER_DATA = "USER_DATA";
+    public static final String MUTE_NOTIF = "MUTE_NOTIF";
 
     // ANIMATION DURATION
     public static final int LONG_DURATION = 700;

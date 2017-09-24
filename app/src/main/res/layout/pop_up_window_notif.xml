@@ -11,6 +11,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"/>
 
+    <CheckBox
+        android:id="@+id/mute_notif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginLeft="4dp"
+        android:text="@string/mute_notif"
+        android:textColor="@color/darkGrey"
+        android:textSize="14sp"
+        android:theme="@style/CheckBoxTheme"/>
+
     <TextView
         android:id="@+id/show_all_notifs"
         android:layout_width="wrap_content"

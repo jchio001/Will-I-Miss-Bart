@@ -25,7 +25,7 @@
             android:orientation="vertical">
             
             <TextView
-                style="@style/BlackTextBase"
+                style="@style/DarkGreyTextBase"
                 android:id="@+id/from"
                 android:layout_marginLeft="8dp"
                 android:text="@string/origin"
@@ -47,14 +47,14 @@
             </LinearLayout>
 
             <com.joanzapata.iconify.widget.IconTextView
-                style="@style/BlackTextBase"
+                style="@style/DarkGreyTextBase"
                 android:id="@+id/user_route_swap"
                 android:layout_toRightOf="@+id/origin_wrapper"
                 android:padding="8dp"
                 android:text="@string/ion_arrow_swap"/>
 
             <TextView
-                style="@style/BlackTextBase"
+                style="@style/DarkGreyTextBase"
                 android:id="@+id/to"
                 android:layout_toRightOf="@+id/user_route_swap"
                 android:text="@string/destination"
@@ -75,7 +75,7 @@
             </LinearLayout>
 
             <com.joanzapata.iconify.widget.IconTextView
-                style="@style/BlackTextBase"
+                style="@style/DarkGreyTextBase"
                 android:id="@+id/user_route_expand"
                 android:layout_alignParentRight="true"
                 android:padding="8dp"
@@ -97,7 +97,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/BlackTextBase"
+                    style="@style/DarkGreyTextBase"
                     android:layout_gravity="start"
                     android:text="@string/leaving_in"
                     android:textSize="18sp"/>
@@ -116,11 +116,12 @@
             </LinearLayout>
 
             <CheckBox
-                style="@style/BlackTextBase"
+                style="@style/DarkGreyTextBase"
                 android:id="@+id/include_destination"
                 android:layout_gravity="end"
                 android:text="@string/include_return_route"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:theme="@style/CheckBoxTheme"/>
 
             <Button
                 android:id="@+id/user_route_update"

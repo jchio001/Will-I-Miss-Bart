@@ -3,7 +3,6 @@ package com.app.jonathan.willimissbart.Activities.AppActivities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -24,7 +23,6 @@ import com.app.jonathan.willimissbart.Fragments.DeparturesFragment;
 import com.app.jonathan.willimissbart.Fragments.MyStationsFragment;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
-import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.PopUpWindows.NotificationPopUpWindow;
 import com.app.jonathan.willimissbart.R;
@@ -35,6 +33,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -63,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
         setSupportActionBar(toolbar);
 
+        NotificationPopUpWindow.isChecked = SPSingleton.getString(this, Constants.MUTE_NOTIF)
+            .equals(NotificationPopUpWindow.dateFormat.format(new Date()));
         Utils.loadStations(SPSingleton.getInstance(getApplicationContext()).getPersistedStations());
 
         setUpViewPager(getIntent().getExtras());
@@ -108,7 +109,9 @@ public class MainActivity extends AppCompatActivity {
     public void onBsaResponse(BsaResp bsaResp) {
         if (bsaResp.getRoot().getBsaList().size() > 1 ||
             !bsaResp.getRoot().getBsaList().get(0).getStation().isEmpty()) {
-            redCircle.setVisibility(View.VISIBLE);
+            if (!NotificationPopUpWindow.isChecked) {
+                redCircle.setVisibility(View.VISIBLE);
+            }
         }
 
         bsas = bsaResp.getRoot().getBsaList();

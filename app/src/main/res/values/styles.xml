@@ -112,7 +112,7 @@
         <item name="android:layout_marginRight">-9dp</item>
     </style>
 
-    <style name="BlackTextBase">
+    <style name="DarkGreyTextBase">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
@@ -120,18 +120,18 @@
         <item name="android:textSize">22sp</item>
     </style>
 
-    <style name="AbbrTextTheme" parent="BlackTextBase">
+    <style name="AbbrTextTheme" parent="DarkGreyTextBase">
         <item name="android:layout_width">110dp</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="UserRouteInputTextTheme" parent="BlackTextBase">
+    <style name="UserRouteInputTextTheme" parent="DarkGreyTextBase">
         <item name="android:gravity">center</item>
         <item name="android:layout_width">70dp</item>
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="UserRouteEditIconTheme" parent="BlackTextBase">
+    <style name="UserRouteEditIconTheme" parent="DarkGreyTextBase">
         <item name="android:gravity">center</item>
         <item name="android:layout_marginRight">4dp</item>
         <item name="android:text">@string/ion_edit</item>
@@ -144,6 +144,10 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="CheckBoxTheme" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/bartBlue</item>
     </style>
 
 </resources>
