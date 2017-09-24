@@ -10,12 +10,14 @@
     android:padding="@dimen/activity_vertical_margin"
     android:visibility="gone">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/stn_info_header"
+            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -43,6 +45,7 @@
 
         <LinearLayout
             android:id="@+id/stn_info"
+            android:layout_below="@+id/stn_info_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -115,6 +118,16 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+        <ProgressBar
+            style="@style/BartBlueSpinner"
+            android:id="@+id/stn_info_progress_bar"
+            android:layout_below="@+id/stn_info_header"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:visibility="invisible"/>
+
+    </RelativeLayout>
 
 </ScrollView>

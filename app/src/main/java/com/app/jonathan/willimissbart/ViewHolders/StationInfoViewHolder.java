@@ -3,11 +3,10 @@ package com.app.jonathan.willimissbart.ViewHolders;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.net.Uri;
-import android.text.Layout;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import com.app.jonathan.willimissbart.API.Models.StationInfoModels.Station;
 import com.app.jonathan.willimissbart.Listeners.Animations.Generic.ShowOrHideAnimListener;
 import com.app.jonathan.willimissbart.Listeners.Animations.Generic.UpdateListener;
+import com.app.jonathan.willimissbart.Listeners.Animations.StationInfo.HideProgressBarAnimListener;
 import com.app.jonathan.willimissbart.Listeners.Animations.StationInfo.StationInfoAnimListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.R;
@@ -33,6 +33,7 @@ public class StationInfoViewHolder {
     @Bind(R.id.stn_addr_layout) public RelativeLayout stationAddrLayout;
     @Bind(R.id.stn_info) public LinearLayout stationInfoLayout;
     @Bind(R.id.activity_table) LinearLayout activityTable;
+    @Bind(R.id.stn_info_progress_bar) public ProgressBar progressBar;
     @Bind(R.id.stn_info_title) TextView stationInfoTitle;
     @Bind(R.id.stn_info_blurb) TextView stationInfoBlurb;
     @Bind(R.id.stn_info_addr) TextView stationInfoAddress;
@@ -40,6 +41,7 @@ public class StationInfoViewHolder {
     private ValueAnimator expandAnimation;
     private ValueAnimator collapseAnimation;
     private AlphaAnimation showInfoAnim;
+    private AlphaAnimation hideProgressBar;
     private StationInfoAnimListener showLayoutListener;
 
     // I don't need to reset the values because by the time the user clicks on this, new lat long
@@ -65,6 +67,11 @@ public class StationInfoViewHolder {
     public void onClose() {
         showInfoAnim.setAnimationListener(null);
         showInfoAnim.cancel();
+
+        hideProgressBar.setAnimationListener(null);
+        hideProgressBar.cancel();
+        progressBar.setVisibility(View.INVISIBLE);
+
         collapseAnimation.start();
     }
 
@@ -100,8 +107,12 @@ public class StationInfoViewHolder {
         showInfoAnim.setDuration(Constants.STANDARD_DURATION);
         showInfoAnim.setAnimationListener(new ShowOrHideAnimListener(
             stationInfoLayout, View.VISIBLE));
-        stationInfoLayout.startAnimation(showInfoAnim);
-        showInfoAnim.start();
+
+        hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
+        hideProgressBar.setDuration(Constants.STANDARD_DURATION);
+        hideProgressBar.setAnimationListener(new HideProgressBarAnimListener(progressBar,
+            showInfoAnim, stationInfoLayout));
+        progressBar.startAnimation(hideProgressBar);
     }
 
     public void show(String abbr) {

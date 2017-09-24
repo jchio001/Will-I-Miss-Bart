@@ -9,6 +9,7 @@
     <EditText
         android:id="@+id/stn_search"
         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        android:hint="@string/stn_filter_hint"
         android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

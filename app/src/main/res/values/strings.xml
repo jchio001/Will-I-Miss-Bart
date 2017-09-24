@@ -8,6 +8,7 @@
     <string name="stn_dest">Dest.</string>
     <string name="stn_from">From: %s</string>
     <string name="stn_to">To: %s</string>
+    <string name="stn_filter_hint">Enter in a station name</string>
 
     <!-- Notification Timer -->
     <string name="notif_blurb_format">This train from %1$s to %2$s is leaving in around %3$s</string>
