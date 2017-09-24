@@ -16,6 +16,7 @@ import java.util.List;
 public class SPSingleton {
     private static SPSingleton instance = null;
     private SharedPreferences sp;
+    private static Gson gson = new Gson();
 
     private SPSingleton(Context context) {
         sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -39,7 +40,7 @@ public class SPSingleton {
         if (userData.isEmpty()) {
             return null;
         } else {
-            return new Gson().fromJson(userData,
+            return gson.fromJson(userData,
                 new TypeToken<ArrayList<UserStationData>>(){}.getType());
         }
     }
@@ -54,7 +55,7 @@ public class SPSingleton {
 
     public static void persistUserData(Context context, List<UserStationData> userData) {
         getInstance(context).getSp().edit()
-            .putString(Constants.USER_DATA, new Gson().toJson(userData))
+            .putString(Constants.USER_DATA, gson.toJson(userData))
             .apply();
     }
 

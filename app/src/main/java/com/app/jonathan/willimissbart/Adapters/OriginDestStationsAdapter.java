@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
+import com.app.jonathan.willimissbart.ViewHolders.StationInfoViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationsCardViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 import com.google.common.collect.Lists;
@@ -20,8 +21,10 @@ public class OriginDestStationsAdapter extends AbstractStationsAdapter {
     private int originIndex = -1;
     private int destIndex = -1;
 
-    public OriginDestStationsAdapter(List<Station> stations, StationsFooterViewHolder footer) {
-        super(stations);
+    public OriginDestStationsAdapter(List<Station> stations,
+                                     StationInfoViewHolder stationInfoViewHolder,
+                                     StationsFooterViewHolder footer) {
+        super(stations, stationInfoViewHolder);
         this.footer = footer.setAdapter(this);
     }
 

@@ -9,12 +9,15 @@
     <string name="stn_from">From: %s</string>
     <string name="stn_to">To: %s</string>
 
-    <!-- Notification -->
+    <!-- Notification Timer -->
     <string name="notif_blurb_format">This train from %1$s to %2$s is leaving in around %3$s</string>
     <string name="notif_title_format">%1$s to %2$s leaving in:</string>
     <string name="train_leaving">Your train is leaving!</string>
     <string name="close">Tap here to close</string>
     <string name="imageview_desc">App icon</string>
+
+    <!-- BSA Pop up Window -->
+    <string name="see_all">See all announcements</string>
 
     <!-- User route footer -->
     <string name="leaving_in">"Leaving in: "</string>
@@ -32,7 +35,7 @@
 
     <string name="enter_days">Enter the days you want to track this station on:</string>
 
-    <string name="departures_as_of">Departures as of %s. Swipe up to refresh.</string>
+    <string name="departures_as_of">Departures as of %s. Pull down to refresh.</string>
     <string name="updated_data">Updated your route.</string>
     <string name="no_etds">No etds for this station.</string>
     <string name="failed_to_get_etds">Failed to fetch etds. Press here to try again.</string>
@@ -43,8 +46,6 @@
     <string name="too_late">The train probably left already.</string>
     <string name="departures_title_format">From %1$s to %2$s</string>
     <string name="departures_departure_format">Train from %1$s to %2$s %3$s</string>
-    <string name="tip_1">Did you know? If you press on a estimate, you can set a timer to notify you when that train leaves!</string>
-    <string name="tip_2">Unsure what station an abbreviation stands for? Press on it!</string>
 
     <!-- Timer dialog -->
     <string name="timer_notif_title">How many minutes early do you want the timer to trigger?</string>
@@ -71,4 +72,8 @@
     <string name="select_origin">Select an origin station</string>
     <string name="select_dest">Select a destination station</string>
     <string name="going_in_a_loop">You can\'t be leaving and going to the same station.</string>
+
+    <!-- StationInfoLayout -->
+    <string name="stn_info_title">Info for %s station</string>
+    <string name="whats_nearby">Looking for something to do nearby?</string>
 </resources>

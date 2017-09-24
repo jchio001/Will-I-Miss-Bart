@@ -39,10 +39,9 @@ public class Utils {
     }
 
     public static void loadStations(String stationsJSON) {
-        if (StationsSingleton.getInstance().getStations().isEmpty()) {
+        if (StationsSingleton.getStations().isEmpty()) {
             Gson gson = new Gson();
-            Type listType = new TypeToken<List<Station>>() {
-            }.getType();
+            Type listType = new TypeToken<List<Station>>() {}.getType();
             List<Station> stations = gson.fromJson(stationsJSON, listType);
             StationsSingleton.getInstance().setStations(stations);
         }
@@ -108,29 +107,29 @@ public class Utils {
     }
 
     public static List<FlattenedEstimate> flattenEstimates(EtdStation[] etdStations,
-                                                           UserStationData[] associatedData,
+                                                           List<UserStationData> associatedData,
                                                            long[] timeOfResponse,
                                                            boolean[] successArr,
                                                            int size) {
         List<FlattenedEstimate> flattenedEstimates = Lists.newArrayList();
         for (int i = 0; i < size; ++i) {
             if (successArr[i]) {
-                if (!etdStations[i].getEtds().isEmpty()) {
+                if (etdStations[i].getEtds() != null && !etdStations[i].getEtds().isEmpty()) {
                     for (Etd etd : etdStations[i].getEtds()) {
                         flattenedEstimates.add(
-                            new FlattenedEstimate(etdStations[i], etd, timeOfResponse[i], null));
+                            new FlattenedEstimate(associatedData.get(i), etd, timeOfResponse[i], null));
                         for (Estimate estimate : etd.getEstimates()) {
                             flattenedEstimates.add(
                                 new FlattenedEstimate(
-                                    etdStations[i], etd, timeOfResponse[i], estimate));
+                                    associatedData.get(i), etd, timeOfResponse[i], estimate));
                         }
                     }
                 } else {
                     flattenedEstimates.add(new FlattenedEstimate(
-                        etdStations[i], null, timeOfResponse[i], null));
+                        associatedData.get(i), null, timeOfResponse[i], null));
                 }
             } else {
-                flattenedEstimates.add(new FlattenedEstimate(associatedData[i]));
+                flattenedEstimates.add(new FlattenedEstimate(associatedData.get(i)));
             }
         }
         return flattenedEstimates;

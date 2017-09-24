@@ -46,7 +46,9 @@
             android:name=".Activities.AppActivities.SelectStationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/PureBlueTheme"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden|adjustNothing"/>
+        <activity android:name=".Activities.AppActivities.AnnouncementsActivity">
+        </activity>
     </application>
 
 </manifest>

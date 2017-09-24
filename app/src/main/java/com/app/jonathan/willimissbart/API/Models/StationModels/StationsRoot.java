@@ -1,7 +1,6 @@
 package com.app.jonathan.willimissbart.API.Models.StationModels;
 
-
-import com.app.jonathan.willimissbart.API.Models.Meta.UriData;
+import com.app.jonathan.willimissbart.API.Models.Generic.CDataSection;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,14 +9,13 @@ import java.io.Serializable;
 public class StationsRoot implements Serializable {
     @SerializedName("uri")
     @Expose
-    private UriData uri;
+    private CDataSection uri;
 
     @SerializedName("stations")
     @Expose
     private Stations stations;
 
-
-    public UriData getUri() {
+    public CDataSection getUri() {
         return uri;
     }
 

@@ -1,4 +1,4 @@
-package com.app.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.InitialAnimation;
+package com.app.jonathan.willimissbart.Listeners.Animations.StationInput.InitialAnimation;
 
 
 import android.view.View;

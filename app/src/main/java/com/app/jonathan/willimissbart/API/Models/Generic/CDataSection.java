@@ -1,4 +1,4 @@
-package com.app.jonathan.willimissbart.API.Models.BSAModels;
+package com.app.jonathan.willimissbart.API.Models.Generic;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

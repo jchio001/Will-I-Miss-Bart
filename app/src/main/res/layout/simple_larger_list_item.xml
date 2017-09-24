@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/simple_large_list_item"
-    android:background="@color/bartBlue"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:padding="1dp">
 
     <TextView
@@ -13,6 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
         android:textSize="24sp"
-        android:textColor="@color/white" />
+        android:textColor="@color/darkGrey" />
 
 </LinearLayout>

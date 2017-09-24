@@ -64,8 +64,6 @@ public class DeparturesFragment extends Fragment {
 
     // Data for setting the the feed of ETD's
     private EtdStation[] stationArr = new EtdStation[5];
-    // Need the user data to make retry calls. TODO: use this
-    private UserStationData[] associatedData = new UserStationData[5];
     private boolean[] successArr = new boolean[5]; // keeps track of if API calls are successful
     // keeps track of when each call is received (in epoch seconds)
     // this is so that better timer intervals can be generated
@@ -146,9 +144,6 @@ public class DeparturesFragment extends Fragment {
             synchronized (this) {
                 timeOfResponse[failure.index] = System.currentTimeMillis() / 1000;
                 stationArr[failure.index] = new EtdStation(failure.data);
-                // only need the user data for failure since I want to user to be able to refreshOnNewData
-                // each item individually
-                associatedData[failure.index] = failure.data;
                 successArr[failure.index] = false;
                 ++sharedEtdDataBundle.stationCntr;
             }
@@ -185,7 +180,7 @@ public class DeparturesFragment extends Fragment {
 
         setUpRetrievalTimeText();
         List<FlattenedEstimate> flattenedEstimates = Utils.flattenEstimates(
-            stations, associatedData, timeOfResponse, successArr, 2);
+            stations, userData, timeOfResponse, successArr, 2);
         departuresAdapter.refresh(flattenedEstimates);
 
         mainSWL.setVisibility(View.VISIBLE);

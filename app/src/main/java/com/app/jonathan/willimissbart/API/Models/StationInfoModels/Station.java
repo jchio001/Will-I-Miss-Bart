@@ -1,12 +1,12 @@
-package com.app.jonathan.willimissbart.API.Models.StationModels;
+package com.app.jonathan.willimissbart.API.Models.StationInfoModels;
 
-import com.app.jonathan.willimissbart.API.Models.Generic.SimpleListItem;
+import com.app.jonathan.willimissbart.API.Models.Generic.CDataSection;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Station implements Serializable, SimpleListItem {
+public class Station implements Serializable {
     @SerializedName("name")
     @Expose
     private String name;
@@ -43,14 +43,21 @@ public class Station implements Serializable, SimpleListItem {
     @Expose
     private int zipCode;
 
-    @SerializedName("index")
+    @SerializedName("intro")
     @Expose
-    private int index = -1;
+    private CDataSection intro;
 
-    @Override
-    public String getTag() {
-        return abbr;
-    }
+    @SerializedName("food")
+    @Expose
+    private CDataSection food;
+
+    @SerializedName("shopping")
+    @Expose
+    private CDataSection shopping;
+
+    @SerializedName("attraction")
+    @Expose
+    private CDataSection attraction;
 
     public String getName() {
         return name;
@@ -58,11 +65,6 @@ public class Station implements Serializable, SimpleListItem {
 
     public String getAbbr() {
         return abbr;
-    }
-
-    public Station setAbbr(String abbr) {
-        this.abbr = abbr;
-        return this;
     }
 
     public double getLatitude() {
@@ -93,12 +95,23 @@ public class Station implements Serializable, SimpleListItem {
         return zipCode;
     }
 
-    public int getIndex() {
-        return index;
+    public CDataSection getIntro() {
+        return intro;
     }
 
-    public Station setIndex(int index) {
-        this.index = index;
-        return this;
+    public CDataSection getFood() {
+        return food;
+    }
+
+    public CDataSection getShopping() {
+        return shopping;
+    }
+
+    public CDataSection getAttraction() {
+        return attraction;
+    }
+
+    public String getFullAddress() {
+        return address + " " + city + ", " + state + " " + String.valueOf(zipCode);
     }
 }

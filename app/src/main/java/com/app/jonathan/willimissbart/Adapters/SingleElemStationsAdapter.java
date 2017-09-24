@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
+import com.app.jonathan.willimissbart.ViewHolders.StationInfoViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationsCardViewHolder;
 
 import java.util.List;
@@ -11,8 +12,10 @@ import java.util.List;
 public class SingleElemStationsAdapter extends AbstractStationsAdapter {
     private boolean selectingOrigin = true;
 
-    public SingleElemStationsAdapter(List<Station> stations, boolean selectingOrigin) {
-        super(stations);
+    public SingleElemStationsAdapter(List<Station> stations,
+                                     StationInfoViewHolder stationInfoViewHolder,
+                                     boolean selectingOrigin) {
+        super(stations, stationInfoViewHolder);
         this.selectingOrigin = selectingOrigin;
     }
 
@@ -30,7 +33,7 @@ public class SingleElemStationsAdapter extends AbstractStationsAdapter {
         convertView = super.getView(position, convertView, parent);
         StationsCardViewHolder viewHolder = (StationsCardViewHolder) convertView.getTag();
 
-        viewHolder.abbr.setText(stations.get(position).getAbbr());
+        viewHolder.abbr.setText(filteredStations.get(position).getAbbr());
         return convertView;
     }
 }

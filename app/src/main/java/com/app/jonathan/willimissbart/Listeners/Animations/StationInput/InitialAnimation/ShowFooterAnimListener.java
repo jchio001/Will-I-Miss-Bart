@@ -1,10 +1,8 @@
-package com.app.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.InitialAnimation;
+package com.app.jonathan.willimissbart.Listeners.Animations.StationInput.InitialAnimation;
 
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.animation.Animation;
 
-import com.app.jonathan.willimissbart.ViewHolders.StationsCardViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 
 

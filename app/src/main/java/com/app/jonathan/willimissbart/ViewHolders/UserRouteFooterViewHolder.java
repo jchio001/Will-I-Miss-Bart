@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.app.jonathan.willimissbart.Activities.AppActivities.SelectStationActivity;
 import com.app.jonathan.willimissbart.Fragments.DeparturesFragment;
 import com.app.jonathan.willimissbart.Listeners.Animations.Footers.FooterAnimListener;
-import com.app.jonathan.willimissbart.Listeners.Animations.Footers.FooterUpdateListener;
+import com.app.jonathan.willimissbart.Listeners.Animations.Generic.UpdateListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
@@ -77,6 +77,7 @@ public class UserRouteFooterViewHolder {
 
     @OnClick(R.id.user_route_update)
     public void onUserRouteUpdate() {
+        Utils.hideKeyboard((Activity) footerBody.getContext());
         departuresFragment.persistUpdatesAndRefresh();
     }
 
@@ -91,12 +92,12 @@ public class UserRouteFooterViewHolder {
 
         expandAnimation = ValueAnimator.ofInt(0, measuredHeight);
         expandAnimation.setDuration(Constants.SHORT_DURATION);
-        expandAnimation.addUpdateListener(new FooterUpdateListener(footerBody));
+        expandAnimation.addUpdateListener(new UpdateListener(footerBody));
         expandAnimation.addListener(new FooterAnimListener(this, View.VISIBLE));
 
         collapseAnimation = ValueAnimator.ofInt(measuredHeight, 0);
         collapseAnimation.setDuration(Constants.SHORT_DURATION);
-        collapseAnimation.addUpdateListener(new FooterUpdateListener(footerBody));
+        collapseAnimation.addUpdateListener(new UpdateListener(footerBody));
         collapseAnimation.addListener(new FooterAnimListener(this, View.GONE));
     }
 }

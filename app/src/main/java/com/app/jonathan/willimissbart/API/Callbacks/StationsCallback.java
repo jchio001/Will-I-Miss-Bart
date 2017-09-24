@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Models.Generic.FailureEvent;
+import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.app.jonathan.willimissbart.API.Models.StationModels.StationsResp;
 
 import org.greenrobot.eventbus.EventBus;
@@ -24,6 +25,12 @@ public class StationsCallback implements Callback<StationsResp> {
         Log.i(tag, String.valueOf(resp.code()));
         switch (resp.code()) {
             case APIConstants.HTTP_STATUS_OK:
+                int i = 0;
+                for (Station station : resp.body().getStationsRoot()
+                    .getStations().getStationList()) {
+                    station.setIndex(i++);
+                }
+
                 EventBus.getDefault().post(resp.body());
                 break;
             default:

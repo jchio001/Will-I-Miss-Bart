@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/activity_info_icon"
+            android:gravity="center"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/darkGrey"
+            android:textSize="28sp"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/darkGrey"/>
+
+        <TextView
+            android:id="@+id/activity_blurb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:linksClickable="true"
+            android:textColor="@color/darkGrey"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/bottom_border"
+        android:background="@color/darkGrey"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+</LinearLayout>

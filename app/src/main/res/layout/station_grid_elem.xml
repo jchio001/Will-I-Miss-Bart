@@ -57,9 +57,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="6dp"
-                android:padding="4dp"
+                android:padding="8dp"
                 android:text="@string/ion_ios_information_outline"
-                android:textColor="@color/black"
+                android:textColor="@color/darkGrey"
                 android:textSize="26sp"
                 android:textStyle="bold"/>
 

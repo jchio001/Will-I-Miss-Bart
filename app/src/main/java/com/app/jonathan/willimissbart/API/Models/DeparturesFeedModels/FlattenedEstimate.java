@@ -21,11 +21,15 @@ public class FlattenedEstimate {
     private long respTime;
     private boolean successful = true;
 
-    public FlattenedEstimate(EtdStation etdStation, Etd etd, long respTime, Estimate estimate) {
-        this.originAbbr = etdStation.getAbbr();
-        this.originName = etdStation.getName();
-        this.destAbbr = etd.getAbbreviation();
-        this.destName = etd.getDestination();
+    public FlattenedEstimate(UserStationData userStationData, Etd etd, long respTime, Estimate estimate) {
+        this.originAbbr = userStationData.getAbbr();
+        this.originName = userStationData.getStation();
+
+        if (etd != null) {
+            this.destAbbr = etd.getAbbreviation();
+            this.destName = etd.getDestination();
+        }
+
         this.estimate = estimate;
         this.respTime = respTime;
 
@@ -37,7 +41,8 @@ public class FlattenedEstimate {
                     .getString(R.string.departures_title_format, originAbbr, destAbbr);
             }
         } else {
-            this.title = "No departures for " + originAbbr + " " + destAbbr;
+            this.title = "No departures for " + originAbbr +
+                (destAbbr != null ? " " + destAbbr : "");
         }
     }
 

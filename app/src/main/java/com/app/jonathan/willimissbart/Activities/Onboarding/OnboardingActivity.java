@@ -20,7 +20,7 @@ import com.app.jonathan.willimissbart.API.Models.StationModels.StationsResp;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.OriginDestStationsAdapter;
 import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog;
-import com.app.jonathan.willimissbart.Listeners.Animations.StationInputAnimationListeners.InitialAnimation.HideProgressBarAnimListener;
+import com.app.jonathan.willimissbart.Listeners.Animations.StationInput.InitialAnimation.HideProgressBarAnimListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
@@ -129,7 +129,8 @@ public class OnboardingActivity extends AppCompatActivity
 
     @SuppressWarnings("unchecked")
     private void setUpActivityLayout() {
-        adapter = new OriginDestStationsAdapter(StationsSingleton.getStations(), footer);
+        // TODO: remove this null with actual object
+        adapter = new OriginDestStationsAdapter(StationsSingleton.getStations(), null, footer);
         stationGrid.setAdapter(adapter);
         AlphaAnimation hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
         hideProgressBar.setDuration(Constants.LONG_DURATION);

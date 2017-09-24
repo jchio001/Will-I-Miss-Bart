@@ -1,6 +1,6 @@
 package com.app.jonathan.willimissbart.API.Models.EtdModels;
 
-import com.app.jonathan.willimissbart.API.Models.Meta.UriData;
+import com.app.jonathan.willimissbart.API.Models.Generic.CDataSection;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,7 +14,7 @@ public class EtdRoot implements Serializable {
 
     @SerializedName("uri")
     @Expose
-    private UriData uri;
+    private CDataSection uri;
 
     @SerializedName("date")
     @Expose
@@ -28,7 +28,7 @@ public class EtdRoot implements Serializable {
         return id;
     }
 
-    public UriData getUri() {
+    public CDataSection getUri() {
         return uri;
     }
 
