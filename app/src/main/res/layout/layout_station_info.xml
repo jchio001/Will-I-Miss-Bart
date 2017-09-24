@@ -95,7 +95,7 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="22dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/whats_nearby"
                 android:textColor="@color/darkGrey"
                 android:textSize="18sp"/>
@@ -105,7 +105,7 @@
                 android:background="@drawable/dark_grey_rectangular_border"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:orientation="vertical">
 
                 <include layout="@layout/layout_station_info_row" />

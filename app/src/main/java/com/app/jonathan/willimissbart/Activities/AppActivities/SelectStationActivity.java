@@ -89,19 +89,6 @@ public class SelectStationActivity extends AppCompatActivity {
         }
     }
 
-    /*@OnItemClick(R.id.stn_grid)
-    public void onStationSelected(AdapterView<?> parent, int position) {
-        if (position != notThisIndex) {
-            Intent intent = new Intent();
-            intent.putExtra(Constants.STATION_INDEX, position);
-            setResult(adapter.isSelectingOrigin() ?
-                Constants.UPDATED_ORIGIN : Constants.UPDATED_DEST, intent);
-            finish();
-        } else {
-            Utils.showSnackbar(this, parent, R.color.red, R.string.going_in_a_loop);
-        }
-    }*/
-
     public int getStationInfoLayoutHeight() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);

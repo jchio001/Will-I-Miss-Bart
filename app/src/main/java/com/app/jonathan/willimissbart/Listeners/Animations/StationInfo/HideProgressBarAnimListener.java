@@ -31,10 +31,6 @@ public class HideProgressBarAnimListener implements AnimationListener {
     @Override
     public void onAnimationEnd(Animation animation) {
         progressBar.setVisibility(View.GONE);
-        showInfoAnim = new AlphaAnimation(0.0f, 1.0f);
-        showInfoAnim.setDuration(Constants.STANDARD_DURATION);
-        showInfoAnim.setAnimationListener(new ShowOrHideAnimListener(
-            stationInfoLayout, View.VISIBLE));
         stationInfoLayout.startAnimation(showInfoAnim);
     }
 

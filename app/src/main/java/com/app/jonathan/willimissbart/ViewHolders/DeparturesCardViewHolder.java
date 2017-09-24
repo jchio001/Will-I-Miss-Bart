@@ -49,12 +49,7 @@ public class DeparturesCardViewHolder extends ViewHolder {
 
     @OnClick(R.id.departures_info_blurb)
     public void onInfoBlurbClick() {
-        Toast.makeText(context,
-            context.getString(
-                R.string.departures_title_format,
-                flattenedEstimate.getOriginName(),
-                flattenedEstimate.getDestName()),
-            Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, infoBlurb.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.leaving_in_text)
