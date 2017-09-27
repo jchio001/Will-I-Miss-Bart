@@ -37,7 +37,7 @@
 
     <string name="enter_days">Enter the days you want to track this station on:</string>
 
-    <string name="departures_as_of">Departures as of %s. Pull down to refresh.</string>
+    <string name="departures_as_of">Departures as of %s</string>
     <string name="updated_data">Updated your route.</string>
     <string name="no_etds">No etds for this station.</string>
     <string name="failed_to_get_etds">Failed to fetch etds. Press here to try again.</string>

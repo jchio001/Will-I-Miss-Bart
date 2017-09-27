@@ -5,16 +5,17 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 
 public class ShowGridAnimListener implements Animation.AnimationListener {
-    private GridView grid;
+    private LinearLayout gridLayout;
     private StationsFooterViewHolder footer;
 
-    public ShowGridAnimListener setGrid(GridView grid) {
-        this.grid = grid;
+    public ShowGridAnimListener setGridLayout(LinearLayout gridLayout) {
+        this.gridLayout = gridLayout;
         return this;
     }
 
@@ -35,7 +36,7 @@ public class ShowGridAnimListener implements Animation.AnimationListener {
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        grid.setVisibility(View.VISIBLE);
+        gridLayout.setVisibility(View.VISIBLE);
         AlphaAnimation showFooter = new AlphaAnimation(0.0f, 1.0f);
         showFooter.setDuration(Constants.STANDARD_DURATION);
         showFooter.setAnimationListener(new ShowFooterAnimListener().setFooter(footer));

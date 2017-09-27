@@ -19,7 +19,6 @@ import com.app.jonathan.willimissbart.API.Models.Generic.FailureEvent;
 import com.app.jonathan.willimissbart.API.Models.StationModels.StationsResp;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.OriginDestStationsAdapter;
-import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog;
 import com.app.jonathan.willimissbart.Listeners.Animations.StationInput.InitialAnimation.HideProgressBarAnimListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
@@ -27,6 +26,7 @@ import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
 import com.app.jonathan.willimissbart.PopUpWindows.InfoPopUpWindow;
 import com.app.jonathan.willimissbart.R;
+import com.app.jonathan.willimissbart.ViewHolders.StationGridViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 import com.google.gson.Gson;
 
@@ -38,16 +38,16 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 
-public class OnboardingActivity extends AppCompatActivity
-        implements DeleteAlertDialog.DeleteDataElemListener {
+public class OnboardingActivity extends AppCompatActivity {
     @Bind(R.id.activity_station_input) CoordinatorLayout parent;
     @Bind(R.id.info_layout) LinearLayout infoLayout;
-    @Bind(R.id.stn_grid) GridView stationGrid;
+    @Bind(R.id.stn_grid_layout) LinearLayout stationGridLayout;
     @Bind(R.id.stations_footer) LinearLayout stationsFooter;
     @Bind(R.id.progressBar) ProgressBar progressBar;
     @Bind(R.id.help_tv) TextView helpTextView;
 
     // View modules
+    private StationGridViewHolder stationGridViewHolder;
     private StationsFooterViewHolder footer;
 
     OriginDestStationsAdapter adapter;
@@ -90,18 +90,6 @@ public class OnboardingActivity extends AppCompatActivity
                 loc[1] + helpTextView.getMeasuredHeight() + 10);
     }
 
-    @Deprecated
-    @Override
-    public void deleteDataElem(int index) {
-        /*Log.i("OnboardingActivity", String.format("Deleting %d", index));
-        for (int i = index + 1; i < bartDataElemViewHolders.size(); ++i) {
-            bartDataElemViewHolders.get(i).decrementIndex();
-        }
-        bartDataElemViewHolders.remove(index);
-        dataElemLayout.removeViewAt(index);
-        --nextIndex;*/
-    }
-
     @OnClick(R.id.help_tv)
     public void onHelpRequested() {
         InfoPopUpWindow info = new InfoPopUpWindow(this);
@@ -110,7 +98,7 @@ public class OnboardingActivity extends AppCompatActivity
 
     @OnItemClick(R.id.stn_grid)
     public void onItemSelected(AdapterView<?> parent, int position) {
-        adapter.setOriginOrDest(position);
+        adapter.setOriginOrDest(adapter.getItem(position).getIndex());
     }
 
     @Subscribe
@@ -131,13 +119,13 @@ public class OnboardingActivity extends AppCompatActivity
     private void setUpActivityLayout() {
         // TODO: remove this null with actual object
         adapter = new OriginDestStationsAdapter(StationsSingleton.getStations(), null, footer);
-        stationGrid.setAdapter(adapter);
+        stationGridViewHolder = new StationGridViewHolder(stationGridLayout, adapter, true);
         AlphaAnimation hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
         hideProgressBar.setDuration(Constants.LONG_DURATION);
         hideProgressBar.setAnimationListener(new HideProgressBarAnimListener()
             .setProgressBar(progressBar)
             .setLinearLayout(infoLayout)
-            .setGrid(stationGrid)
+            .setGridLayout(stationGridLayout)
             .setFooter(footer));
         progressBar.startAnimation(hideProgressBar);
     }

@@ -7,6 +7,8 @@ import android.media.AudioManager;
 import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -151,5 +153,20 @@ public class Utils {
         tv.setTextColor(ContextCompat.getColor(context, R.color.white));
         snackbar.show();
         return snackbar;
+    }
+
+    public static int getStationInfoLayoutHeight(Activity activity, int sizeFactor) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        int resourceId = activity.getResources().getIdentifier("status_bar_height",
+            "dimen", "android");
+        int statusBarHeight = activity.getResources().getDimensionPixelSize(resourceId);
+
+        TypedValue tv = new TypedValue();
+        activity.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true);
+        return displayMetrics.heightPixels - (TypedValue.complexToDimensionPixelSize(
+            tv.data, activity.getResources().getDisplayMetrics()) * sizeFactor) -
+            statusBarHeight;
     }
 }

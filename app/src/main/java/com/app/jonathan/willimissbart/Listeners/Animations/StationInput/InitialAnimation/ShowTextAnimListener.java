@@ -12,7 +12,7 @@ import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 
 public class ShowTextAnimListener implements Animation.AnimationListener {
     private LinearLayout linearLayout;
-    private GridView grid;
+    private LinearLayout gridLayout;
     private StationsFooterViewHolder footer;
 
     public ShowTextAnimListener setLinearLayout(LinearLayout linearLayout) {
@@ -20,8 +20,8 @@ public class ShowTextAnimListener implements Animation.AnimationListener {
         return this;
     }
 
-    public ShowTextAnimListener setGrid(GridView grid) {
-        this.grid = grid;
+    public ShowTextAnimListener setGridLayout(LinearLayout gridLayout) {
+        this.gridLayout = gridLayout;
         return this;
     }
 
@@ -40,8 +40,8 @@ public class ShowTextAnimListener implements Animation.AnimationListener {
         AlphaAnimation showGridAnim = new AlphaAnimation(0.0f, 1.0f);
         showGridAnim.setDuration(Constants.LONG_DURATION);
         showGridAnim.setAnimationListener(new ShowGridAnimListener()
-            .setGrid(grid).setFooter(footer));
-        grid.startAnimation(showGridAnim);
+            .setGridLayout(gridLayout).setFooter(footer));
+        gridLayout.startAnimation(showGridAnim);
     }
 
     @Override

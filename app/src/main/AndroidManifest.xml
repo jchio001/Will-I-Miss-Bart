@@ -36,7 +36,8 @@
         <activity
             android:name=".Activities.Onboarding.OnboardingActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".Activities.AppActivities.MainActivity"
             android:label="@string/app_name"

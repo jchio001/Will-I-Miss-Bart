@@ -1,5 +1,6 @@
 package com.app.jonathan.willimissbart.Activities.AppActivities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ import com.app.jonathan.willimissbart.API.Models.BSAModels.BsaResp;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.ViewPagerAdapter;
 import com.app.jonathan.willimissbart.Fragments.DeparturesFragment;
-import com.app.jonathan.willimissbart.Fragments.MyStationsFragment;
+import com.app.jonathan.willimissbart.Fragments.StationsFragment;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
@@ -49,10 +50,10 @@ public class MainActivity extends AppCompatActivity {
     private View redCircle;
 
     private DeparturesFragment departuresFragment = new DeparturesFragment();
-    private MyStationsFragment myStationsFragment = new MyStationsFragment();
+    private StationsFragment stationsFragment = new StationsFragment();
     private List<Bsa> bsas = Lists.newArrayList();
 
-    protected final Context context = this;
+    protected final Activity context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,11 +125,27 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Fragment> fragments = new ArrayList<>();
         departuresFragment.setArguments(bundle);
         fragments.add(departuresFragment);
-        fragments.add(myStationsFragment);
+        fragments.add(stationsFragment);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager())
             .setTitles(titles)
             .setFragments(fragments);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Utils.hideKeyboard(context);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);

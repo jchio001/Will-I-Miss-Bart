@@ -180,7 +180,7 @@ public class DeparturesFragment extends Fragment {
 
         setUpRetrievalTimeText();
         List<FlattenedEstimate> flattenedEstimates = Utils.flattenEstimates(
-            stations, userData, timeOfResponse, successArr, 2);
+            stations, updatedUserData, timeOfResponse, successArr, 2);
         departuresAdapter.refresh(flattenedEstimates);
 
         mainSWL.setVisibility(View.VISIBLE);

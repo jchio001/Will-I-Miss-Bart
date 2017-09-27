@@ -42,7 +42,6 @@
                 android:id="@+id/help_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/help"
                 android:textColor="@color/white"/>
@@ -53,17 +52,19 @@
             layout="@layout/layout_station_footer"
             android:visibility="invisible"/>
 
-        <GridView
-            android:id="@+id/stn_grid"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/stations_footer"
             android:layout_below="@+id/info_layout"
-            android:layout_marginTop="4dp"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:layout_marginRight="@dimen/activity_vertical_margin"
-            android:numColumns="3"
-            android:visibility="invisible"
-            android:layout_above="@+id/stations_footer"/>
+            android:layout_marginRight="@dimen/activity_vertical_margin">
+
+            <include
+                layout="@layout/layout_station_grid"
+                android:visibility="invisible"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

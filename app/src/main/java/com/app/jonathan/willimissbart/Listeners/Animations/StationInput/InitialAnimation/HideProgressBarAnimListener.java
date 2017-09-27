@@ -14,7 +14,7 @@ import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 public class HideProgressBarAnimListener implements Animation.AnimationListener {
     private ProgressBar progressBar;
     private LinearLayout linearLayout;
-    private GridView grid;
+    private LinearLayout gridLayout;
     private StationsFooterViewHolder footer;
 
     public HideProgressBarAnimListener setProgressBar(ProgressBar progressBar) {
@@ -27,8 +27,8 @@ public class HideProgressBarAnimListener implements Animation.AnimationListener 
         return this;
     }
 
-    public HideProgressBarAnimListener setGrid(GridView grid) {
-        this.grid = grid;
+    public HideProgressBarAnimListener setGridLayout(LinearLayout gridLayout) {
+        this.gridLayout = gridLayout;
         return this;
     }
 
@@ -50,7 +50,7 @@ public class HideProgressBarAnimListener implements Animation.AnimationListener 
         showTextAnim.setAnimationListener(
             new ShowTextAnimListener()
                 .setLinearLayout(linearLayout)
-                .setGrid(grid)
+                .setGridLayout(gridLayout)
                 .setFooter(footer)
         );
         linearLayout.startAnimation(showTextAnim);

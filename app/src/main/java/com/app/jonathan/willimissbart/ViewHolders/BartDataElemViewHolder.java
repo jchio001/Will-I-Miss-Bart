@@ -12,8 +12,6 @@ import android.widget.TextView;
 import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
 import com.app.jonathan.willimissbart.Adapters.SimpleLargeTextListAdapter;
 import com.app.jonathan.willimissbart.Adapters.StringAdapter;
-import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog;
-import com.app.jonathan.willimissbart.Dialogs.DeleteAlertDialog.DeleteDataElemListener;
 import com.app.jonathan.willimissbart.Enums.StyleEnum;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
@@ -21,7 +19,6 @@ import com.app.jonathan.willimissbart.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnLongClick;
 
 public class BartDataElemViewHolder {
     @Bind(R.id.day_of_week_layout) public LinearLayout dayOfWeekLayout;
@@ -36,7 +33,7 @@ public class BartDataElemViewHolder {
     @Bind(R.id.divider) View divider;
 
     private Context context;
-    private DeleteDataElemListener listener;
+    //private DeleteDataElemListener listener;
     private StyleEnum style = StyleEnum.BART_STYLE;
 
     private int index;
@@ -45,11 +42,11 @@ public class BartDataElemViewHolder {
 
     public BartDataElemViewHolder(View v,
                                   Context context,
-                                  DeleteDataElemListener listener,
+                                  //DeleteDataElemListener listener,
                                   int index) {
         ButterKnife.bind(this, v);
         this.context = context;
-        this.listener = listener;
+        //this.listener = listener;
         this.index = index;
     }
 
@@ -68,7 +65,7 @@ public class BartDataElemViewHolder {
 
     @OnClick(R.id.remove)
     public void onRemoveClicked() {
-        new DeleteAlertDialog(context, listener, index).show();
+        //new DeleteAlertDialog(context, listener, index).show();
     }
 
     // ghetto builder pattern

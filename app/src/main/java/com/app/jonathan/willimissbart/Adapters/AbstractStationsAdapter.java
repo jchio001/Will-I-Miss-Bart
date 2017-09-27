@@ -14,14 +14,13 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-public abstract class AbstractStationsAdapter extends BaseAdapter {
+public class AbstractStationsAdapter extends BaseAdapter {
     protected List<Station> filteredStations;
     protected List<Station> stations;
     private StationInfoViewHolder stationInfoViewHolder;
-    protected boolean pickingOrigin = true; // TODO: do something with this
 
-    protected AbstractStationsAdapter(List<Station> stations,
-                                      StationInfoViewHolder stationInfoViewHolder) {
+    public AbstractStationsAdapter(List<Station> stations,
+                                   StationInfoViewHolder stationInfoViewHolder) {
         this.filteredStations = Lists.newArrayList(stations);
         this.stations = stations;
         this.stationInfoViewHolder = stationInfoViewHolder;

@@ -33,10 +33,11 @@ public class OriginDestStationsAdapter extends AbstractStationsAdapter {
         convertView = super.getView(position, convertView, parent);
         StationsCardViewHolder viewHolder = (StationsCardViewHolder) convertView.getTag();
 
-        viewHolder.abbr.setText(stations.get(position).getAbbr());
-        if (position == originIndex) {
+        viewHolder.abbr.setText(getItem(position).getAbbr());
+        int originalIndex = getItem(position).getIndex();
+        if (originalIndex == originIndex) {
             viewHolder.originOrDest.setText(R.string.stn_origin);
-        } else if (position == destIndex) {
+        } else if (originalIndex == destIndex) {
             viewHolder.originOrDest.setText(R.string.stn_dest);
         } else {
             viewHolder.originOrDest.setText(" ");
