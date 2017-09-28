@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
-                android:textColor="@color/black"
+                android:textColor="@color/darkGrey"
                 android:textSize="24sp"/>
 
             <TextView
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="6dp"
-                android:textColor="@color/black"
+                android:textColor="@color/darkGrey"
                 android:textSize="18sp"/>
 
             <com.joanzapata.iconify.widget.IconTextView

@@ -35,7 +35,6 @@ public class SelectStationActivity extends AppCompatActivity {
     private StationGridViewHolder stationGridViewHolder;
 
     private int notThisIndex = -1;
-    private static int height = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +47,8 @@ public class SelectStationActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ButterKnife.bind(this);
 
-        if (height == -1) {
-            height = Utils.getStationInfoLayoutHeight(this, 1);
-        }
-
-        stationInfoViewHolder = new StationInfoViewHolder(stationInfoLayout, height);
+        stationInfoViewHolder = new StationInfoViewHolder(stationInfoLayout,
+            Utils.getStationInfoLayoutHeight(this));
         adapter = new SingleElemStationsAdapter(StationsSingleton.getStations(),
             stationInfoViewHolder, true)
             .setSelectingOrigin(titleId == R.string.select_origin);
@@ -79,7 +75,7 @@ public class SelectStationActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (stationInfoLayout.getVisibility() == View.VISIBLE &&
-            stationInfoLayout.getHeight() == height) {
+            stationInfoLayout.getHeight() == Utils.getStationInfoLayoutHeight(this)) {
             stationInfoViewHolder.onClose();
         } else {
 

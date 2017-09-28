@@ -155,18 +155,23 @@ public class Utils {
         return snackbar;
     }
 
-    public static int getStationInfoLayoutHeight(Activity activity, int sizeFactor) {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+    private static int height = -1;
+    public static int getStationInfoLayoutHeight(Activity activity) {
+        if (height == -1) {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-        int resourceId = activity.getResources().getIdentifier("status_bar_height",
-            "dimen", "android");
-        int statusBarHeight = activity.getResources().getDimensionPixelSize(resourceId);
+            int resourceId = activity.getResources().getIdentifier("status_bar_height",
+                "dimen", "android");
+            int statusBarHeight = activity.getResources().getDimensionPixelSize(resourceId);
 
-        TypedValue tv = new TypedValue();
-        activity.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true);
-        return displayMetrics.heightPixels - (TypedValue.complexToDimensionPixelSize(
-            tv.data, activity.getResources().getDisplayMetrics()) * sizeFactor) -
-            statusBarHeight;
+            TypedValue tv = new TypedValue();
+            activity.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true);
+            return displayMetrics.heightPixels - (TypedValue.complexToDimensionPixelSize(
+                tv.data, activity.getResources().getDisplayMetrics())) -
+                statusBarHeight;
+        }
+
+        return height;
     }
 }

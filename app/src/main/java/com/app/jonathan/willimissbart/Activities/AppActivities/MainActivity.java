@@ -15,6 +15,8 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ScrollView;
 
 import com.app.jonathan.willimissbart.API.Models.BSAModels.Bsa;
 import com.app.jonathan.willimissbart.API.Models.BSAModels.BsaResp;
@@ -27,6 +29,7 @@ import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.PopUpWindows.NotificationPopUpWindow;
 import com.app.jonathan.willimissbart.R;
+import com.app.jonathan.willimissbart.ViewHolders.StationInfoViewHolder;
 import com.google.common.collect.Lists;
 
 import org.greenrobot.eventbus.EventBus;
@@ -39,21 +42,25 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnItemClick;
 
 public class MainActivity extends AppCompatActivity {
     @Bind(R.id.drawer_layout) CoordinatorLayout parent;
+    @Bind(R.id.stn_info_parent) ScrollView stationInfoLayout;
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.tabs) TabLayout tabs;
     @Bind(R.id.view_pager) ViewPager viewPager;
 
+    private StationInfoViewHolder stationInfoViewHolder;
     private View notifIcon;
     private View redCircle;
 
     private DeparturesFragment departuresFragment = new DeparturesFragment();
     private StationsFragment stationsFragment = new StationsFragment();
     private List<Bsa> bsas = Lists.newArrayList();
-
     protected final Activity context = this;
+
+    private int height = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
         setSupportActionBar(toolbar);
 
+        stationInfoViewHolder = new StationInfoViewHolder(stationInfoLayout,
+            Utils.getStationInfoLayoutHeight(this));
         NotificationPopUpWindow.isChecked = SPSingleton.getString(this, Constants.MUTE_NOTIF)
             .equals(NotificationPopUpWindow.dateFormat.format(new Date()));
         Utils.loadStations(SPSingleton.getInstance(getApplicationContext()).getPersistedStations());
@@ -80,7 +89,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (stationInfoLayout.getVisibility() == View.VISIBLE) {
+            stationInfoViewHolder.onClose();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -118,6 +131,10 @@ public class MainActivity extends AppCompatActivity {
         bsas = bsaResp.getRoot().getBsaList();
     }
 
+    public StationInfoViewHolder getStationInfoViewHolder() {
+        return stationInfoViewHolder;
+    }
+
     private void setUpViewPager(Bundle bundle) {
         ArrayList<String> titles = new ArrayList<String>(Arrays.asList(getResources()
             .getStringArray(R.array.tab_headers)));
@@ -131,7 +148,9 @@ public class MainActivity extends AppCompatActivity {
             .setTitles(titles)
             .setFragments(fragments);
 
+        // TODO: Butterknife this (again)
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }

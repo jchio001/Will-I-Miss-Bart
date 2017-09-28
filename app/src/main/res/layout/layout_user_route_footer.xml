@@ -105,7 +105,7 @@
                 <EditText
                     style="@style/UserRouteInputTextTheme"
                     android:id="@+id/user_route_minutes"
-                    android:background="@drawable/black_rectangular_border"
+                    android:background="@drawable/dark_grey_rectangular_border"
                     android:cursorVisible="false"
                     android:inputType="number"
                     android:imeOptions="actionDone"
