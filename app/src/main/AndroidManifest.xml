@@ -50,6 +50,12 @@
             android:windowSoftInputMode="stateHidden|adjustNothing"/>
         <activity android:name=".Activities.AppActivities.AnnouncementsActivity">
         </activity>
+        <activity
+            android:label="@string/bart_map"
+            android:name=".Activities.AppActivities.MapActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/PureBlueTheme">
+        </activity>
     </application>
 
 </manifest>

@@ -31,6 +31,8 @@ import com.app.jonathan.willimissbart.PopUpWindows.NotificationPopUpWindow;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.StationInfoViewHolder;
 import com.google.common.collect.Lists;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.IoniconsIcons;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -101,11 +103,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main, menu);
         setUpNotifIcon(menu);
+        menu.findItem(R.id.map).setIcon(new IconDrawable(this, IoniconsIcons.ion_map)
+            .colorRes(R.color.white)
+            .actionBarSize());
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.map) {
+            startActivity(new Intent(this, MapActivity.class));
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

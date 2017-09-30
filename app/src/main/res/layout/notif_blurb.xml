@@ -10,14 +10,12 @@
 
     <TextView
         android:id="@+id/notif_blurb_text"
-        android:ellipsize="end"
         android:gravity="center_vertical"
         android:textColor="@color/darkGrey"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:maxLines="3"
-        android:padding="4dp"/>
+        android:layout_height="wrap_content"
+        android:padding="5dp"/>
 
     <View
         android:background="@color/darkGrey"

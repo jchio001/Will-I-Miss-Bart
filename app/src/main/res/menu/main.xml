@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/map"
+        android:orderInCategory="98"
+        android:title="@string/map"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/notifications"
         android:orderInCategory="99"
         android:title="@string/action_notifications"
