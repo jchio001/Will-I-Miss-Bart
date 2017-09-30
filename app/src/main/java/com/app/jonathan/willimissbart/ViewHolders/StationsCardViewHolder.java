@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.R;
+import com.joanzapata.iconify.widget.IconTextView;
 
 import java.lang.ref.WeakReference;
 
@@ -17,6 +18,7 @@ import butterknife.OnClick;
 
 public class StationsCardViewHolder {
     @Bind(R.id.stn_main_view) public LinearLayout mainView;
+    @Bind(R.id.stn_info_icon) public IconTextView infoIcon;
     @Bind(R.id.stn_abbr) public TextView abbr;
     @Bind(R.id.origin_or_dest) public TextView originOrDest;
 

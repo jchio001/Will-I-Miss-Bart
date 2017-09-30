@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,11 +46,6 @@ public class UserRouteFooterViewHolder {
         destination.setText(userData.get(1).getAbbr());
         this.userData = userData;
         initAnimations();
-    }
-
-    @OnClick(R.id.user_route_minutes)
-    public void onMinutesClick() {
-        minutes.setSelection(minutes.getText().length());
     }
 
     @OnClick(R.id.user_route_expand)

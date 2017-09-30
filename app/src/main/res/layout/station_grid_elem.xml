@@ -8,13 +8,12 @@
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         card_view:cardBackgroundColor="@color/white"
-        card_view:contentPadding="6dp"
+        card_view:contentPadding="4dp"
         card_view:cardUseCompatPadding="true"
         card_view:cardElevation="4dp"
         card_view:cardCornerRadius="3dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="2dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/stn_main_view"
@@ -28,6 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="6dp"
                 android:padding="4dp"
                 android:text="@string/ion_android_subway"
                 android:textColor="@color/white"
@@ -40,16 +40,16 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
                 android:textColor="@color/darkGrey"
-                android:textSize="24sp"/>
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/origin_or_dest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="4dp"
                 android:textColor="@color/darkGrey"
-                android:textSize="18sp"/>
+                android:textSize="16sp"/>
 
             <com.joanzapata.iconify.widget.IconTextView
                 android:id="@+id/stn_info_icon"
@@ -57,10 +57,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="6dp"
-                android:padding="8dp"
+                android:padding="6dp"
                 android:text="@string/ion_ios_information_outline"
                 android:textColor="@color/darkGrey"
-                android:textSize="26sp"
+                android:textSize="24sp"
                 android:textStyle="bold"/>
 
         </LinearLayout>

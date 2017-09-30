@@ -19,6 +19,7 @@ public class StationsAdapter extends AbstractStationsAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = super.getView(position, convertView, parent);
         StationsCardViewHolder viewHolder = (StationsCardViewHolder) convertView.getTag();
+        viewHolder.originOrDest.setVisibility(View.GONE);
         viewHolder.abbr.setText(getItem(position).getAbbr());
         return convertView;
     }

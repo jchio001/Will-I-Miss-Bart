@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class DeparturesCardViewHolder extends ViewHolder {
         "#ffffff", "#ffff33");
 
     @Bind(R.id.departure_card) CardView departureCard;
+    @Bind(R.id.icon_wrapper) FrameLayout iconWrapper;
     @Bind(R.id.subway_icon) IconTextView subwayIcon;
     @Bind(R.id.set_alarm) IconTextView setAlarm;
     @Bind(R.id.departures_info_blurb) TextView infoBlurb;
@@ -86,7 +88,7 @@ public class DeparturesCardViewHolder extends ViewHolder {
         if (flattenedEstimate.getEstimate() != null) {
             infoBlurb.setVisibility(View.GONE);
             departureCard.setVisibility(View.VISIBLE);
-            subwayIcon.setVisibility(View.VISIBLE);
+            iconWrapper.setVisibility(View.VISIBLE);
             setAlarm.setVisibility(View.VISIBLE);
 
             subwayIcon.setTextColor(ContextCompat.getColor(context,
@@ -103,7 +105,7 @@ public class DeparturesCardViewHolder extends ViewHolder {
             } else {
                 infoBlurb.setVisibility(View.GONE);
                 departureCard.setVisibility(View.VISIBLE);
-                subwayIcon.setVisibility(View.GONE);
+                iconWrapper.setVisibility(View.GONE);
                 setAlarm.setVisibility(View.GONE);
 
                 departureInfo.setText(flattenedEstimate.getTitle());
