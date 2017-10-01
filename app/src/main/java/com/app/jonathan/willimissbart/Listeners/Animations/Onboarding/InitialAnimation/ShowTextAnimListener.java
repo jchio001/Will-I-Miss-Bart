@@ -1,22 +1,22 @@
-package com.app.jonathan.willimissbart.Listeners.Animations.StationInput.InitialAnimation;
+package com.app.jonathan.willimissbart.Listeners.Animations.Onboarding.InitialAnimation;
 
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 
 
 public class ShowTextAnimListener implements Animation.AnimationListener {
-    private LinearLayout linearLayout;
+    private TextView textView;
     private LinearLayout gridLayout;
     private StationsFooterViewHolder footer;
 
-    public ShowTextAnimListener setLinearLayout(LinearLayout linearLayout) {
-        this.linearLayout = linearLayout;
+    public ShowTextAnimListener setTextView(TextView textView) {
+        this.textView = textView;
         return this;
     }
 
@@ -36,7 +36,7 @@ public class ShowTextAnimListener implements Animation.AnimationListener {
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        linearLayout.setVisibility(View.VISIBLE);
+        textView.setVisibility(View.VISIBLE);
         AlphaAnimation showGridAnim = new AlphaAnimation(0.0f, 1.0f);
         showGridAnim.setDuration(Constants.LONG_DURATION);
         showGridAnim.setAnimationListener(new ShowGridAnimListener()

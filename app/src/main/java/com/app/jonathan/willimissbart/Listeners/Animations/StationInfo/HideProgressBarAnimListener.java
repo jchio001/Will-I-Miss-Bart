@@ -7,9 +7,6 @@ import android.view.animation.Animation.AnimationListener;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.app.jonathan.willimissbart.Listeners.Animations.Generic.ShowOrHideAnimListener;
-import com.app.jonathan.willimissbart.Misc.Constants;
-
 public class HideProgressBarAnimListener implements AnimationListener {
     private ProgressBar progressBar;
     private AlphaAnimation showInfoAnim;

@@ -4,9 +4,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 
-import com.app.jonathan.willimissbart.API.Models.StationInfoModels.Station;
-import com.app.jonathan.willimissbart.ViewHolders.StationInfoViewHolder;
-
 public class ShowOrHideAnimListener implements AnimationListener {
     private View v;
     private int visibility;

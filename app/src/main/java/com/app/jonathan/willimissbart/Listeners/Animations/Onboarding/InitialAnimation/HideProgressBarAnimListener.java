@@ -1,19 +1,19 @@
-package com.app.jonathan.willimissbart.Listeners.Animations.StationInput.InitialAnimation;
+package com.app.jonathan.willimissbart.Listeners.Animations.Onboarding.InitialAnimation;
 
 
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 
 public class HideProgressBarAnimListener implements Animation.AnimationListener {
     private ProgressBar progressBar;
-    private LinearLayout linearLayout;
+    private TextView textView;
     private LinearLayout gridLayout;
     private StationsFooterViewHolder footer;
 
@@ -22,8 +22,8 @@ public class HideProgressBarAnimListener implements Animation.AnimationListener 
         return this;
     }
 
-    public HideProgressBarAnimListener setLinearLayout(LinearLayout linearLayout) {
-        this.linearLayout = linearLayout;
+    public HideProgressBarAnimListener setTextView(TextView textView) {
+        this.textView = textView;
         return this;
     }
 
@@ -49,11 +49,11 @@ public class HideProgressBarAnimListener implements Animation.AnimationListener 
         showTextAnim.setDuration(Constants.LONG_DURATION);
         showTextAnim.setAnimationListener(
             new ShowTextAnimListener()
-                .setLinearLayout(linearLayout)
+                .setTextView(textView)
                 .setGridLayout(gridLayout)
                 .setFooter(footer)
         );
-        linearLayout.startAnimation(showTextAnim);
+        textView.startAnimation(showTextAnim);
     }
 
     @Override

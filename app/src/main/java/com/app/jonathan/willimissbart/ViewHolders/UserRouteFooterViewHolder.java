@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -73,6 +72,7 @@ public class UserRouteFooterViewHolder {
 
     @OnClick(R.id.user_route_update)
     public void onUserRouteUpdate() {
+        collapseAnimation.start();
         Utils.hideKeyboard((Activity) footerBody.getContext());
         departuresFragment.persistUpdatesAndRefresh();
     }

@@ -6,10 +6,10 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.app.jonathan.willimissbart.Timers.NotificationCountDownTimer;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Notification.TimerNotificationBuilder;
 import com.app.jonathan.willimissbart.Runnables.StartTimerRunnable;
+import com.app.jonathan.willimissbart.Timers.NotificationCountDownTimer;
 
 public class TimerService extends Service {
     private NotificationCountDownTimer timer;

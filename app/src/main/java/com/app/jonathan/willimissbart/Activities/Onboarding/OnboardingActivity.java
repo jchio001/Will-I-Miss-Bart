@@ -1,13 +1,10 @@
 package com.app.jonathan.willimissbart.Activities.Onboarding;
 
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
 import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,12 +16,11 @@ import com.app.jonathan.willimissbart.API.Models.Generic.FailureEvent;
 import com.app.jonathan.willimissbart.API.Models.StationModels.StationsResp;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.OriginDestStationsAdapter;
-import com.app.jonathan.willimissbart.Listeners.Animations.StationInput.InitialAnimation.HideProgressBarAnimListener;
+import com.app.jonathan.willimissbart.Listeners.Animations.Onboarding.InitialAnimation.HideProgressBarAnimListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
-import com.app.jonathan.willimissbart.PopUpWindows.InfoPopUpWindow;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.StationGridViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
@@ -35,23 +31,20 @@ import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.OnItemClick;
 
 public class OnboardingActivity extends AppCompatActivity {
     @Bind(R.id.activity_station_input) CoordinatorLayout parent;
-    @Bind(R.id.info_layout) LinearLayout infoLayout;
     @Bind(R.id.stn_grid_layout) LinearLayout stationGridLayout;
     @Bind(R.id.stations_footer) LinearLayout stationsFooter;
+    @Bind(R.id.onboarding_blurb) TextView onboardingBlurb;
     @Bind(R.id.progressBar) ProgressBar progressBar;
-    @Bind(R.id.help_tv) TextView helpTextView;
 
     // View modules
     private StationGridViewHolder stationGridViewHolder;
     private StationsFooterViewHolder footer;
 
     OriginDestStationsAdapter adapter;
-    Point point; //TODO don't really need this
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,21 +72,6 @@ public class OnboardingActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        int[] loc = new int[2];
-        helpTextView.getLocationOnScreen(loc);
-        point = new Point(
-                loc[0] - helpTextView.getMeasuredWidth(),
-                loc[1] + helpTextView.getMeasuredHeight() + 10);
-    }
-
-    @OnClick(R.id.help_tv)
-    public void onHelpRequested() {
-        InfoPopUpWindow info = new InfoPopUpWindow(this);
-        info.showAtLocation(parent, Gravity.NO_GRAVITY, point.x, point.y);
     }
 
     @OnItemClick(R.id.stn_grid)
@@ -124,7 +102,7 @@ public class OnboardingActivity extends AppCompatActivity {
         hideProgressBar.setDuration(Constants.LONG_DURATION);
         hideProgressBar.setAnimationListener(new HideProgressBarAnimListener()
             .setProgressBar(progressBar)
-            .setLinearLayout(infoLayout)
+            .setTextView(onboardingBlurb)
             .setGridLayout(stationGridLayout)
             .setFooter(footer));
         progressBar.startAnimation(hideProgressBar);

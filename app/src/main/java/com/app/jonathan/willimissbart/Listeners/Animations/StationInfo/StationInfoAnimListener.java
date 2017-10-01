@@ -3,9 +3,7 @@ package com.app.jonathan.willimissbart.Listeners.Animations.StationInfo;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.view.View;
-import android.widget.ProgressBar;
 
-import com.app.jonathan.willimissbart.API.Models.StationInfoModels.Station;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.ViewHolders.StationInfoViewHolder;
 

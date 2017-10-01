@@ -32,7 +32,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 // Random utility functions
 public class Utils {

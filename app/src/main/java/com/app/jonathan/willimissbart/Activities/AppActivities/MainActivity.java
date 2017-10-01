@@ -1,7 +1,6 @@
 package com.app.jonathan.willimissbart.Activities.AppActivities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -15,7 +14,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ScrollView;
 
 import com.app.jonathan.willimissbart.API.Models.BSAModels.Bsa;
@@ -44,7 +42,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnItemClick;
 
 public class MainActivity extends AppCompatActivity {
     @Bind(R.id.drawer_layout) CoordinatorLayout parent;

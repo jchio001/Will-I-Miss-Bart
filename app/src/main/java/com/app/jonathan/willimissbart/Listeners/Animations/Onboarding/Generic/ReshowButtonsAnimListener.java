@@ -1,4 +1,4 @@
-package com.app.jonathan.willimissbart.Listeners.Animations.StationInput.Generic;
+package com.app.jonathan.willimissbart.Listeners.Animations.Onboarding.Generic;
 
 import android.view.View;
 import android.view.animation.AlphaAnimation;

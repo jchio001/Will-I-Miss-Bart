@@ -13,10 +13,11 @@
         android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         android:hint="@string/stn_filter_hint"
         android:inputType="text"
+        android:imeOptions="actionDone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLength="4"
-        android:maxLines="1"/>
+        android:singleLine="true"/>
 
     <GridView
         android:id="@+id/stn_grid"

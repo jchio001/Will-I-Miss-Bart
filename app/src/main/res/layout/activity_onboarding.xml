@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_station_input"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,35 +17,18 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"/>
 
-        <LinearLayout
-            android:id="@+id/info_layout"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/onboarding_blurb"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:layout_marginRight="@dimen/activity_vertical_margin"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="invisible">
-
-            <TextView
-                style="@style/TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/enter_bart_data"
-                android:textColor="@color/white"/>
-
-            <com.joanzapata.iconify.widget.IconTextView
-                android:id="@+id/help_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/help"
-                android:textColor="@color/white"/>
-
-        </LinearLayout>
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:text="@string/enter_bart_data"
+            android:textColor="@color/white"
+            android:visibility="invisible"/>
 
         <include
             layout="@layout/layout_station_footer"
@@ -56,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/stations_footer"
-            android:layout_below="@+id/info_layout"
+            android:layout_below="@+id/onboarding_blurb"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin">
 

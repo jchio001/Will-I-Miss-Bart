@@ -1,10 +1,9 @@
-package com.app.jonathan.willimissbart.Listeners.Animations.StationInput.InitialAnimation;
+package com.app.jonathan.willimissbart.Listeners.Animations.Onboarding.InitialAnimation;
 
 
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 
 import com.app.jonathan.willimissbart.Misc.Constants;

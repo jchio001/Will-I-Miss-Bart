@@ -41,11 +41,10 @@
             android:layout_toRightOf="@+id/swap"/>
 
         <Button
-            style="@style/DarkGreyTextBase"
+            style="@style/StandardBlueButton"
             android:id="@+id/done"
             android:layout_alignParentRight="true"
-            android:text="@string/done"
-            android:textSize="16dp"/>
+            android:text="@string/done"/>
 
     </RelativeLayout>
 

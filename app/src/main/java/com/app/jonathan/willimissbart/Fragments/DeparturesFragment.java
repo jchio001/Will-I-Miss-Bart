@@ -162,6 +162,7 @@ public class DeparturesFragment extends Fragment {
 
     public void persistUpdatesAndRefresh() {
         SPSingleton.persistUserData(getActivity(), updatedUserData);
+        mainSWL.setRefreshing(true);
         etdRefreshListener.forceRefresh();
         Utils.showSnackbar(getActivity(), parent, R.color.bartBlue, R.string.updated_data);
     }

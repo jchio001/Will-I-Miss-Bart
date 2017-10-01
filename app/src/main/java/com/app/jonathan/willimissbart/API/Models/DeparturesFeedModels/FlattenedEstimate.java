@@ -2,7 +2,6 @@ package com.app.jonathan.willimissbart.API.Models.DeparturesFeedModels;
 
 import com.app.jonathan.willimissbart.API.Models.EtdModels.Estimate;
 import com.app.jonathan.willimissbart.API.Models.EtdModels.Etd;
-import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdStation;
 import com.app.jonathan.willimissbart.Misc.MyApplication;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;

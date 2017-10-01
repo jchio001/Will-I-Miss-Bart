@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.app.jonathan.willimissbart.Activities.AppActivities.MainActivity;
-import com.app.jonathan.willimissbart.Adapters.AbstractStationsAdapter;
 import com.app.jonathan.willimissbart.Adapters.StationsAdapter;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.StationsSingleton;

@@ -19,7 +19,7 @@
         android:layout_marginTop="2dp"
         android:text="@string/zero"
         android:textColor="@color/black"
-        android:textSize="40sp"/>
+        android:textSize="42sp"/>
 
     <com.joanzapata.iconify.widget.IconTextView
         android:id="@+id/decrement"
