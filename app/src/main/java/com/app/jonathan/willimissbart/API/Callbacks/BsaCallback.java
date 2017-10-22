@@ -3,7 +3,7 @@ package com.app.jonathan.willimissbart.API.Callbacks;
 import android.util.Log;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
-import com.app.jonathan.willimissbart.API.Models.BSAModels.BsaResp;
+import com.app.jonathan.willimissbart.API.Models.BSA.BsaResp;
 import com.app.jonathan.willimissbart.API.Models.Generic.FailureEvent;
 
 import org.greenrobot.eventbus.EventBus;

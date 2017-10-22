@@ -15,11 +15,13 @@ import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
-import com.app.jonathan.willimissbart.API.Models.DeparturesFeedModels.FlattenedEstimate;
-import com.app.jonathan.willimissbart.API.Models.EtdModels.Estimate;
-import com.app.jonathan.willimissbart.API.Models.EtdModels.Etd;
-import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdStation;
-import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
+import com.app.jonathan.willimissbart.API.Models.Routes.Leg;
+import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
+import com.app.jonathan.willimissbart.API.Models.DeparturesFeed.FlattenedEstimate;
+import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
+import com.app.jonathan.willimissbart.API.Models.Etd.Etd;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdStation;
+import com.app.jonathan.willimissbart.API.Models.Station.Station;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Notification.TimerNotificationBuilder;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
@@ -61,6 +63,12 @@ public class Utils {
                         .setData(userStationData.get(i))
                         .setIndex(i));
         }
+    }
+
+    public static void fetchDepartures(List<UserStationData> userStationData) {
+        RetrofitClient.getCurrentDepartures(
+            userStationData.get(0).getAbbr(),
+            userStationData.get(1).getAbbr());
     }
 
     public static String generateTimerText(int seconds) {

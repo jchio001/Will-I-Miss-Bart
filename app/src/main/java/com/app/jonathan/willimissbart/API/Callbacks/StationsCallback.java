@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Models.Generic.FailureEvent;
-import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
-import com.app.jonathan.willimissbart.API.Models.StationModels.StationsResp;
+import com.app.jonathan.willimissbart.API.Models.Station.Station;
+import com.app.jonathan.willimissbart.API.Models.Station.StationsResp;
 
 import org.greenrobot.eventbus.EventBus;
 

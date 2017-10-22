@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.app.jonathan.willimissbart.API.Models.DeparturesFeedModels.FlattenedEstimate;
+import com.app.jonathan.willimissbart.API.Models.DeparturesFeed.FlattenedEstimate;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.R;

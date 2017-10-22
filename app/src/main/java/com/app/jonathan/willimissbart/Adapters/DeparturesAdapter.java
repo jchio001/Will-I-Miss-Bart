@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.app.jonathan.willimissbart.API.Models.DeparturesFeedModels.FlattenedEstimate;
+import com.app.jonathan.willimissbart.API.Models.DeparturesFeed.FlattenedEstimate;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.DeparturesCardViewHolder;
 

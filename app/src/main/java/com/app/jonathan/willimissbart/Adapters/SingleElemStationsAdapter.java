@@ -3,7 +3,7 @@ package com.app.jonathan.willimissbart.Adapters;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
+import com.app.jonathan.willimissbart.API.Models.Station.Station;
 import com.app.jonathan.willimissbart.ViewHolders.StationInfoViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationsCardViewHolder;
 

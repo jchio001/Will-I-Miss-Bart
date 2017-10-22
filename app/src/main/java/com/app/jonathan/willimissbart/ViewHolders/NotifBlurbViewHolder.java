@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.app.jonathan.willimissbart.API.Models.BSAModels.Bsa;
+import com.app.jonathan.willimissbart.API.Models.BSA.Bsa;
 import com.app.jonathan.willimissbart.R;
 
 import butterknife.Bind;

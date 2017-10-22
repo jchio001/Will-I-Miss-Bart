@@ -16,7 +16,7 @@ public class Constants {
     public static final String SECONDS = "seconds";
     public static final String STATION_INDEX = "station_index";
     public static final String NOT_THIS_INDEX = "not_this_index";
-    public static final String ANNOUNCEMENTS = "announcements";
+    public static final String TRIP = "trip";
 
     // INTENT TAGS
     public static final String DISMISS = "WillIMissBart.dismiss";

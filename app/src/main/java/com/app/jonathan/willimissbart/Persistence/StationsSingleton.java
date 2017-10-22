@@ -1,7 +1,7 @@
 package com.app.jonathan.willimissbart.Persistence;
 
 
-import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
+import com.app.jonathan.willimissbart.API.Models.Station.Station;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;

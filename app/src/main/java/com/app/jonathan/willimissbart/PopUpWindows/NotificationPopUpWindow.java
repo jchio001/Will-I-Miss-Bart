@@ -1,7 +1,6 @@
 package com.app.jonathan.willimissbart.PopUpWindows;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,16 +8,13 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
-import com.app.jonathan.willimissbart.API.Models.BSAModels.Bsa;
-import com.app.jonathan.willimissbart.Activities.AppActivities.AnnouncementsActivity;
+import com.app.jonathan.willimissbart.API.Models.BSA.Bsa;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.NotifBlurbViewHolder;
-import com.google.common.collect.Lists;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -33,7 +29,6 @@ public class NotificationPopUpWindow extends PopupWindow {
     @Bind(R.id.notif_blurb_feed) LinearLayout notifFeed;
     @Bind(R.id.mute_notif) CheckBox muteNotifCheckBox;
 
-    private List<Bsa> bsaList;
     public static boolean isChecked = false;
     public final static SimpleDateFormat dateFormat = new SimpleDateFormat(
         "yyyy/MM/dd", Locale.ENGLISH);
@@ -44,7 +39,6 @@ public class NotificationPopUpWindow extends PopupWindow {
             800, WRAP_CONTENT);
         ButterKnife.bind(this, getContentView());
         muteNotifCheckBox.setChecked(isChecked);
-        this.bsaList = bsaList;
         setBackgroundDrawable(
             ContextCompat.getDrawable(context, R.drawable.background_pop_up_window));
 
@@ -55,19 +49,6 @@ public class NotificationPopUpWindow extends PopupWindow {
         }
 
         setFocusable(true);
-    }
-
-    @OnClick(R.id.show_all_notifs)
-    public void showAllNotifications() {
-        ArrayList<String> announcementText = Lists.newArrayList();
-        for (int i = 0; i < bsaList.size(); ++i){
-            announcementText.add(bsaList.get(i).getTag());
-        }
-
-        Context context = notifFeed.getContext();
-        Intent intent = new Intent(notifFeed.getContext(), AnnouncementsActivity.class);
-        intent.putStringArrayListExtra(Constants.ANNOUNCEMENTS, announcementText);
-        context.startActivity(intent);
     }
 
     @OnClick(R.id.mute_notif)

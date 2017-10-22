@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.app.jonathan.willimissbart.API.Models.EtdModels.Estimate;
+import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.R;
 

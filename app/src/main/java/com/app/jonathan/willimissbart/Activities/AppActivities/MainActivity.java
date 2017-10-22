@@ -16,11 +16,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ScrollView;
 
-import com.app.jonathan.willimissbart.API.Models.BSAModels.Bsa;
-import com.app.jonathan.willimissbart.API.Models.BSAModels.BsaResp;
+import com.app.jonathan.willimissbart.API.Models.BSA.Bsa;
+import com.app.jonathan.willimissbart.API.Models.BSA.BsaResp;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.ViewPagerAdapter;
 import com.app.jonathan.willimissbart.Fragments.DeparturesFragment;
+import com.app.jonathan.willimissbart.Fragments.RouteFragment;
 import com.app.jonathan.willimissbart.Fragments.StationsFragment;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
@@ -55,11 +56,10 @@ public class MainActivity extends AppCompatActivity {
     private View redCircle;
 
     private DeparturesFragment departuresFragment = new DeparturesFragment();
+    private RouteFragment routeFragment = new RouteFragment();
     private StationsFragment stationsFragment = new StationsFragment();
     private List<Bsa> bsas = Lists.newArrayList();
     protected final Activity context = this;
-
-    private int height = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +147,9 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<Fragment> fragments = new ArrayList<>();
         departuresFragment.setArguments(bundle);
+        routeFragment.setArguments(bundle);
         fragments.add(departuresFragment);
+        fragments.add(routeFragment);
         fragments.add(stationsFragment);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager())
@@ -172,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);
     }
 

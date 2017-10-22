@@ -15,8 +15,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // TODO: pass UserStationData from here
-        if (SPSingleton.getUserData(this) == null) {
+        if (!SPSingleton.containsUserData(this)) {
             Intent intent = new Intent(this, OnboardingActivity.class);
             startActivity(intent);
         } else {

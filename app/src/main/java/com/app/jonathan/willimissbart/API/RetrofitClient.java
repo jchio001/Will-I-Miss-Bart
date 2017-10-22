@@ -1,6 +1,7 @@
 package com.app.jonathan.willimissbart.API;
 
 import com.app.jonathan.willimissbart.API.Callbacks.BsaCallback;
+import com.app.jonathan.willimissbart.API.Callbacks.DeparturesCallback;
 import com.app.jonathan.willimissbart.API.Callbacks.StationInfoCallback;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,7 +54,7 @@ public class RetrofitClient {
         return matchingService;
     }
 
-    // TODO: make all api methods static
+    // TODO: return callback from each API call
 
     public static void getBsas() {
         RetrofitClient.getInstance()
@@ -67,5 +68,13 @@ public class RetrofitClient {
             .getMatchingService()
             .getStationInfo("stninfo", APIConstants.API_KEY, abbr, 'y')
             .enqueue(new StationInfoCallback());
+    }
+
+    public static void getCurrentDepartures(String orig,
+                                            String dest) {
+        RetrofitClient.getInstance()
+            .getMatchingService()
+            .getDepartures("depart", orig, dest, "now", APIConstants.API_KEY, 'y')
+            .enqueue(new DeparturesCallback());
     }
 }

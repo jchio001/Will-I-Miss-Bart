@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- deals with dynamically changing xml shenanigans -->
+            <!-- this frame layout deals with dynamically changing xml shenanigans -->
             <FrameLayout
                 android:id="@+id/icon_wrapper"
                 android:background="@drawable/black_rectangular_border"

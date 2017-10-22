@@ -8,6 +8,7 @@
     
     <string-array name="tab_headers">
         <item>Departures</item>
+        <item>Route</item>
         <item>Stations</item>
     </string-array>
 </resources>

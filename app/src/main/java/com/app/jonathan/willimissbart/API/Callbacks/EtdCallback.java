@@ -4,9 +4,9 @@ package com.app.jonathan.willimissbart.API.Callbacks;
 import android.util.Log;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
-import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdFailure;
-import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdResp;
-import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdRespBundle;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdFailure;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdResp;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespBundle;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 
 import org.greenrobot.eventbus.EventBus;

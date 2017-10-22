@@ -7,8 +7,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.app.jonathan.willimissbart.API.Models.EtdModels.Etd;
-import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdStation;
+import com.app.jonathan.willimissbart.API.Models.Etd.Etd;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdStation;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
 

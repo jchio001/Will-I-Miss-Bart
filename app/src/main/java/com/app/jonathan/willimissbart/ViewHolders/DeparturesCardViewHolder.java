@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.app.jonathan.willimissbart.API.Models.DeparturesFeedModels.FlattenedEstimate;
+import com.app.jonathan.willimissbart.API.Models.DeparturesFeed.FlattenedEstimate;
 import com.app.jonathan.willimissbart.Dialogs.NotificationAlertDialog;
 import com.app.jonathan.willimissbart.R;
 import com.google.common.collect.ImmutableSet;
@@ -37,7 +37,7 @@ public class DeparturesCardViewHolder extends ViewHolder {
     @Bind(R.id.departures_info_blurb) TextView infoBlurb;
     @Bind(R.id.leaving_in_text) TextView departureInfo;
 
-    private final Context context;
+    private final Context context; // Don't need this
     private FlattenedEstimate flattenedEstimate;
 
     public static Map<String, ColorDrawable> hexToDrawableMap = Maps.newHashMap();

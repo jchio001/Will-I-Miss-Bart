@@ -1,9 +1,10 @@
 package com.app.jonathan.willimissbart.API;
 
-import com.app.jonathan.willimissbart.API.Models.BSAModels.BsaResp;
-import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdResp;
-import com.app.jonathan.willimissbart.API.Models.StationInfoModels.StationInfoResp;
-import com.app.jonathan.willimissbart.API.Models.StationModels.StationsResp;
+import com.app.jonathan.willimissbart.API.Models.BSA.BsaResp;
+import com.app.jonathan.willimissbart.API.Models.Routes.DeparturesResp;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdResp;
+import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
+import com.app.jonathan.willimissbart.API.Models.Station.StationsResp;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -32,4 +33,12 @@ public interface MatchingService {
                                          @Query("key") String key,
                                          @Query("orig") String orig,
                                          @Query("json") Character json);
+
+    @GET("sched.aspx")
+    Call<DeparturesResp> getDepartures(@Query("cmd") String cmd,
+                                       @Query("orig") String orig,
+                                       @Query("dest") String dest,
+                                       @Query("date") String date,
+                                       @Query("key") String key,
+                                       @Query("json") Character json);
 }

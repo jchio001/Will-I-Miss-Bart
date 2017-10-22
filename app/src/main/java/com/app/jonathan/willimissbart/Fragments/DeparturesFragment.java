@@ -15,10 +15,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
-import com.app.jonathan.willimissbart.API.Models.DeparturesFeedModels.FlattenedEstimate;
-import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdFailure;
-import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdRespBundle;
-import com.app.jonathan.willimissbart.API.Models.EtdModels.EtdStation;
+import com.app.jonathan.willimissbart.API.Models.DeparturesFeed.FlattenedEstimate;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdFailure;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespBundle;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdStation;
 import com.app.jonathan.willimissbart.Adapters.DeparturesAdapter;
 import com.app.jonathan.willimissbart.Listeners.SwipeRefresh.EtdRefreshListener;
 import com.app.jonathan.willimissbart.Misc.Constants;

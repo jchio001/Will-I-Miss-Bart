@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.app.jonathan.willimissbart.API.Models.StationInfoModels.Station;
+import com.app.jonathan.willimissbart.API.Models.StationInfo.Station;
 import com.app.jonathan.willimissbart.Listeners.Animations.Generic.ShowOrHideAnimListener;
 import com.app.jonathan.willimissbart.Listeners.Animations.Generic.UpdateListener;
 import com.app.jonathan.willimissbart.Listeners.Animations.StationInfo.HideProgressBarAnimListener;

@@ -34,6 +34,10 @@ public class SPSingleton {
         return sp;
     }
 
+    public static boolean containsUserData(Context context) {
+        return getInstance(context).getSp().contains(Constants.USER_DATA);
+    }
+
     public static ArrayList<UserStationData> getUserData(Context context) {
         String userData = getInstance(context).getSp()
             .getString(Constants.USER_DATA, "");
@@ -50,11 +54,11 @@ public class SPSingleton {
     }
 
     public static String getString(Context context, String key) {
-        return SPSingleton.getInstance(context).getSp().getString(key, "");
+        return getInstance(context).getSp().getString(key, "");
     }
 
     public static void putString(Context context, String key, String value) {
-        SPSingleton.getInstance(context).getSp().edit().putString(key, value).apply();
+        getInstance(context).getSp().edit().putString(key, value).apply();
     }
 
     public static void persistUserData(Context context, List<UserStationData> userData) {
@@ -64,7 +68,6 @@ public class SPSingleton {
     }
 
     public void persistStations(String stationsJsonArr) {
-        sp.edit()
-            .putString(Constants.STATION_LIST_KEY, stationsJsonArr).apply();
+        sp.edit().putString(Constants.STATION_LIST_KEY, stationsJsonArr).apply();
     }
 }

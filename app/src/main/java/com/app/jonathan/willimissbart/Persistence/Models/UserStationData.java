@@ -5,7 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
+import com.app.jonathan.willimissbart.API.Models.Station.Station;
 import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -55,18 +55,6 @@ public class UserStationData implements Serializable, Parcelable {
         dest.writeString(station);
         dest.writeString(abbr);
         dest.writeInt(stationIndex);
-    }
-
-    //Deep comparison TODO Remove this
-    public boolean equals(UserStationData userStationData) {
-        if (userStationData == null) {
-            Log.e("UserStationData", "passed in data is null");
-            return false;
-        }
-
-        return station.equals(userStationData.getStation())
-            && abbr.equals(userStationData.getAbbr())
-            && stationIndex == userStationData.getStationIndex();
     }
 
     public String getStation() {

@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.app.jonathan.willimissbart.API.Models.StationModels.Station;
+import com.app.jonathan.willimissbart.API.Models.Station.Station;
 import com.app.jonathan.willimissbart.Adapters.SimpleLargeTextListAdapter;
 import com.app.jonathan.willimissbart.Adapters.StringAdapter;
 import com.app.jonathan.willimissbart.Enums.StyleEnum;

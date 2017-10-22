@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Callbacks.StationsCallback;
 import com.app.jonathan.willimissbart.API.Models.Generic.FailureEvent;
-import com.app.jonathan.willimissbart.API.Models.StationModels.StationsResp;
+import com.app.jonathan.willimissbart.API.Models.Station.StationsResp;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.OriginDestStationsAdapter;
 import com.app.jonathan.willimissbart.Listeners.Animations.Onboarding.InitialAnimation.HideProgressBarAnimListener;
