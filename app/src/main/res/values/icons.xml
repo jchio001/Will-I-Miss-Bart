@@ -3,6 +3,7 @@
     <string name="ion_pin">{ion-android-pin}</string>
     <string name="ion_edit">{ion-edit}</string>
     <string name="ion_close">{ion-close}</string>
+    <string name="ion_location">{ion-location}</string>
     <string name="ios_sad_icon">{ion-sad-outline}</string>
     <string name="ion_arrow_swap">{ion-arrow-swap}</string>
     <string name="ion_close_round">{ion-close-round}</string>
@@ -13,6 +14,4 @@
     <string name="ion_android_alarm_clock">{ion-android-alarm-clock}</string>
     <string name="ion_android_notifications">{ion-android-notifications}</string>
     <string name="ion_ios_information_outline">{ion-ios-information-outline}</string>
-
-    <string name="help">Need help?    {ion-ios-information-outline}</string>
 </resources>
