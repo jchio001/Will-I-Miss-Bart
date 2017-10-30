@@ -4,17 +4,18 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.Activities.AppActivities.SelectStationActivity;
-import com.app.jonathan.willimissbart.Fragments.DeparturesFragment;
+import com.app.jonathan.willimissbart.Fragments.RouteFragment;
 import com.app.jonathan.willimissbart.Listeners.Animations.Footers.FooterAnimListener;
 import com.app.jonathan.willimissbart.Listeners.Animations.Generic.UpdateListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
+import com.app.jonathan.willimissbart.Persistence.SPSingleton;
 import com.app.jonathan.willimissbart.R;
 import com.joanzapata.iconify.widget.IconTextView;
 
@@ -29,20 +30,21 @@ public class UserRouteFooterViewHolder {
     @Bind(R.id.user_route_expand) public IconTextView expandCollapseIcon;
     @Bind(R.id.user_route_origin) public TextView origin;
     @Bind(R.id.user_route_dest) public TextView destination;
-    @Bind(R.id.user_route_minutes) public EditText minutes;
+    @Bind(R.id.include_return) public CheckBox includeReturn;
 
-    private DeparturesFragment departuresFragment;
+    private RouteFragment routeFragment;
     private ValueAnimator expandAnimation;
     private ValueAnimator collapseAnimation;
     // userData is the user's data with pending changes which may or mat not have been persisted
     private List<UserStationData> userData;
 
-    public UserRouteFooterViewHolder(View v, DeparturesFragment departuresFragment,
+    public UserRouteFooterViewHolder(View v, RouteFragment routeFragment,
                                      List<UserStationData> userData) {
         ButterKnife.bind(this, v);
-        this.departuresFragment = departuresFragment;
+        this.routeFragment = routeFragment;
         origin.setText(userData.get(0).getAbbr());
         destination.setText(userData.get(1).getAbbr());
+        includeReturn.setChecked(SPSingleton.getIncludeReturnRoute(routeFragment.getContext()));
         this.userData = userData;
         initAnimations();
     }
@@ -74,7 +76,7 @@ public class UserRouteFooterViewHolder {
     public void onUserRouteUpdate() {
         collapseAnimation.start();
         Utils.hideKeyboard((Activity) footerBody.getContext());
-        departuresFragment.persistUpdatesAndRefresh();
+        routeFragment.persistUpdatesAndRefresh();
     }
 
     @OnClick(R.id.user_route_swap)
@@ -90,6 +92,9 @@ public class UserRouteFooterViewHolder {
     public void updateStations(int resultCode, String newAbbr) {
         TextView abbrTextView = (resultCode == Constants.UPDATED_ORIGIN) ? origin : destination;
         abbrTextView.setText(newAbbr);
+        if (footerBody.getVisibility() == View.GONE) {
+            onExpandOrCollapse();
+        }
     }
 
     public void initAnimations() {

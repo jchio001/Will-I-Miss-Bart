@@ -70,4 +70,13 @@ public class SPSingleton {
     public void persistStations(String stationsJsonArr) {
         sp.edit().putString(Constants.STATION_LIST_KEY, stationsJsonArr).apply();
     }
+
+    public static void persistIncludeReturnRoute(Context context, boolean includeReturnRoute) {
+        getInstance(context).getSp().edit()
+            .putBoolean(Constants.INCLUDE_RETURN, includeReturnRoute).apply();
+    }
+
+    public static boolean getIncludeReturnRoute(Context context) {
+        return getInstance(context).getSp().getBoolean(Constants.INCLUDE_RETURN, false);
+    }
 }

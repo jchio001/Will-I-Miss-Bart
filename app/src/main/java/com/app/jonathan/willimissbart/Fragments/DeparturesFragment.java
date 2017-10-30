@@ -53,9 +53,6 @@ public class DeparturesFragment extends Fragment {
     @Bind(R.id.progress_bar) ProgressBar progressBar;
     @Bind(R.id.no_etds_to_display) TextView nothingToDisplayTV;
     @Bind(R.id.departures_as_of) TextView departuresAsOf;
-    @Bind(R.id.footer_wrapper) LinearLayout footerLayout;
-
-    private UserRouteFooterViewHolder footer;
 
     private EtdRefreshListener etdRefreshListener;
     private DeparturesAdapter departuresAdapter;
@@ -87,15 +84,9 @@ public class DeparturesFragment extends Fragment {
             userData = SPSingleton.getUserData(getActivity());
         }
         updatedUserData = Lists.newArrayList(userData);
-        footer = new UserRouteFooterViewHolder(footerLayout, this, updatedUserData);
         EventBus.getDefault().register(this);
 
         mainSWL.setEnabled(false);
-        footerLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)
-            mainSWL.getLayoutParams();
-        params.setMargins(0, 0, 0, footerLayout.getMeasuredHeight());
-        mainSWL.setLayoutParams(params);
 
         departuresAdapter = new DeparturesAdapter(Lists.<FlattenedEstimate>newArrayList());
         departuresAdapter.setHasStableIds(true);
@@ -162,19 +153,6 @@ public class DeparturesFragment extends Fragment {
                 loadFeed(stationArr);
             }
         }
-    }
-
-    public void updateUserStations(int resultCode, int stationIndex) {
-        updatedUserData.set(resultCode - 1, UserStationData.fromStationIndex(stationIndex));
-        footer.updateStations(resultCode, StationsSingleton.getStations()
-            .get(stationIndex).getAbbr());
-    }
-
-    public void persistUpdatesAndRefresh() {
-        SPSingleton.persistUserData(getActivity(), updatedUserData);
-        mainSWL.setRefreshing(true);
-        etdRefreshListener.forceRefresh();
-        Utils.showSnackbar(getActivity(), parent, R.color.bartBlue, R.string.updated_data);
     }
 
     private void handleNothingToFetch() {

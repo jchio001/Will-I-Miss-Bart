@@ -71,10 +71,11 @@ public class RetrofitClient {
     }
 
     public static void getCurrentDepartures(String orig,
-                                            String dest) {
+                                            String dest,
+                                            boolean isReturnRoute) {
         RetrofitClient.getInstance()
             .getMatchingService()
             .getDepartures("depart", orig, dest, "now", APIConstants.API_KEY, 'y')
-            .enqueue(new DeparturesCallback());
+            .enqueue(new DeparturesCallback(isReturnRoute));
     }
 }

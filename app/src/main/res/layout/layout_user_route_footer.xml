@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-    
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            
+
             <TextView
                 style="@style/DarkGreyTextBase"
                 android:id="@+id/from"
@@ -88,42 +88,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp"
+            android:padding="6dp"
             android:visibility="gone">
 
-            <!-- TODO: fix this -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <TextView
-                    style="@style/DarkGreyTextBase"
-                    android:layout_gravity="start"
-                    android:text="@string/leaving_in"
-                    android:textSize="18sp"/>
-
-                <EditText
-                    style="@style/UserRouteInputTextTheme"
-                    android:id="@+id/user_route_minutes"
-                    android:background="@drawable/dark_grey_rectangular_border"
-                    android:cursorVisible="false"
-                    android:inputType="number"
-                    android:imeOptions="actionDone"
-                    android:layout_width="35dp"
-                    android:maxLength="2"
-                    android:maxLines="1"/>
-
-            </LinearLayout>
-
-            <!--<CheckBox
+            <CheckBox
                 style="@style/DarkGreyTextBase"
-                android:id="@+id/include_destination"
+                android:id="@+id/include_return"
                 android:layout_gravity="end"
+                android:layout_marginBottom="8dp"
                 android:text="@string/include_return_route"
                 android:textSize="18sp"
-                android:theme="@style/CheckBoxTheme"/>-->
+                android:theme="@style/CheckBoxTheme"/>
 
             <Button
                 style="@style/StandardBlueButton"

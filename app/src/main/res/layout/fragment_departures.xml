@@ -53,16 +53,4 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <!-- extra layout due to bug involving include and relative layouts -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/footer_wrapper">
-
-        <include
-            layout="@layout/layout_user_route_footer" />
-
-    </LinearLayout>
-
 </RelativeLayout>

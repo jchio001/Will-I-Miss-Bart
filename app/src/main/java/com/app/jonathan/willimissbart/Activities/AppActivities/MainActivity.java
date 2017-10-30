@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private View redCircle;
 
     private RouteFragment routeFragment = new RouteFragment();
-    private DeparturesFragment departuresFragment = new DeparturesFragment();
+    // private DeparturesFragment departuresFragment = new DeparturesFragment();
     private StationsFragment stationsFragment = new StationsFragment();
     private List<Bsa> bsas = Lists.newArrayList();
     protected final Activity context = this;
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.UPDATING_STATIONS && data != null) {
-            departuresFragment.updateUserStations(resultCode,
+            routeFragment.updateUserStations(resultCode,
                 data.getIntExtra(Constants.STATION_INDEX, -1));
         }
     }
@@ -161,9 +161,9 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<Fragment> fragments = new ArrayList<>();
         routeFragment.setArguments(bundle);
-        departuresFragment.setArguments(bundle);
+        // departuresFragment.setArguments(bundle);
         fragments.add(routeFragment);
-        fragments.add(departuresFragment);
+        // fragments.add(departuresFragment);
         fragments.add(stationsFragment);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager())
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
     }
 

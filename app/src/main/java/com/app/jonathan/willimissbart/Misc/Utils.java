@@ -67,12 +67,6 @@ public class Utils {
         }
     }
 
-    public static void fetchDepartures(List<UserStationData> userStationData) {
-        RetrofitClient.getCurrentDepartures(
-            userStationData.get(0).getAbbr(),
-            userStationData.get(1).getAbbr());
-    }
-
     public static String generateTimerText(int seconds) {
         long minutesLeft = seconds / 60;
         long secondsLeft = seconds % 60;

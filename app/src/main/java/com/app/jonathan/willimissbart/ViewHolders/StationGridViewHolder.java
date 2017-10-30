@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
+import com.app.jonathan.willimissbart.API.Models.Routes.TripsWrapper;
 import com.app.jonathan.willimissbart.Adapters.AbstractStationsAdapter;
 import com.app.jonathan.willimissbart.Fragments.StationsFragment;
 import com.app.jonathan.willimissbart.Misc.Utils;
@@ -21,6 +23,7 @@ import com.app.jonathan.willimissbart.R;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,7 +40,6 @@ public class StationGridViewHolder extends ViewHolder {
     @Bind(R.id.stn_grid) GridView stationGrid;
 
     private WeakReference<AbstractStationsAdapter> adapter;
-    private Location userLocation;
     private boolean fetchingLocation = false;
     private Handler handler = new Handler();
 
@@ -79,6 +81,13 @@ public class StationGridViewHolder extends ViewHolder {
         }
     }
 
+    @OnTextChanged(value = R.id.stn_search, callback = TEXT_CHANGED)
+    public void onTextChanged(CharSequence s) {
+        if (adapter != null && adapter.get() != null) {
+            adapter.get().filter(s.toString().toUpperCase());
+        }
+    }
+
     public void fetchLocationAndLoadClosestStation() {
         if (!Utils.isLocationEnabled(itemView.getContext())) {
             Toast.makeText(itemView.getContext(),
@@ -94,7 +103,6 @@ public class StationGridViewHolder extends ViewHolder {
                 public void onLocationUpdated(final Location location) {
                     SmartLocation.with(itemView.getContext()).location().stop();
                     fetchingLocation = false;
-                    userLocation = location;
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -104,13 +112,6 @@ public class StationGridViewHolder extends ViewHolder {
                     });
                 }
             });
-    }
-
-    @OnTextChanged(value = R.id.stn_search, callback = TEXT_CHANGED)
-    public void onTextChanged(CharSequence s) {
-        if (adapter != null && adapter.get() != null) {
-            adapter.get().filter(s.toString().toUpperCase());
-        }
     }
 
     public void loadClosestStation(int index) {
