@@ -3,12 +3,16 @@ package com.app.jonathan.willimissbart.Fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.app.jonathan.willimissbart.API.Callbacks.DeparturesCallback;
+import com.app.jonathan.willimissbart.API.Models.Generic.FailureEvent;
 import com.app.jonathan.willimissbart.API.Models.Routes.DeparturesResp;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.RoutesAdapter;
@@ -26,6 +30,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class RouteFragment extends Fragment {
+    @Bind(R.id.progress_bar) ProgressBar progressBar;
+    @Bind(R.id.failure_text) TextView failureText;
     @Bind(R.id.route_recycler) RecyclerView recyclerView;
 
     private List<UserStationData> userData;
@@ -54,27 +60,34 @@ public class RouteFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        RetrofitClient.getCurrentDepartures(
+            userData.get(0).getAbbr(),
+            userData.get(1).getAbbr());
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        // Make sure that we are currently visible
-        if (this.isVisible() && isVisibleToUser && fetch) {
-            fetch = false;
-            RetrofitClient.getCurrentDepartures(
-                userData.get(0).getAbbr(),
-                userData.get(1).getAbbr());
-        }
+    @Subscribe
+    public void departuresResponse(DeparturesResp resp) {
+        progressBar.setVisibility(View.GONE);
+        failureText.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        adapter.addAll(resp.getRoot().getSchedule().getRequest().getTrips());
     }
 
     @Subscribe
-    public void departuresResponse(DeparturesResp resp) {
-        adapter.addAll(resp.getRoot().getSchedule().getRequest().getTrips());
+    public void departuresFailure(FailureEvent event) {
+        if (event.tag.equals(DeparturesCallback.tag)) {
+            Log.e("RouteFragment", "Failed to get departures");
+            progressBar.setVisibility(View.GONE);
+            failureText.setVisibility(View.VISIBLE);
+        }
     }
 }

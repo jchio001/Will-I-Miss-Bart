@@ -38,13 +38,13 @@ public class OnboardingActivity extends AppCompatActivity {
     @Bind(R.id.stn_grid_layout) LinearLayout stationGridLayout;
     @Bind(R.id.stations_footer) LinearLayout stationsFooter;
     @Bind(R.id.onboarding_blurb) TextView onboardingBlurb;
-    @Bind(R.id.progressBar) ProgressBar progressBar;
+    @Bind(R.id.progress_bar) ProgressBar progressBar;
 
-    // View modules
     private StationGridViewHolder stationGridViewHolder;
     private StationsFooterViewHolder footer;
+    private OriginDestStationsAdapter adapter;
 
-    OriginDestStationsAdapter adapter;
+    public static final int PERMISSIONS_CODE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +97,7 @@ public class OnboardingActivity extends AppCompatActivity {
     private void setUpActivityLayout() {
         // TODO: remove this null with actual object
         adapter = new OriginDestStationsAdapter(StationsSingleton.getStations(), null, footer);
-        stationGridViewHolder = new StationGridViewHolder(stationGridLayout, adapter, true);
+        stationGridViewHolder = new StationGridViewHolder(stationGridLayout, adapter, 0, true);
         AlphaAnimation hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
         hideProgressBar.setDuration(Constants.LONG_DURATION);
         hideProgressBar.setAnimationListener(new HideProgressBarAnimListener()

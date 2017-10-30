@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progress_bar"
         style="@style/BartBlueSpinner"
         android:layout_width="64dp"
         android:layout_height="64dp"

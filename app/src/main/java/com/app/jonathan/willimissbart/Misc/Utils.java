@@ -3,6 +3,8 @@ package com.app.jonathan.willimissbart.Misc;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
@@ -180,5 +182,54 @@ public class Utils {
         }
 
         return height;
+    }
+
+    private static double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private static double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
+    }
+
+    private static double getDistance(double lat1, double lon1, double lat2, double lon2) {
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+        dist = dist * 1.609344;
+
+        return Math.abs(dist);
+    }
+
+    // Fetches the closest station for a given location;\
+    public static int getClosestStation(Location location) {
+        int minIndex = -1;
+        double curMin = 0;
+
+        List<Station> stations = StationsSingleton.getStations();
+        for (int i = 0; i < stations.size(); ++i) {
+            Station station = stations.get(i);
+            if (minIndex == -1) {
+                minIndex = 0;
+                curMin = getDistance(location.getLatitude(), location.getLongitude(),
+                    station.getLatitude(), station.getLongitude());
+            } else {
+                double distance = getDistance(location.getLatitude(), location.getLongitude(),
+                    station.getLatitude(), station.getLongitude());
+                if (distance < curMin) {
+                    minIndex = i;
+                    curMin = distance;
+                }
+            }
+        }
+
+        return minIndex;
+    }
+
+    public static boolean isLocationEnabled(Context context) {
+        return ((LocationManager) context.getSystemService(Context.LOCATION_SERVICE))
+            .isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 }

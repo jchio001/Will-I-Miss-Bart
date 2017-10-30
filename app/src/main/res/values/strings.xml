@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">BART Tracker</string>
-
     <string name="home">Home</string>
+    <string name="departing">Departing at %s</string>
+    <string name="arriving">Arriving by %s</string>
+    <string name="fare_info">Fare: %1$s, Clipper: %2$s</string>
+    <string name="expand_route">Expand route</string>
 
     <!-- Stations Grid -->
     <string name="stn_origin">Origin</string>
@@ -9,6 +12,7 @@
     <string name="stn_from">From: %s</string>
     <string name="stn_to">To: %s</string>
     <string name="stn_filter_hint">Enter in a station name</string>
+    <string name="turn_on_location">Location needs to be enabled before finding the nearest station!</string>
 
     <!-- Notification Timer -->
     <string name="notif_blurb_format">This train from %1$s to %2$s is leaving in around %3$s</string>
@@ -83,16 +87,13 @@
     <string name="stn_info_title">Info for %s station</string>
     <string name="whats_nearby">Looking for something to do nearby?</string>
 
-    <!-- Route List Element TODO: move to generics? -->
-    <string name="departing">Departing at %s</string>
-    <string name="arriving">Arriving by %s</string>
-    <string name="fare_info">Fare: %1$s, Clipper: %2$s</string>
-    <string name="expand_route">Expand route</string>
-
     <!-- Trip Activity -->
     <string name="trip_title">Trip for %1$s to %2$s</string>
 
     <!-- Leg List Element -->
     <string name="train_info">From %1$s, take train to %2$s leaving at %3$s</string>
     <string name="stop_info">Get off at %1$s at %2$s</string>
+
+    <!-- Route Fragment -->
+    <string name="departures_failed">Failed to fetch departures</string>
 </resources>

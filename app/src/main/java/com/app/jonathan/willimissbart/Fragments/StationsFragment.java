@@ -33,6 +33,8 @@ public class StationsFragment extends Fragment {
     private StationGridViewHolder stationGridViewHolder;
     private WeakReference<StationInfoViewHolder> stationInfoViewHolder;
 
+    public static final int PERMISSIONS_CODE = 1;
+
     @Nullable
     @Override
     @SuppressWarnings("unchecked")
@@ -47,7 +49,8 @@ public class StationsFragment extends Fragment {
             ((MainActivity) getActivity()).getStationInfoViewHolder());
         adapter = new StationsAdapter(StationsSingleton.getStations(),
             stationInfoViewHolder.get());
-        stationGridViewHolder = new StationGridViewHolder(stationGridLayout, adapter, false);
+        stationGridViewHolder = new StationGridViewHolder(
+            stationGridLayout, adapter, PERMISSIONS_CODE, false);
         return v;
     }
 
@@ -63,5 +66,9 @@ public class StationsFragment extends Fragment {
             Utils.hideKeyboard(getActivity());
             stationInfoViewHolder.get().show(adapter.getItem(position).getAbbr());
         }
+    }
+
+    public void loadStation () {
+        stationGridViewHolder.fetchLocationAndLoadClosestStation();
     }
 }

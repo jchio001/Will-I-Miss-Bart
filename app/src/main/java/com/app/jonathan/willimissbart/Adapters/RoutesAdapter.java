@@ -10,7 +10,10 @@ import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.RouteViewHolder;
 import com.google.common.collect.Lists;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class RoutesAdapter extends Adapter<RouteViewHolder> {
     private List<Trip> trips = Lists.newArrayList();
@@ -19,7 +22,16 @@ public class RoutesAdapter extends Adapter<RouteViewHolder> {
     }
 
     public void addAll(List<Trip> trips) {
-        this.trips.addAll(trips);
+        long now = System.currentTimeMillis();
+        List<Trip> filtered = Lists.newArrayList();
+        for (Trip trip : trips) {
+            long tripTime = trip.getEpochTime();
+            if (now < tripTime) {
+                filtered.add(trip);
+            }
+        }
+
+        this.trips.addAll(filtered);
         notifyDataSetChanged();
     }
 

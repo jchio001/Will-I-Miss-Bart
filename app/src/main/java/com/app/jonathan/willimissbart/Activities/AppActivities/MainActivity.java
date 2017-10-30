@@ -2,7 +2,9 @@ package com.app.jonathan.willimissbart.Activities.AppActivities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -55,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private View notifIcon;
     private View redCircle;
 
-    private DeparturesFragment departuresFragment = new DeparturesFragment();
     private RouteFragment routeFragment = new RouteFragment();
+    private DeparturesFragment departuresFragment = new DeparturesFragment();
     private StationsFragment stationsFragment = new StationsFragment();
     private List<Bsa> bsas = Lists.newArrayList();
     protected final Activity context = this;
@@ -124,6 +126,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case StationsFragment.PERMISSIONS_CODE:
+                if (permissions.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    stationsFragment.loadStation();
+                }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Subscribe
     public void onBsaResponse(BsaResp bsaResp) {
@@ -146,10 +160,10 @@ public class MainActivity extends AppCompatActivity {
             .getStringArray(R.array.tab_headers)));
 
         ArrayList<Fragment> fragments = new ArrayList<>();
-        departuresFragment.setArguments(bundle);
         routeFragment.setArguments(bundle);
-        fragments.add(departuresFragment);
+        departuresFragment.setArguments(bundle);
         fragments.add(routeFragment);
+        fragments.add(departuresFragment);
         fragments.add(stationsFragment);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager())

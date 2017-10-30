@@ -8,9 +8,16 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class Trip implements Serializable, Parcelable {
+    public static final SimpleDateFormat format =
+        new SimpleDateFormat("MM/dd/yyyy h:mm aa", Locale.ENGLISH);
+
     @SerializedName("@origin")
     @Expose
     private String origin;
@@ -22,6 +29,10 @@ public class Trip implements Serializable, Parcelable {
     @SerializedName("@origTimeMin")
     @Expose
     private String origTimeMin;
+
+    @SerializedName("@origTimeDate")
+    @Expose
+    private String origTimeDate;
 
     @SerializedName("@destTimeMin")
     @Expose
@@ -106,6 +117,10 @@ public class Trip implements Serializable, Parcelable {
         return origTimeMin;
     }
 
+    public String getOrigTimeDate() {
+        return origTimeDate;
+    }
+
     public String getDestTimeMin() {
         return destTimeMin;
     }
@@ -124,5 +139,14 @@ public class Trip implements Serializable, Parcelable {
 
     public List<Leg> getLegList() {
         return legList;
+    }
+
+    public long getEpochTime() {
+        try {
+            return format.parse(origTimeDate + origTimeMin).getTime();
+        } catch (ParseException e) {
+            // For now, FAIL HARD.
+            throw new RuntimeException(e);
+        }
     }
 }

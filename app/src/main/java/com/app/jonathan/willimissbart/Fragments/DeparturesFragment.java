@@ -19,6 +19,7 @@ import com.app.jonathan.willimissbart.API.Models.DeparturesFeed.FlattenedEstimat
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdFailure;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespBundle;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdStation;
+import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.DeparturesAdapter;
 import com.app.jonathan.willimissbart.Listeners.SwipeRefresh.EtdRefreshListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
@@ -49,7 +50,7 @@ public class DeparturesFragment extends Fragment {
     @Bind(R.id.departures_parent) RelativeLayout parent;
     @Bind(R.id.main_swl) SwipeRefreshLayout mainSWL;
     @Bind(R.id.main_feed_layout) RecyclerView mainFeedLayout;
-    @Bind(R.id.progressBar) ProgressBar progressBar;
+    @Bind(R.id.progress_bar) ProgressBar progressBar;
     @Bind(R.id.no_etds_to_display) TextView nothingToDisplayTV;
     @Bind(R.id.departures_as_of) TextView departuresAsOf;
     @Bind(R.id.footer_wrapper) LinearLayout footerLayout;
@@ -122,6 +123,15 @@ public class DeparturesFragment extends Fragment {
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
     }
+
+    /*@Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        // Make sure that we are currently visible
+        if (this.isVisible() && isVisibleToUser && fetch) {
+        }
+    }*/
 
     @Subscribe
     public void onEtdResponse(EtdRespBundle etdRespBundle) {

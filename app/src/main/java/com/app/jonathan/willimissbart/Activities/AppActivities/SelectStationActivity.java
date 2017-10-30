@@ -52,7 +52,7 @@ public class SelectStationActivity extends AppCompatActivity {
         adapter = new SingleElemStationsAdapter(StationsSingleton.getStations(),
             stationInfoViewHolder, true)
             .setSelectingOrigin(titleId == R.string.select_origin);
-        stationGridViewHolder = new StationGridViewHolder(stationGridLayout, adapter, false);
+        stationGridViewHolder = new StationGridViewHolder(stationGridLayout, adapter, 0, false);
 
         stationGrid.setAdapter(adapter);
     }

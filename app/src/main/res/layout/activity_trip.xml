@@ -31,6 +31,7 @@
         android:layout_marginLeft="@dimen/activity_vertical_margin"
         android:layout_marginRight="@dimen/activity_vertical_margin"
         android:layout_gravity="center_horizontal"
+        android:padding="6dp"
         android:textColor="@color/darkGrey"
         android:textSize="14sp"/>
 
