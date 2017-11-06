@@ -5,9 +5,15 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class EtdRoot implements Serializable {
+    public static final SimpleDateFormat format =
+        new SimpleDateFormat("MM/dd/yyyy h:m:s aa z", Locale.ENGLISH);
+
     @SerializedName("@id")
     @Expose
     private String id;
@@ -20,9 +26,13 @@ public class EtdRoot implements Serializable {
     @Expose
     private String date;
 
+    @SerializedName("time")
+    @Expose
+    private String time;
+
     @SerializedName("station")
     @Expose
-    private List<EtdStation> station;
+    private List<EtdStation> stations;
 
     public String getId() {
         return id;
@@ -36,7 +46,19 @@ public class EtdRoot implements Serializable {
         return date;
     }
 
-    public List<EtdStation> getStation() {
-        return station;
+    public String getTime() {
+        return time;
+    }
+
+    public List<EtdStation> getStations() {
+        return stations;
+    }
+
+    public long getTimeAsEpochMs() {
+        try {
+            return format.parse(date + " " + time).getTime();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

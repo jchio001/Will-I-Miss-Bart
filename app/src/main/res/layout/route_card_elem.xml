@@ -5,26 +5,27 @@
     android:id="@+id/route_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="5dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="5dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="2dp"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="3dp"
-    card_view:cardElevation="2dp">
+    card_view:cardElevation="2dp"
+    card_view:cardUseCompatPadding="true">
 
     <LinearLayout
-        android:background="?selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
         android:orientation="vertical"
         android:padding="6dp">
 
         <LinearLayout
-            android:gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
@@ -75,10 +76,21 @@
             android:textSize="14sp"/>
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/next_train_blurb"
+            android:textColor="@color/darkGrey"/>
+
+        <include layout="@layout/layout_departure"/>
+
+        <TextView
             android:id="@+id/show_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
+            android:padding="3dp"
             android:text="@string/expand_route"
             android:textColor="@color/darkGrey"
             android:textSize="16sp"/>

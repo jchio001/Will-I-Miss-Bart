@@ -28,12 +28,12 @@ public class Estimate implements Serializable {
 
     @SerializedName("hexcolor")
     @Expose
-    private String hexcolor;
+    private String hexColor;
 
     //pretty much always 1/true/whatever
     @SerializedName("bikeflag")
     @Expose
-    private String bikeflag;
+    private String bikeFlag;
 
     public String getMinutes() {
         return minutes;
@@ -55,11 +55,23 @@ public class Estimate implements Serializable {
         return color;
     }
 
-    public String getHexcolor() {
-        return hexcolor;
+    public String getHexColor() {
+        return hexColor;
     }
 
-    public String getBikeflag() {
-        return bikeflag;
+    public String getBikeFlag() {
+        return bikeFlag;
+    }
+
+    public String getEstimateAsString() {
+        if (minutes.equals("Leaving")) {
+            return "Leaving now!";
+        } else {
+            if (minutes.equals("1")) {
+                return "1 minute";
+            } else {
+                return minutes + " minutes";
+            }
+        }
     }
 }

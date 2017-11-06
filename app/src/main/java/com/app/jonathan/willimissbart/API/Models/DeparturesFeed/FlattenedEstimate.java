@@ -85,7 +85,7 @@ public class FlattenedEstimate {
     }
 
     public String getHexColor() {
-        return estimate.getHexcolor();
+        return estimate.getHexColor();
     }
 
     public String getMinutes() {
@@ -95,7 +95,7 @@ public class FlattenedEstimate {
     // Returns # of seconds before the train leaves;
     public int getRealTimeEstimate() {
         return getMinutes().equals("Leaving") ? 0 :
-            Utils.getTimerDuration(estimate.getMinutes(), respTime);
+            Utils.getEstimateInSeconds(estimate.getMinutes(), respTime);
     }
 
     public String getFormattedRealTimeEstimate() {

@@ -15,7 +15,7 @@
     <string name="turn_on_location">Location needs to be enabled before finding the nearest station!</string>
 
     <!-- Notification Timer -->
-    <string name="notif_blurb_format">This train from %1$s to %2$s is leaving in around %3$s</string>
+    <string name="notif_blurb_format">The train from %1$s to %2$s is leaving in around %3$s</string>
     <string name="notif_title_format">%1$s to %2$s leaving in:</string>
     <string name="train_leaving">Your train is leaving!</string>
     <string name="close">Tap here to close</string>
@@ -96,4 +96,5 @@
 
     <!-- Route Fragment -->
     <string name="departures_failed">Failed to fetch departures</string>
+    <string name="next_train_blurb">The next train for this route leaves in:</string>
 </resources>

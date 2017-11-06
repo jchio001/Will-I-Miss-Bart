@@ -40,7 +40,7 @@ public class ErrorTextViewViewHolder {
                     .clone()
                     .enqueue(
                             new EtdCallback()
-                                    .setStationName(data.getStation())
+                                    .setStationName(data.getStations())
                                     .setStationAbbr(data.getAbbr())
                                     .setIndex(i)
                     );*/

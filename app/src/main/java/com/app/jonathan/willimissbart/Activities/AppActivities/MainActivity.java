@@ -22,7 +22,6 @@ import com.app.jonathan.willimissbart.API.Models.BSA.Bsa;
 import com.app.jonathan.willimissbart.API.Models.BSA.BsaResp;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.ViewPagerAdapter;
-import com.app.jonathan.willimissbart.Fragments.DeparturesFragment;
 import com.app.jonathan.willimissbart.Fragments.RouteFragment;
 import com.app.jonathan.willimissbart.Fragments.StationsFragment;
 import com.app.jonathan.willimissbart.Misc.Constants;

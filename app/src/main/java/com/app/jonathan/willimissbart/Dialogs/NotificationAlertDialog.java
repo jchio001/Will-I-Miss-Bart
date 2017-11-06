@@ -12,7 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.app.jonathan.willimissbart.API.Models.DeparturesFeed.FlattenedEstimate;
+import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
+import com.app.jonathan.willimissbart.API.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.R;
@@ -32,23 +33,31 @@ public class NotificationAlertDialog extends AlertDialog {
     @Bind(R.id.ones_digit) LinearLayout onesDigit;
     @Bind(R.id.error_tv) TextView errorTV;
 
+    private String title;
+
     private IconTextView alarmIcon;
     private AlertDialog alertDialog;
     private DigitViewHolder tensDigitViewHolder;
     private DigitViewHolder onesDigitViewHolder;
-    private FlattenedEstimate flattenedEstimate;
-    private String title;
+    private Leg leg;
+    private Estimate estimate;
+
+    private long timeOfResp;
 
     public NotificationAlertDialog(Context context,
                                    final IconTextView alarmIcon,
-                                   FlattenedEstimate flattenedEstimate) {
+                                   Leg leg,
+                                   Estimate estimate,
+                                   long timeOfResp) {
         super(context);
         this.alarmIcon = alarmIcon;
-        this.flattenedEstimate = flattenedEstimate;
+        this.leg = leg;
+        this.estimate = estimate;
+        this.timeOfResp = timeOfResp;
         this.title = context.getString(
             R.string.notif_title_format,
-            flattenedEstimate.getOriginAbbr(),
-            flattenedEstimate.getDestAbbr());
+            leg.getOrigin(),
+            leg.getDestination());
         View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_set_timer_layout, null);
         ButterKnife.bind(this, v);
 
@@ -90,7 +99,7 @@ public class NotificationAlertDialog extends AlertDialog {
                 positive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int estimateInSeconds = flattenedEstimate.getRealTimeEstimate() -
+                        int estimateInSeconds = Utils.getEstimateInSeconds(estimate.getMinutes(), timeOfResp) -
                             getMinutes() * 60;
                         if (estimateInSeconds >= 45) {
                             showNotification(estimateInSeconds);
@@ -113,9 +122,10 @@ public class NotificationAlertDialog extends AlertDialog {
     private String getBlurb() {
         return getContext().getString(
             R.string.notif_blurb_format,
-            flattenedEstimate.getOriginAbbr(),
-            flattenedEstimate.getDestAbbr(),
-            Utils.secondsToFormattedString(flattenedEstimate.getRealTimeEstimate()));
+            leg.getOrigin(),
+            leg.getDestination(),
+            Utils.secondsToFormattedString(
+                Utils.getEstimateInSeconds(estimate.getMinutes(), timeOfResp)));
     }
 
     private void showNotification(int estimateInSeconds) {

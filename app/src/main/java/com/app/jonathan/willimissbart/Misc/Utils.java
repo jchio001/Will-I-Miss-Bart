@@ -39,10 +39,6 @@ import java.util.Locale;
 
 // Random utility functions
 public class Utils {
-    public static Character directionToUrlParam(String direction) {
-        return direction.equals("Both") ? null : direction.charAt(0);
-    }
-
     public static void loadStations(String stationsJSON) {
         if (StationsSingleton.getStations().isEmpty()) {
             Gson gson = new Gson();
@@ -70,12 +66,11 @@ public class Utils {
     public static String generateTimerText(int seconds) {
         long minutesLeft = seconds / 60;
         long secondsLeft = seconds % 60;
-        String time =  String.format(
+        return String.format(
                 Locale.ENGLISH,
                 "%s:%s",
                 (minutesLeft < 10 ? "0" : "") + String.valueOf(minutesLeft),
                 (secondsLeft < 10 ? "0" : "") + String.valueOf(secondsLeft));
-        return time;
     }
 
     // Converts seconds into a string of format: %d min(s) %d seconds
@@ -100,15 +95,17 @@ public class Utils {
                         new TimerNotificationBuilder(title, time).build(time < 0));
     }
 
-    // Converts a minute into a timer estimate given:
-    // - A estimate in minutes
-    // - The time at which an estimate is fetched
-    // Dampening factor is smaller for smaller intervals as the train will be more likely
-    // to leave earlier
-    public static int getTimerDuration(String min, long timeInSeconds) {
+    /**
+     * Converts a minute into an arrival estimate. Dampening factor is smaller for smaller intervals
+     * as the train will be more likely to leave earlier
+     * @param min A string representing an estimate in minutes
+     * @param timeOfResp The time at which an estimate is fetched (in epoch seconds)
+     * @return A dampened timer estimate
+     */
+    public static int getEstimateInSeconds(String min, long timeOfResp) {
         int minAsInt = Integer.valueOf(min);
         return minAsInt * 60 * ((minAsInt > 5) ? 95 : 90) / 100
-            - ((int) ((System.currentTimeMillis() / 1000) - timeInSeconds));
+            - ((int) ((System.currentTimeMillis() / 1000) - timeOfResp));
     }
 
     public static List<FlattenedEstimate> flattenEstimates(EtdStation[] etdStations,
@@ -188,7 +185,8 @@ public class Utils {
 
     private static double getDistance(double lat1, double lon1, double lat2, double lon2) {
         double theta = lon1 - lon2;
-        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
+            + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
         dist = Math.acos(dist);
         dist = rad2deg(dist);
         dist = dist * 60 * 1.1515;

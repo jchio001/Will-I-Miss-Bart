@@ -36,4 +36,9 @@ public class EtdStation implements Serializable {
     public List<Etd> getEtds() {
         return etds;
     }
+
+    public EtdStation setEtds(List<Etd> etds) {
+        this.etds = etds;
+        return this;
+    }
 }

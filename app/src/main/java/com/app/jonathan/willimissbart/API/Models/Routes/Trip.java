@@ -15,8 +15,12 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class Trip implements Serializable, Parcelable {
-    public static final SimpleDateFormat format =
-        new SimpleDateFormat("MM/dd/yyyy h:mm aa", Locale.ENGLISH);
+    public static final SimpleDateFormat format;
+
+    static {
+        format = new SimpleDateFormat("MM/dd/yyyy h:mm aa", Locale.ENGLISH);
+        format.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+    }
 
     @SerializedName("@origin")
     @Expose

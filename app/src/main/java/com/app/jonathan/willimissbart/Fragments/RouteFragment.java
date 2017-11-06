@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.app.jonathan.willimissbart.API.Callbacks.DeparturesCallback;
-import com.app.jonathan.willimissbart.API.Models.Generic.FailureEvent;
+import com.app.jonathan.willimissbart.API.APIConstants;
+import com.app.jonathan.willimissbart.API.Callbacks.NewEtdCallback;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdRoot;
+import com.app.jonathan.willimissbart.API.Models.Etd.NewEtdFailure;
 import com.app.jonathan.willimissbart.API.Models.Routes.RoutesFailure;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.Models.Routes.TripsWrapper;
@@ -39,7 +40,6 @@ import butterknife.ButterKnife;
 
 public class RouteFragment extends Fragment {
     @Bind(R.id.progress_bar) ProgressBar progressBar;
-    @Bind(R.id.route_parent) RelativeLayout parent;
     @Bind(R.id.footer_wrapper) LinearLayout footerLayout;
     @Bind(R.id.failure_text) TextView failureText;
     @Bind(R.id.route_recycler) RecyclerView recyclerView;
@@ -50,7 +50,10 @@ public class RouteFragment extends Fragment {
     private RoutesAdapter adapter = new RoutesAdapter();
     private List<Trip>[] trips = new List[2];
 
-    private int respCnt = 0;
+    private String routeFirstLegHead = null;
+    private String returnFirstLegHead = null;
+
+    private int routesCnt = 0;
 
     @Nullable
     @Override
@@ -73,7 +76,7 @@ public class RouteFragment extends Fragment {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.setMargins(0, 0, 0, footerLayout.getMeasuredHeight());
-        parent.setLayoutParams(params);
+        recyclerView.setLayoutParams(params);
 
         recyclerView.setAdapter(adapter);
         return v;
@@ -85,7 +88,7 @@ public class RouteFragment extends Fragment {
 
         boolean includeReturnRoute = SPSingleton.getIncludeReturnRoute(getContext());
         if (!includeReturnRoute) {
-            respCnt = 1;
+            routesCnt = 1;
         }
 
         RetrofitClient.getCurrentDepartures(
@@ -109,31 +112,94 @@ public class RouteFragment extends Fragment {
     }
 
     @Subscribe
-    public synchronized void departuresResponse(TripsWrapper wrapper) {
-        trips[wrapper.isReturnRoute() ? 1 : 0] = wrapper.getTrips();
-        ++respCnt;
-        loadUserRoutes();
+    public void departuresResponse(TripsWrapper wrapper) {
+        boolean loadFeed = false;
+        synchronized (this) {
+            trips[wrapper.isReturnRoute() ? 1 : 0] = wrapper.getTrips();
+            ++routesCnt;
+
+            if (routesCnt == 2) {
+                loadFeed = true;
+            }
+        }
+
+        if (!wrapper.isReturnRoute()) {
+            routeFirstLegHead = wrapper.getTrips().get(0)
+                .getLegList().get(0)
+                .getTrainHeadStation();
+        } else {
+            returnFirstLegHead = wrapper.getTrips().get(0)
+                .getLegList().get(0)
+                .getTrainHeadStation();
+        }
+
+        if (loadFeed) {
+            loadUserRoutes();
+        }
     }
 
     @Subscribe
-    public synchronized void departuresFailure(RoutesFailure event) {
-        trips[event.isReturnRoute() ? 1 : 0] = null;
-        ++respCnt;
-        loadUserRoutes();
+    public void departuresFailure(RoutesFailure event) {
+        boolean loadFeed = false;
+        synchronized (this) {
+            trips[event.isReturnRoute() ? 1 : 0] = null;
+            ++routesCnt;
+
+            if (routesCnt == 2) {
+                loadFeed = true;
+            }
+        }
+
+        if (loadFeed) {
+            loadUserRoutes();
+        }
+    }
+
+    @Subscribe
+    public void realTimeResponse(EtdRoot etdRoot) {
+        if (etdRoot.getStations().get(0).getAbbr().equals(userData.get(0).getAbbr())) {
+            adapter.setRouteEtdStation(etdRoot);
+        } else {
+            adapter.setReturnRouteEtdStation(etdRoot);
+        }
+    }
+
+    @Subscribe
+    public void realTimeFailure(NewEtdFailure failure) {
+        if (!failure.isReturnRoute()) {
+            adapter.setRouteEtdStation(null);
+        } else {
+            adapter.setReturnRouteEtdStation(null);
+        }
     }
 
     public void loadUserRoutes() {
-        if (respCnt == 2) {
-            progressBar.setVisibility(View.GONE);
-            failureText.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+        // failureText.setVisibility(View.GONE);
+        // recyclerView.setVisibility(View.VISIBLE);
 
-            List<Trip> merged = trips[0] != null ? trips[0] : Lists.<Trip>newArrayList();
-            if (SPSingleton.getIncludeReturnRoute(this.getActivity()) && trips[1] != null) {
-                merged.addAll(trips[1]);
-            }
+        boolean includeReturnRoute = SPSingleton.getIncludeReturnRoute(this.getActivity());
+        List<Trip> merged = trips[0] != null ? trips[0] : Lists.<Trip>newArrayList();
+        if (includeReturnRoute && trips[1] != null) {
+            merged.addAll(trips[1]);
+        }
 
-            adapter.addAll(merged);
+        adapter.addAll(merged);
+
+        if (routeFirstLegHead != null) {
+            RetrofitClient.getInstance()
+                .getMatchingService()
+                .getEtd("etd", APIConstants.API_KEY, 'y', userData.get(0).getAbbr(), null)
+                .clone()
+                .enqueue(new NewEtdCallback().setDestAbbr(routeFirstLegHead));
+        }
+
+        if (includeReturnRoute && returnFirstLegHead != null) {
+            RetrofitClient.getInstance()
+                .getMatchingService()
+                .getEtd("etd", APIConstants.API_KEY, 'y', userData.get(1).getAbbr(), null)
+                .clone()
+                .enqueue(new NewEtdCallback().setDestAbbr(returnFirstLegHead));
         }
     }
 
@@ -152,14 +218,14 @@ public class RouteFragment extends Fragment {
             updatedUserData.get(0).getAbbr(),
             updatedUserData.get(1).getAbbr(),
             false);
-        respCnt = 1;
+        routesCnt = 1;
 
         if (isChecked) {
             RetrofitClient.getCurrentDepartures(
                 updatedUserData.get(1).getAbbr(),
                 updatedUserData.get(0).getAbbr(),
                 true);
-            respCnt = 0;
+            routesCnt = 0;
         }
 
         Utils.showSnackbar(getActivity(), footerLayout, R.color.bartBlue, R.string.updated_data);
