@@ -17,8 +17,6 @@ import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
-import com.app.jonathan.willimissbart.API.Models.Routes.Leg;
-import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.Models.DeparturesFeed.FlattenedEstimate;
 import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.API.Models.Etd.Etd;

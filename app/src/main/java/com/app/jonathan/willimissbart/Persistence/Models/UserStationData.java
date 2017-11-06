@@ -3,7 +3,6 @@ package com.app.jonathan.willimissbart.Persistence.Models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.app.jonathan.willimissbart.API.Models.Station.Station;
 import com.app.jonathan.willimissbart.Persistence.StationsSingleton;

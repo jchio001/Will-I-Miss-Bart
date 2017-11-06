@@ -1,10 +1,10 @@
 package com.app.jonathan.willimissbart.API;
 
 import com.app.jonathan.willimissbart.API.Models.BSA.BsaResp;
-import com.app.jonathan.willimissbart.API.Models.Routes.DeparturesResp;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdResp;
-import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
+import com.app.jonathan.willimissbart.API.Models.Routes.DeparturesResp;
 import com.app.jonathan.willimissbart.API.Models.Station.StationsResp;
+import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Models.Routes.DeparturesResp;
-import com.app.jonathan.willimissbart.API.Models.Generic.FailureEvent;
 import com.app.jonathan.willimissbart.API.Models.Routes.RoutesFailure;
 import com.app.jonathan.willimissbart.API.Models.Routes.TripsWrapper;
 

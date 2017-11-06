@@ -13,8 +13,6 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
-import com.app.jonathan.willimissbart.API.Models.Routes.TripsWrapper;
 import com.app.jonathan.willimissbart.Adapters.AbstractStationsAdapter;
 import com.app.jonathan.willimissbart.Fragments.StationsFragment;
 import com.app.jonathan.willimissbart.Misc.Utils;
@@ -23,7 +21,6 @@ import com.app.jonathan.willimissbart.R;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

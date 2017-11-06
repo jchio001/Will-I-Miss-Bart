@@ -12,7 +12,6 @@ import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.RouteViewHolder;
 import com.google.common.collect.Lists;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
