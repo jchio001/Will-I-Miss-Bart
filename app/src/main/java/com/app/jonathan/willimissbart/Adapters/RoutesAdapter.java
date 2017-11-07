@@ -61,7 +61,12 @@ public class RoutesAdapter extends Adapter<RouteViewHolder> {
     }
 
     public void addAll(List<Trip> trips) {
+        this.routeEtdStation = null;
+        this.returnRouteEtdStation = null;
+        this.routeEtdStationTime = 0;
+        this.returnRouteEtdStationTime = 0;
         this.trips.clear();
+
         long now = System.currentTimeMillis();
         List<Trip> filtered = Lists.newArrayList();
         for (Trip trip : trips) {

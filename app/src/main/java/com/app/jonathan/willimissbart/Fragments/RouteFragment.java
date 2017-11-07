@@ -210,7 +210,10 @@ public class RouteFragment extends Fragment {
     }
 
     public void persistUpdatesAndRefresh() {
+        // At this point, userData & updatedUserData need to be identical (in terms of what elements
+        // are contained within each list, not do they point to the same list)
         SPSingleton.persistUserData(getActivity(), updatedUserData);
+        userData = Lists.newArrayList(updatedUserData);
 
         boolean isChecked = footer.includeReturn.isChecked();
         SPSingleton.persistIncludeReturnRoute(getActivity(), isChecked);
