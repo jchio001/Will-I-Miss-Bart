@@ -1,21 +1,14 @@
 package com.app.jonathan.willimissbart.API.Models.Etd;
 
 
-import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
-import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
-
 public class EtdFailure {
-    public String tag;
-    public int errorCode;
-    public boolean retryAfterFailure;
-    public UserStationData data;
-    public int index;
+    private boolean isReturnRoute = false;
 
-    public EtdFailure(EtdCallback etdCallback, int errorCode) {
-        this.tag = EtdCallback.tag;
-        this.errorCode = errorCode;
-        this.retryAfterFailure = etdCallback.isRetryAfterFailure();
-        this.data = etdCallback.getData();
-        this.index = etdCallback.getIndex();
+    public EtdFailure(boolean isReturnRoute) {
+        this.isReturnRoute = isReturnRoute;
+    }
+
+    public boolean isReturnRoute() {
+        return isReturnRoute;
     }
 }

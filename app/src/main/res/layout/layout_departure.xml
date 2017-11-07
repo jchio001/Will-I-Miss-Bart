@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/departures_layout"
+    android:background="?selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="6dp">
@@ -52,7 +53,6 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/set_alarm"
         android:layout_toRightOf="@id/icon_wrapper"
-        android:background="?selectableItemBackground"
         android:gravity="center_vertical"
         android:textColor="@color/darkGrey"
         android:textSize="22sp"/>

@@ -16,7 +16,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
-import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.app.jonathan.willimissbart.API.Models.DeparturesFeed.FlattenedEstimate;
 import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.API.Models.Etd.Etd;
@@ -43,21 +42,6 @@ public class Utils {
             Type listType = new TypeToken<List<Station>>() {}.getType();
             List<Station> stations = gson.fromJson(stationsJSON, listType);
             StationsSingleton.getInstance().setStations(stations);
-        }
-    }
-
-    //usually filtered
-    public static void fetchEtds(List<UserStationData> userStationData) {
-        for (int i = 0; i < userStationData.size(); ++i) {
-            UserStationData data = userStationData.get(i);
-            RetrofitClient.getInstance()
-                .getMatchingService()
-                .getEtd("etd", APIConstants.API_KEY, 'y', data.getAbbr(), null)
-                .clone()
-                .enqueue(
-                    new EtdCallback()
-                        .setData(userStationData.get(i))
-                        .setIndex(i));
         }
     }
 

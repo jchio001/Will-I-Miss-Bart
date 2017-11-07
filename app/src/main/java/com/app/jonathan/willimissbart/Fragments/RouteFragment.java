@@ -13,9 +13,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
-import com.app.jonathan.willimissbart.API.Callbacks.NewEtdCallback;
+import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRoot;
-import com.app.jonathan.willimissbart.API.Models.Etd.NewEtdFailure;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdFailure;
 import com.app.jonathan.willimissbart.API.Models.Routes.RoutesFailure;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.Models.Routes.TripsWrapper;
@@ -165,7 +165,7 @@ public class RouteFragment extends Fragment {
     }
 
     @Subscribe
-    public void realTimeFailure(NewEtdFailure failure) {
+    public void realTimeFailure(EtdFailure failure) {
         if (!failure.isReturnRoute()) {
             adapter.setRouteEtdStation(null);
         } else {
@@ -191,7 +191,7 @@ public class RouteFragment extends Fragment {
                 .getMatchingService()
                 .getEtd("etd", APIConstants.API_KEY, 'y', userData.get(0).getAbbr(), null)
                 .clone()
-                .enqueue(new NewEtdCallback().setDestAbbr(routeFirstLegHead));
+                .enqueue(new EtdCallback().setDestAbbr(routeFirstLegHead));
         }
 
         if (includeReturnRoute && returnFirstLegHead != null) {
@@ -199,7 +199,7 @@ public class RouteFragment extends Fragment {
                 .getMatchingService()
                 .getEtd("etd", APIConstants.API_KEY, 'y', userData.get(1).getAbbr(), null)
                 .clone()
-                .enqueue(new NewEtdCallback().setDestAbbr(returnFirstLegHead));
+                .enqueue(new EtdCallback().setDestAbbr(returnFirstLegHead));
         }
     }
 

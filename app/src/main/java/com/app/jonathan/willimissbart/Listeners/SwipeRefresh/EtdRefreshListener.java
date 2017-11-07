@@ -49,7 +49,7 @@ public class EtdRefreshListener extends BaseRefreshListener {
         }
 
         sharedEtdDataBundle.stationCntr = 0;
-        Utils.fetchEtds(userData);
+        // Utils.fetchEtds(userData);
     }
 
     // Forcefully makes API calls needed to refresh the feed (ignores the 45 second cooldown)
@@ -58,6 +58,6 @@ public class EtdRefreshListener extends BaseRefreshListener {
         lastRefreshTime = System.currentTimeMillis() / 1000;
         sharedEtdDataBundle.stationCntr = 0;
         refreshState = Constants.REFRESH_STATE_REFRESHING;
-        Utils.fetchEtds(userData);
+        // Utils.fetchEtds(userData);
     }
 }

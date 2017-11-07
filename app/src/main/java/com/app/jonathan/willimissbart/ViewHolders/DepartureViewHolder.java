@@ -47,7 +47,7 @@ public class DepartureViewHolder extends ViewHolder {
         ButterKnife.bind(this, v);
     }
 
-    @OnClick(R.id.leaving_in_text)
+    @OnClick(R.id.departures_layout)
     public void onDepartureClick() {
         if (leg != null && estimate != null) {
             Context context = itemView.getContext();

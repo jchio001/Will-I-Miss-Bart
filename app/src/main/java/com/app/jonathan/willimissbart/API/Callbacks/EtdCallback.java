@@ -4,12 +4,16 @@ package com.app.jonathan.willimissbart.API.Callbacks;
 import android.util.Log;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
-import com.app.jonathan.willimissbart.API.Models.Etd.EtdFailure;
+import com.app.jonathan.willimissbart.API.Models.Etd.Etd;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdResp;
-import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespBundle;
-import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdRoot;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdStation;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdFailure;
+import com.google.common.collect.Lists;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,57 +21,49 @@ import retrofit2.Response;
 
 public class EtdCallback implements Callback<EtdResp> {
     public static final String tag = "EtdCallback";
-    private UserStationData data;
-    private int index;
-    private boolean retryAfterFailure = false;
 
-    public static String getTag() {
-        return tag;
-    }
+    private String destAbbr;
+    private boolean isReturnRoute = false;
 
-    public UserStationData getData() {
-        return data;
-    }
-
-    public EtdCallback setData(UserStationData data) {
-        this.data = data;
+    public EtdCallback setDestAbbr(String destAbbr) {
+        this.destAbbr = destAbbr;
         return this;
     }
 
-    public int getIndex() {
-        return index;
-    }
-
-    public EtdCallback setIndex(int index) {
-        this.index = index;
+    public EtdCallback setReturnRoute(boolean returnRoute) {
+        isReturnRoute = returnRoute;
         return this;
-    }
-
-    public boolean isRetryAfterFailure() {
-        return retryAfterFailure;
-    }
-
-    public void setRetryAfterFailure(boolean retryAfterFailure) {
-        this.retryAfterFailure = retryAfterFailure;
     }
 
     @Override
     public void onResponse(Call<EtdResp> call, Response<EtdResp> resp) {
-        Log.i(tag, String.format("Got etd for: %s", data.getStation()));
+        Log.i(tag, "Etds fetched!");
         switch (resp.code()) {
             case APIConstants.HTTP_STATUS_OK:
-                EventBus.getDefault()
-                        .post(new EtdRespBundle(index, retryAfterFailure, resp.body()));
+                EtdRoot etdRoot = resp.body().getRoot();
+                filterEtds(etdRoot.getStations().get(0));
+                EventBus.getDefault().post(etdRoot);
                 break;
             default:
-                EventBus.getDefault().post(new EtdFailure(this, resp.code()));
+                EventBus.getDefault().post(new EtdFailure(isReturnRoute));
                 break;
         }
     }
 
     @Override
     public void onFailure(Call<EtdResp> call, Throwable t) {
-        Log.e(tag, String.format("Failed to get etd for: %s", data.getStation()));
-        EventBus.getDefault().post(new EtdFailure(this, -1));
+        Log.e(tag, "Failed to get etds");
+        EventBus.getDefault().post(new EtdFailure(isReturnRoute));
+    }
+
+    private void filterEtds(EtdStation etdStation) {
+        List<Etd> filtered = Lists.newArrayList();
+        for (Etd etd : etdStation.getEtds()) {
+            if (etd.getAbbreviation().equals(destAbbr)) {
+                filtered.add(etd);
+            }
+        }
+
+        etdStation.setEtds(filtered);
     }
 }
