@@ -46,7 +46,10 @@ public class RouteViewHolder extends ViewHolder {
         fairInfo.setText(itemView.getContext()
             .getString(R.string.fare_info, trip.getFare(), trip.getClipper()));
 
-        if (etdStation != null) {
+        // TODO: FIX THIS LOGIC ASAP
+        if (etdStation != null && etdStation.getEtds().isEmpty()) {
+            departureViewHolder.handleFailure();
+        } else if (etdStation != null) {
             departureViewHolder.setUp(
                 trip.getLegList().get(0),
                 etdStation.getEtds().get(0).getEstimates().get(0),

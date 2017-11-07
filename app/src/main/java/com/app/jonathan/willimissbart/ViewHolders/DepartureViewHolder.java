@@ -104,6 +104,13 @@ public class DepartureViewHolder extends ViewHolder {
         }
     }
 
+    // If this is called, it's an error on the app end!
+    public void handleFailure() {
+        iconWrapper.setVisibility(View.INVISIBLE);
+        setAlarm.setVisibility(View.INVISIBLE);
+        departureInfo.setText("Failed to load");
+    }
+
     private Drawable getDrawable(String color) {
         ColorDrawable drawable;
         if (hexToDrawableMap.containsKey(color)) {
