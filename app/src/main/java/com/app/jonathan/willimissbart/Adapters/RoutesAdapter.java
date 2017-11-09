@@ -5,29 +5,41 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
+import com.app.jonathan.willimissbart.API.Models.Etd.Etd;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRoot;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdStation;
+import com.app.jonathan.willimissbart.API.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
+import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.RouteViewHolder;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import okhttp3.Route;
 
 public class RoutesAdapter extends Adapter<RouteViewHolder> {
     public static final SimpleDateFormat format =
         new SimpleDateFormat("MM/dd/yyyy h:mm aa z", Locale.ENGLISH);
 
     private List<Trip> trips = Lists.newArrayList();
-    private EtdStation routeEtdStation;
-    private EtdStation returnRouteEtdStation;
+    private Map<String, List<Estimate>> origDestToEstimates = Maps.newHashMap();
+    private String origAbbr;
+    private String destAbbr;
 
     private long routeEtdStationTime = 0;
     private long returnRouteEtdStationTime = 0;
 
-    public RoutesAdapter() {
+    public RoutesAdapter(UserStationData originData, UserStationData destData) {
+        this.origAbbr = originData.getAbbr();
+        this.destAbbr = destData.getAbbr();
     }
 
     @Override
@@ -49,20 +61,25 @@ public class RoutesAdapter extends Adapter<RouteViewHolder> {
 
     @Override
     public void onBindViewHolder(RouteViewHolder holder, int position) {
-        if (routeEtdStation != null
-            && trips.get(position).getOrigin().equals(routeEtdStation.getAbbr())) {
-            holder.setUp(trips.get(position), routeEtdStation, routeEtdStationTime);
-        } else if (returnRouteEtdStation != null
-            && trips.get(position).getOrigin().equals(returnRouteEtdStation.getAbbr())) {
-            holder.setUp(trips.get(position), returnRouteEtdStation, returnRouteEtdStationTime);
+        Trip trip = trips.get(position);
+        Estimate estimate;
+        if (!origDestToEstimates.containsKey(trip.getOrigin()
+            + trip.getLegList().get(0).getTrainHeadStation())) {
+            estimate = null;
         } else {
-            holder.setUp(trips.get(position), null, 0);
+            estimate = Iterables.getFirst(origDestToEstimates.get(trip.getOrigin()
+                + trip.getLegList().get(0).getTrainHeadStation()), null);
         }
+
+        holder.setUp(trip, estimate,
+            trip.getOrigin().equals(origAbbr) ? routeEtdStationTime : returnRouteEtdStationTime);
+    }
+
+    public List<Trip> getTrips() {
+        return trips;
     }
 
     public void addAll(List<Trip> trips) {
-        this.routeEtdStation = null;
-        this.returnRouteEtdStation = null;
         this.routeEtdStationTime = 0;
         this.returnRouteEtdStationTime = 0;
         this.trips.clear();
@@ -80,7 +97,25 @@ public class RoutesAdapter extends Adapter<RouteViewHolder> {
         notifyDataSetChanged();
     }
 
-    public RoutesAdapter setRouteEtdStation(EtdRoot etdRoot) {
+    public RoutesAdapter populateOrigDestMappings(EtdRoot etdRoot, boolean isReturnRoute) {
+        if (!isReturnRoute) {
+            this.routeEtdStationTime = etdRoot.getTimeAsEpochMs() / 1000;
+        } else {
+            this.returnRouteEtdStationTime = etdRoot.getTimeAsEpochMs() / 1000;
+        }
+
+        Map<String, List<Estimate>> origDestToEstimates = Maps.newHashMap();
+        for (Etd etd: etdRoot.getStations().get(0).getEtds()) {
+            origDestToEstimates.put(
+                etdRoot.getStations().get(0).getAbbr() + etd.getAbbreviation(), etd.getEstimates());
+        }
+
+        this.origDestToEstimates.putAll(origDestToEstimates);
+        notifyDataSetChanged();
+        return this;
+    }
+
+    /*public RoutesAdapter setRouteEtdStation(EtdRoot etdRoot) {
         this.routeEtdStation = etdRoot.getStations().get(0);
         this.routeEtdStationTime = etdRoot.getTimeAsEpochMs() / 1000;
         notifyDataSetChanged();
@@ -92,5 +127,5 @@ public class RoutesAdapter extends Adapter<RouteViewHolder> {
         this.returnRouteEtdStationTime = etdRoot.getTimeAsEpochMs() / 1000;
         notifyDataSetChanged();
         return this;
-    }
+    }*/
 }

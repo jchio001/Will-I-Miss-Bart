@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
+import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
+import com.app.jonathan.willimissbart.API.Models.Etd.Etd;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRoot;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdFailure;
 import com.app.jonathan.willimissbart.API.Models.Routes.RoutesFailure;
@@ -29,11 +31,15 @@ import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.UserRouteFooterViewHolder;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,7 +53,7 @@ public class RouteFragment extends Fragment {
     private UserRouteFooterViewHolder footer;
     private List<UserStationData> userData;
     private List<UserStationData> updatedUserData;
-    private RoutesAdapter adapter = new RoutesAdapter();
+    private RoutesAdapter adapter;
     private List<Trip>[] trips = new List[2];
 
     private String routeFirstLegHead = null;
@@ -69,6 +75,7 @@ public class RouteFragment extends Fragment {
         } else {
             userData = SPSingleton.getUserData(getActivity());
         }
+        adapter = new RoutesAdapter(userData.get(0), userData.get(1));
         updatedUserData = Lists.newArrayList(userData);
 
         footer = new UserRouteFooterViewHolder(footerLayout, this, updatedUserData);
@@ -157,20 +164,13 @@ public class RouteFragment extends Fragment {
 
     @Subscribe
     public void realTimeResponse(EtdRoot etdRoot) {
-        if (etdRoot.getStations().get(0).getAbbr().equals(userData.get(0).getAbbr())) {
-            adapter.setRouteEtdStation(etdRoot);
-        } else {
-            adapter.setReturnRouteEtdStation(etdRoot);
-        }
+        adapter.populateOrigDestMappings(
+            etdRoot, etdRoot.getStations().get(0).getAbbr().equals(userData.get(0).getAbbr()));
     }
 
     @Subscribe
     public void realTimeFailure(EtdFailure failure) {
-        if (!failure.isReturnRoute()) {
-            adapter.setRouteEtdStation(null);
-        } else {
-            adapter.setReturnRouteEtdStation(null);
-        }
+        // TODO: do things here!
     }
 
     public void loadUserRoutes() {
@@ -186,20 +186,35 @@ public class RouteFragment extends Fragment {
 
         adapter.addAll(merged);
 
+        // TODO: probably don't need a map. Also probably should explain what's going on
+        Map<String, Set<String>> origToDestsMapping = Maps.newHashMap();
+        for (Trip trip : adapter.getTrips()) {
+            if (!origToDestsMapping.containsKey(trip.getOrigin())) {
+                origToDestsMapping.put(trip.getOrigin(), Sets.<String>newHashSet());
+            } else {
+                Set<String> destSet = origToDestsMapping.get(trip.getOrigin());
+                destSet.add(trip.getLegList().get(0).getTrainHeadStation());
+            }
+        }
+
         if (routeFirstLegHead != null) {
+            String originAbbr = userData.get(0).getAbbr();
             RetrofitClient.getInstance()
                 .getMatchingService()
-                .getEtd("etd", APIConstants.API_KEY, 'y', userData.get(0).getAbbr(), null)
+                .getEtd("etd", APIConstants.API_KEY, 'y', originAbbr, null)
                 .clone()
-                .enqueue(new EtdCallback().setDestAbbr(routeFirstLegHead));
+                .enqueue(new EtdCallback().setDestSet(origToDestsMapping.get(originAbbr)));
         }
 
         if (includeReturnRoute && returnFirstLegHead != null) {
+            String destAbbr = userData.get(1).getAbbr();
             RetrofitClient.getInstance()
                 .getMatchingService()
-                .getEtd("etd", APIConstants.API_KEY, 'y', userData.get(1).getAbbr(), null)
+                .getEtd("etd", APIConstants.API_KEY, 'y', destAbbr, null)
                 .clone()
-                .enqueue(new EtdCallback().setDestAbbr(returnFirstLegHead));
+                .enqueue(new EtdCallback()
+                    .setDestSet(origToDestsMapping.get(destAbbr))
+                    .isReturnRoute(true));
         }
     }
 

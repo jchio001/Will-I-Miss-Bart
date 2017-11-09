@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdStation;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.Activities.AppActivities.TripActivity;
@@ -35,7 +36,7 @@ public class RouteViewHolder extends ViewHolder {
         departureViewHolder = new DepartureViewHolder(departuresLayout);
     }
 
-    public void setUp(Trip trip, EtdStation etdStation, long timeOfResp) {
+    public void setUp(Trip trip, Estimate estimate, long timeOfResp) {
         this.trip = trip;
         origin.setText(trip.getOrigin());
         dest.setText(trip.getDestination());
@@ -47,15 +48,10 @@ public class RouteViewHolder extends ViewHolder {
             .getString(R.string.fare_info, trip.getFare(), trip.getClipper()));
 
         // TODO: FIX THIS LOGIC ASAP
-        if (etdStation != null && etdStation.getEtds().isEmpty()) {
-            departureViewHolder.handleFailure();
-        } else if (etdStation != null) {
-            departureViewHolder.setUp(
-                trip.getLegList().get(0),
-                etdStation.getEtds().get(0).getEstimates().get(0),
-                timeOfResp);
-        } else {
+        if (estimate == null) {
             departureViewHolder.setUp(null, null, timeOfResp);
+        } else {
+            departureViewHolder.setUp(trip.getLegList().get(0), estimate, timeOfResp);
         }
     }
 

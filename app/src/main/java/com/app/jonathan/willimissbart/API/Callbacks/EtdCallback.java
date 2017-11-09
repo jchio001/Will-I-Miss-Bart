@@ -4,16 +4,20 @@ package com.app.jonathan.willimissbart.API.Callbacks;
 import android.util.Log;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
+import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.API.Models.Etd.Etd;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdResp;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRoot;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdStation;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdFailure;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,15 +26,15 @@ import retrofit2.Response;
 public class EtdCallback implements Callback<EtdResp> {
     public static final String tag = "EtdCallback";
 
-    private String destAbbr;
+    private Set<String> destSet; // note: all the strings are abbreviations!
     private boolean isReturnRoute = false;
 
-    public EtdCallback setDestAbbr(String destAbbr) {
-        this.destAbbr = destAbbr;
+    public EtdCallback setDestSet(Set<String> destSet) {
+        this.destSet = destSet;
         return this;
     }
 
-    public EtdCallback setReturnRoute(boolean returnRoute) {
+    public EtdCallback isReturnRoute(boolean returnRoute) {
         isReturnRoute = returnRoute;
         return this;
     }
@@ -59,11 +63,28 @@ public class EtdCallback implements Callback<EtdResp> {
     private void filterEtds(EtdStation etdStation) {
         List<Etd> filtered = Lists.newArrayList();
         for (Etd etd : etdStation.getEtds()) {
-            if (etd.getAbbreviation().equals(destAbbr)) {
+            if (destSet.contains(etd.getAbbreviation())) {
                 filtered.add(etd);
             }
         }
 
         etdStation.setEtds(filtered);
+    }
+
+    private Map<String, List<Estimate>> filterAndMapEtds(EtdStation etdStation) {
+        List<Etd> filtered = Lists.newArrayList();
+        for (Etd etd : etdStation.getEtds()) {
+            if (destSet.contains(etd.getAbbreviation())) {
+                filtered.add(etd);
+            }
+        }
+        etdStation.setEtds(filtered);
+
+        Map<String, List<Estimate>> origDestToEstimates = Maps.newHashMap();
+        for (Etd etd: etdStation.getEtds()) {
+            origDestToEstimates.put(
+                etdStation.getAbbr() + etd.getAbbreviation(), etd.getEstimates());
+        }
+        return origDestToEstimates;
     }
 }
