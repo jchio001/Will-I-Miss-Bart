@@ -14,10 +14,8 @@ import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
-import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
-import com.app.jonathan.willimissbart.API.Models.Etd.Etd;
-import com.app.jonathan.willimissbart.API.Models.Etd.EtdRoot;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdFailure;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdRoot;
 import com.app.jonathan.willimissbart.API.Models.Routes.RoutesFailure;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.Models.Routes.TripsWrapper;

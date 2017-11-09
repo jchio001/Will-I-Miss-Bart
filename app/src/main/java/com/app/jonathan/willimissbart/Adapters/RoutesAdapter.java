@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.API.Models.Etd.Etd;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRoot;
-import com.app.jonathan.willimissbart.API.Models.Etd.EtdStation;
-import com.app.jonathan.willimissbart.API.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
@@ -22,8 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import okhttp3.Route;
 
 public class RoutesAdapter extends Adapter<RouteViewHolder> {
     public static final SimpleDateFormat format =

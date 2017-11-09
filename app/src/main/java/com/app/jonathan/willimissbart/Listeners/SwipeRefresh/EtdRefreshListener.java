@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.SharedEtdDataBundle;
-import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 
 import java.util.List;

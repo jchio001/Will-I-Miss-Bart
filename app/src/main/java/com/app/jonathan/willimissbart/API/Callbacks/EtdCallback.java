@@ -6,10 +6,10 @@ import android.util.Log;
 import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.API.Models.Etd.Etd;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdFailure;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdResp;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRoot;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdStation;
-import com.app.jonathan.willimissbart.API.Models.Etd.EtdFailure;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
