@@ -4,19 +4,11 @@ package com.app.jonathan.willimissbart.API.Callbacks;
 import android.util.Log;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
-import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
-import com.app.jonathan.willimissbart.API.Models.Etd.Etd;
-import com.app.jonathan.willimissbart.API.Models.Etd.EtdFailure;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdResp;
-import com.app.jonathan.willimissbart.API.Models.Etd.EtdRoot;
-import com.app.jonathan.willimissbart.API.Models.Etd.EtdStation;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import retrofit2.Call;
@@ -44,12 +36,11 @@ public class EtdCallback implements Callback<EtdResp> {
         Log.i(tag, "Etds fetched!");
         switch (resp.code()) {
             case APIConstants.HTTP_STATUS_OK:
-                EtdRoot etdRoot = resp.body().getRoot();
-                filterEtds(etdRoot.getStations().get(0));
-                EventBus.getDefault().post(etdRoot);
+                EventBus.getDefault()
+                    .post(new EtdRespWrapper(resp.body().getRoot(), destSet, isReturnRoute));
                 break;
             default:
-                EventBus.getDefault().post(new EtdFailure(isReturnRoute));
+                EventBus.getDefault().post(new EtdRespWrapper(null, destSet, isReturnRoute));
                 break;
         }
     }
@@ -57,34 +48,6 @@ public class EtdCallback implements Callback<EtdResp> {
     @Override
     public void onFailure(Call<EtdResp> call, Throwable t) {
         Log.e(tag, "Failed to get etds");
-        EventBus.getDefault().post(new EtdFailure(isReturnRoute));
-    }
-
-    private void filterEtds(EtdStation etdStation) {
-        List<Etd> filtered = Lists.newArrayList();
-        for (Etd etd : etdStation.getEtds()) {
-            if (destSet.contains(etd.getAbbreviation())) {
-                filtered.add(etd);
-            }
-        }
-
-        etdStation.setEtds(filtered);
-    }
-
-    private Map<String, List<Estimate>> filterAndMapEtds(EtdStation etdStation) {
-        List<Etd> filtered = Lists.newArrayList();
-        for (Etd etd : etdStation.getEtds()) {
-            if (destSet.contains(etd.getAbbreviation())) {
-                filtered.add(etd);
-            }
-        }
-        etdStation.setEtds(filtered);
-
-        Map<String, List<Estimate>> origDestToEstimates = Maps.newHashMap();
-        for (Etd etd: etdStation.getEtds()) {
-            origDestToEstimates.put(
-                etdStation.getAbbr() + etd.getAbbreviation(), etd.getEstimates());
-        }
-        return origDestToEstimates;
+        EventBus.getDefault().post(new EtdRespWrapper(null, destSet, isReturnRoute));
     }
 }

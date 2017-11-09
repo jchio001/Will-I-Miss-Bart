@@ -46,7 +46,6 @@ public class RouteViewHolder extends ViewHolder {
         fairInfo.setText(itemView.getContext()
             .getString(R.string.fare_info, trip.getFare(), trip.getClipper()));
 
-        // TODO: FIX THIS LOGIC ASAP
         if (estimate == null) {
             departureViewHolder.setUp(null, null, timeOfResp);
         } else {

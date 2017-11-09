@@ -14,8 +14,7 @@ import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
-import com.app.jonathan.willimissbart.API.Models.Etd.EtdFailure;
-import com.app.jonathan.willimissbart.API.Models.Etd.EtdRoot;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.API.Models.Routes.RoutesFailure;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.Models.Routes.TripsWrapper;
@@ -73,7 +72,7 @@ public class RouteFragment extends Fragment {
         } else {
             userData = SPSingleton.getUserData(getActivity());
         }
-        adapter = new RoutesAdapter(userData.get(0), userData.get(1));
+        adapter = new RoutesAdapter(userData.get(0));
         updatedUserData = Lists.newArrayList(userData);
 
         footer = new UserRouteFooterViewHolder(footerLayout, this, updatedUserData);
@@ -161,14 +160,8 @@ public class RouteFragment extends Fragment {
     }
 
     @Subscribe
-    public void realTimeResponse(EtdRoot etdRoot) {
-        adapter.populateOrigDestMappings(
-            etdRoot, etdRoot.getStations().get(0).getAbbr().equals(userData.get(0).getAbbr()));
-    }
-
-    @Subscribe
-    public void realTimeFailure(EtdFailure failure) {
-        // TODO: do things here!
+    public void realTimeResponse(EtdRespWrapper etdRespWrap) {
+        adapter.populateOrigDestMappings(etdRespWrap);
     }
 
     public void loadUserRoutes() {
