@@ -31,10 +31,6 @@ public class RoutesAdapter extends Adapter<RouteViewHolder> {
     private long routeEtdStationTime = 0;
     private long returnRouteEtdStationTime = 0;
 
-    public RoutesAdapter(UserStationData originData) {
-        this.origAbbr = originData.getAbbr();
-    }
-
     @Override
     public long getItemId(int position) {
         return position;
@@ -72,10 +68,11 @@ public class RoutesAdapter extends Adapter<RouteViewHolder> {
         return trips;
     }
 
-    public void addAll(List<Trip> trips) {
+    public void addAll(List<Trip> trips, UserStationData originData) {
         this.routeEtdStationTime = 0;
         this.returnRouteEtdStationTime = 0;
         this.trips.clear();
+        this.origDestToEstimates.clear();
 
         long now = System.currentTimeMillis();
         List<Trip> filtered = Lists.newArrayList();

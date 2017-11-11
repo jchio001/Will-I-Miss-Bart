@@ -50,7 +50,7 @@ public class RouteFragment extends Fragment {
     private UserRouteFooterViewHolder footer;
     private List<UserStationData> userData;
     private List<UserStationData> updatedUserData;
-    private RoutesAdapter adapter;
+    private RoutesAdapter adapter = new RoutesAdapter();
     private List<Trip>[] trips = new List[2];
 
     private String routeFirstLegHead = null;
@@ -72,7 +72,6 @@ public class RouteFragment extends Fragment {
         } else {
             userData = SPSingleton.getUserData(getActivity());
         }
-        adapter = new RoutesAdapter(userData.get(0));
         updatedUserData = Lists.newArrayList(userData);
 
         footer = new UserRouteFooterViewHolder(footerLayout, this, updatedUserData);
@@ -175,13 +174,14 @@ public class RouteFragment extends Fragment {
             merged.addAll(trips[1]);
         }
 
-        adapter.addAll(merged);
+        adapter.addAll(merged, userData.get(0));
 
         // TODO: probably don't need a map. Also probably should explain what's going on
         Map<String, Set<String>> origToDestsMapping = Maps.newHashMap();
         for (Trip trip : adapter.getTrips()) {
             if (!origToDestsMapping.containsKey(trip.getOrigin())) {
-                origToDestsMapping.put(trip.getOrigin(), Sets.<String>newHashSet());
+                origToDestsMapping.put(trip.getOrigin(),
+                    Sets.newHashSet(trip.getLegList().get(0).getTrainHeadStation()));
             } else {
                 Set<String> destSet = origToDestsMapping.get(trip.getOrigin());
                 destSet.add(trip.getLegList().get(0).getTrainHeadStation());
