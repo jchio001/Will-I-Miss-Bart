@@ -99,12 +99,11 @@ public class NotificationAlertDialog extends AlertDialog {
                 positive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int estimateInSeconds = Utils.getEstimateInSeconds(estimate.getMinutes(), timeOfResp) -
-                            getMinutes() * 60;
-                        if (estimateInSeconds >= 45) {
-                            showNotification(estimateInSeconds);
+                        int estimateInSeconds = Utils.getEstimateInSeconds(estimate.getMinutes(), timeOfResp);
+                        int timerDuration = getMinutes() * 60;
+                        if (estimateInSeconds - timerDuration >= 60) {
+                            showNotification(timerDuration);
                             alertDialog.dismiss();
-                            //estimateViewHolder.enable();
                         } else {
                             errorTV.setVisibility(View.VISIBLE);
                         }

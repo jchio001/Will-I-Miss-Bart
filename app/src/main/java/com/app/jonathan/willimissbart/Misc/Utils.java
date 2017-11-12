@@ -84,8 +84,14 @@ public class Utils {
      */
     public static int getEstimateInSeconds(String min, long timeOfResp) {
         int minAsInt = Integer.valueOf(min);
-        return minAsInt * 60 * ((minAsInt > 5) ? 95 : 90) / 100
-            - ((int) ((System.currentTimeMillis() / 1000) - timeOfResp));
+        long now = System.currentTimeMillis() / 1000;
+
+        int diff = 0;
+        if (now > timeOfResp) {
+            diff = (int) (now - timeOfResp);
+        }
+
+        return minAsInt * 60 * ((minAsInt > 5) ? 98 : 95) / 100 - diff;
     }
 
     public static List<FlattenedEstimate> flattenEstimates(EtdStation[] etdStations,

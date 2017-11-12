@@ -35,9 +35,10 @@
         android:textColor="@color/darkGrey"
         android:textSize="14sp"/>
 
-    <ListView
+    <LinearLayout
         android:id="@+id/leg_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"/>
 
 </LinearLayout>

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:layout_margin="6dp"
-        android:textColor="@color/black"
+        android:textColor="@color/darkGrey"
         android:textSize="14sp"/>
 
     <LinearLayout
@@ -36,6 +36,16 @@
     </LinearLayout>
 
     <TextView
+        android:includeFontPadding="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="2dp"
+        android:text="@string/minutes"
+        android:textColor="@color/darkGrey"
+        android:textSize="14sp"/>
+
+    <TextView
         android:id="@+id/error_tv"
         android:gravity="center"
         android:layout_width="match_parent"
@@ -43,7 +53,7 @@
         android:layout_marginTop="6dp"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
-        android:text="@string/too_early"
+        android:text="@string/train_probably_left"
         android:textColor="@color/red"
         android:textSize="12sp"
         android:visibility="invisible"/>

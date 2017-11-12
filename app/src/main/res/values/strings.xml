@@ -1,10 +1,13 @@
 <resources>
     <string name="app_name">BART Tracker</string>
+
+    <!-- Generic -->
     <string name="home">Home</string>
     <string name="departing">Departing at %s</string>
     <string name="arriving">Arriving by %s</string>
     <string name="fare_info">Fare: %1$s, Clipper: %2$s</string>
     <string name="expand_route">Expand route</string>
+    <string name="minutes">minutes</string>
 
     <!-- Stations Grid -->
     <string name="stn_origin">Origin</string>
@@ -15,7 +18,7 @@
     <string name="turn_on_location">Location needs to be enabled before finding the nearest station!</string>
 
     <!-- Notification Timer -->
-    <string name="notif_blurb_format">The train from %1$s to %2$s is leaving in around %3$s</string>
+    <string name="notif_blurb_format">This train from %1$s to %2$s is leaving in around %3$s. Alert me in: </string>
     <string name="notif_title_format">%1$s to %2$s leaving in:</string>
     <string name="train_leaving">Your train is leaving!</string>
     <string name="close">Tap here to close</string>
@@ -54,9 +57,9 @@
     <string name="departures_departure_format">Train from %1$s to %2$s %3$s</string>
 
     <!-- Timer dialog -->
-    <string name="timer_notif_title">How many minutes early do you want the timer to trigger?</string>
+    <string name="timer_notif_title">Do you want to set an alarm for this train?</string>
     <string name="zero">0</string>
-    <string name="too_early">You should\'ve left a long time ago if you wanted to leave that early.</string>
+    <string name="train_probably_left">The train will probably be long gone by then.</string>
     <string name="info_blurb">Train leaves in around %s</string>
 
     <string name="from">From&#160;</string>

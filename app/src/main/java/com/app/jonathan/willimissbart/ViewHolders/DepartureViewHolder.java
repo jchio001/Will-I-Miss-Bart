@@ -26,6 +26,7 @@ import java.util.Set;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.internal.Util;
 
 public class DepartureViewHolder extends ViewHolder {
     private static final Set<String> LIGHT_HEX_CODES = ImmutableSet.of(
@@ -128,7 +129,7 @@ public class DepartureViewHolder extends ViewHolder {
             !estimate.getMinutes().equals("Leaving") ? estimate.getMinutes() : "0",
             timeOfResp);
         if (currentEstimate > 0) {
-            return "is leaving in " + Utils.secondsToFormattedString(currentEstimate);
+            return "is leaving in about " + String.valueOf(currentEstimate / 60) + " minutes";
         } else if (-60 <= currentEstimate && currentEstimate <= 0) {
             return "is leaving now!";
         } else {

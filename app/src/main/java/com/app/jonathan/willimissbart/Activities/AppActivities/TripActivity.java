@@ -3,7 +3,7 @@ package com.app.jonathan.willimissbart.Activities.AppActivities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
@@ -18,7 +18,7 @@ public class TripActivity extends AppCompatActivity {
     @Bind(R.id.orig_time) TextView originTime;
     @Bind(R.id.dest_time) TextView destTime;
     @Bind(R.id.fare_info) TextView fareInfo;
-    @Bind(R.id.leg_list) ListView legListView;
+    @Bind(R.id.leg_list) LinearLayout legsLayout;
 
     private Trip trip;
     private LegsAdapter adapter;
@@ -37,7 +37,10 @@ public class TripActivity extends AppCompatActivity {
         fareInfo.setText(getString(R.string.fare_info, trip.getFare(), trip.getClipper()));
 
         adapter = new LegsAdapter(trip.getLegList());
-        legListView.setAdapter(adapter);
+
+        for (int i = 0; i < adapter.getCount(); ++i) {
+            legsLayout.addView(adapter.getView(i, null, legsLayout));
+        }
     }
 
     @Override
