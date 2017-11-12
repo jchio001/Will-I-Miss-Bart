@@ -21,6 +21,7 @@ import com.app.jonathan.willimissbart.API.Models.Routes.TripsWrapper;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.RoutesAdapter;
 import com.app.jonathan.willimissbart.Misc.Constants;
+import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.Persistence.SPSingleton;
@@ -66,6 +67,7 @@ public class RouteFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_route, container, false);
         ButterKnife.bind(this, v);
         EventBus.getDefault().register(this);
+        EstimatesManager.register(adapter);
 
         if (getArguments() != null) {
             userData = getArguments().getParcelableArrayList(Constants.USER_DATA);
@@ -112,6 +114,7 @@ public class RouteFragment extends Fragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
+        EstimatesManager.unregister(adapter);
     }
 
     @Subscribe
@@ -158,10 +161,10 @@ public class RouteFragment extends Fragment {
         }
     }
 
-    @Subscribe
+    /*@Subscribe
     public void realTimeResponse(EtdRespWrapper etdRespWrap) {
-        adapter.populateOrigDestMappings(etdRespWrap);
-    }
+        adapter.onReceiveEstimates(etdRespWrap);
+    }*/
 
     public void loadUserRoutes() {
         progressBar.setVisibility(View.GONE);

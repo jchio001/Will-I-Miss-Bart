@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BART Tracker</string>
+    <string name="app_name">BART Buddy</string>
 
     <!-- Generic -->
     <string name="home">Home</string>

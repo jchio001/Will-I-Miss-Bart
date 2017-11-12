@@ -8,24 +8,18 @@ import android.view.ViewGroup;
 import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
+import com.app.jonathan.willimissbart.Misc.EstimatesListener;
+import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.RouteViewHolder;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
-public class RoutesAdapter extends Adapter<RouteViewHolder> {
-    public static final SimpleDateFormat format =
-        new SimpleDateFormat("MM/dd/yyyy h:mm aa z", Locale.ENGLISH);
-
+public class RoutesAdapter extends Adapter<RouteViewHolder> implements EstimatesListener {
     private List<Trip> trips = Lists.newArrayList();
-    private Map<String, List<Estimate>> origDestToEstimates = Maps.newHashMap();
     private String origAbbr;
 
     private long routeEtdStationTime = 0;
@@ -52,11 +46,11 @@ public class RoutesAdapter extends Adapter<RouteViewHolder> {
     public void onBindViewHolder(RouteViewHolder holder, int position) {
         Trip trip = trips.get(position);
         Estimate estimate;
-        if (!origDestToEstimates.containsKey(trip.getOrigin()
+        if (!EstimatesManager.containsKey(trip.getOrigin()
             + trip.getLegList().get(0).getTrainHeadStation())) {
             estimate = null;
         } else {
-            estimate = Iterables.getFirst(origDestToEstimates.get(trip.getOrigin()
+            estimate = Iterables.getFirst(EstimatesManager.getEstimates(trip.getOrigin()
                 + trip.getLegList().get(0).getTrainHeadStation()), null);
         }
 
@@ -64,15 +58,27 @@ public class RoutesAdapter extends Adapter<RouteViewHolder> {
             trip.getOrigin().equals(origAbbr) ? routeEtdStationTime : returnRouteEtdStationTime);
     }
 
+    @Override
+    public void onReceiveEstimates(EtdRespWrapper etdRespWrap) {
+        if (etdRespWrap.isReturnRoute()) {
+            this.routeEtdStationTime = etdRespWrap.getRespTime();
+        } else {
+            this.returnRouteEtdStationTime = etdRespWrap.getRespTime();
+        }
+
+        notifyDataSetChanged();
+    }
+
     public List<Trip> getTrips() {
         return trips;
     }
 
     public void addAll(List<Trip> trips, UserStationData originData) {
+        this.origAbbr = originData.getAbbr();
         this.routeEtdStationTime = 0;
         this.returnRouteEtdStationTime = 0;
         this.trips.clear();
-        this.origDestToEstimates.clear();
+        EstimatesManager.clear();
 
         long now = System.currentTimeMillis();
         List<Trip> filtered = Lists.newArrayList();
@@ -85,17 +91,5 @@ public class RoutesAdapter extends Adapter<RouteViewHolder> {
 
         this.trips.addAll(filtered);
         notifyDataSetChanged();
-    }
-
-    public RoutesAdapter populateOrigDestMappings(EtdRespWrapper etdRespWrap) {
-        if (etdRespWrap.isReturnRoute()) {
-            this.routeEtdStationTime = etdRespWrap.getRespTime();
-        } else {
-            this.returnRouteEtdStationTime = etdRespWrap.getRespTime();
-        }
-
-        this.origDestToEstimates.putAll(etdRespWrap.getOrigDestToEstimates());
-        notifyDataSetChanged();
-        return this;
     }
 }

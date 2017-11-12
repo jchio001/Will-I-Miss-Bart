@@ -6,6 +6,7 @@ import android.util.Log;
 import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdResp;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
+import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -36,11 +37,11 @@ public class EtdCallback implements Callback<EtdResp> {
         Log.i(tag, "Etds fetched!");
         switch (resp.code()) {
             case APIConstants.HTTP_STATUS_OK:
-                EventBus.getDefault()
+                EstimatesManager
                     .post(new EtdRespWrapper(resp.body().getRoot(), destSet, isReturnRoute));
                 break;
             default:
-                EventBus.getDefault().post(new EtdRespWrapper(null, destSet, isReturnRoute));
+                EstimatesManager.post(new EtdRespWrapper(null, destSet, isReturnRoute));
                 break;
         }
     }
@@ -48,6 +49,6 @@ public class EtdCallback implements Callback<EtdResp> {
     @Override
     public void onFailure(Call<EtdResp> call, Throwable t) {
         Log.e(tag, "Failed to get etds");
-        EventBus.getDefault().post(new EtdRespWrapper(null, destSet, isReturnRoute));
+        EstimatesManager.post(new EtdRespWrapper(null, destSet, isReturnRoute));
     }
 }

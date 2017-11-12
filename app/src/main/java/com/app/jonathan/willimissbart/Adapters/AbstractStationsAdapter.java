@@ -55,7 +55,7 @@ public class AbstractStationsAdapter extends BaseAdapter {
     public final void filter(String text) {
         filteredStations.clear();
         for (Station station : stations) {
-            if (station.getAbbr().contains(text)) {
+            if (station.getAbbr().startsWith(text)) {
                 filteredStations.add(station);
             }
         }
