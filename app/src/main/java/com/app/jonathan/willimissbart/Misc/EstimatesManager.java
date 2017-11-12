@@ -53,4 +53,15 @@ public class EstimatesManager {
     public synchronized static List<Estimate> getEstimates(String origDest) {
         return getInstance().origDestToEstimates.get(origDest);
     }
+
+    public synchronized static List<Estimate> getEstimatesElseRegister(EstimatesListener listener,
+                                                                       String origDest) {
+        Map<String, List<Estimate>> origDestToEstimates = getInstance().origDestToEstimates;
+        if (origDestToEstimates.containsKey(origDest)) {
+            return origDestToEstimates.get(origDest);
+        } else {
+            EstimatesManager.register(listener);
+            return null;
+        }
+    }
  }

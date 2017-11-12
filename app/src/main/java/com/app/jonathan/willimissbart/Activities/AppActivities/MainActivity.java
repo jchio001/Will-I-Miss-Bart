@@ -22,7 +22,7 @@ import com.app.jonathan.willimissbart.API.Models.BSA.Bsa;
 import com.app.jonathan.willimissbart.API.Models.BSA.BsaResp;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.ViewPagerAdapter;
-import com.app.jonathan.willimissbart.Fragments.RouteFragment;
+import com.app.jonathan.willimissbart.Fragments.RoutesFragment;
 import com.app.jonathan.willimissbart.Fragments.StationsFragment;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private View notifIcon;
     private View redCircle;
 
-    private RouteFragment routeFragment = new RouteFragment();
+    private RoutesFragment routeFragment = new RoutesFragment();
     // private DeparturesFragment departuresFragment = new DeparturesFragment();
     private StationsFragment stationsFragment = new StationsFragment();
     private List<Bsa> bsas = Lists.newArrayList();

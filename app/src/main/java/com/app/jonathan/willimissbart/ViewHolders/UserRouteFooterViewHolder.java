@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.Activities.AppActivities.SelectStationActivity;
-import com.app.jonathan.willimissbart.Fragments.RouteFragment;
+import com.app.jonathan.willimissbart.Fragments.RoutesFragment;
 import com.app.jonathan.willimissbart.Listeners.Animations.Footers.FooterAnimListener;
 import com.app.jonathan.willimissbart.Listeners.Animations.Generic.UpdateListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
@@ -32,13 +32,13 @@ public class UserRouteFooterViewHolder {
     @Bind(R.id.user_route_dest) public TextView destination;
     @Bind(R.id.include_return) public CheckBox includeReturn;
 
-    private RouteFragment routeFragment;
+    private RoutesFragment routeFragment;
     private ValueAnimator expandAnimation;
     private ValueAnimator collapseAnimation;
     // userData is the user's data with pending changes which may or mat not have been persisted
     private List<UserStationData> userData;
 
-    public UserRouteFooterViewHolder(View v, RouteFragment routeFragment,
+    public UserRouteFooterViewHolder(View v, RoutesFragment routeFragment,
                                      List<UserStationData> userData) {
         ButterKnife.bind(this, v);
         this.routeFragment = routeFragment;

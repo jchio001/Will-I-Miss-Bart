@@ -33,17 +33,17 @@
             android:id="@+id/ones_digit">
         </include>
 
-    </LinearLayout>
+        <TextView
+            android:includeFontPadding="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="6dp"
+            android:text="@string/minutes"
+            android:textColor="@color/darkGrey"
+            android:textSize="14sp"/>
 
-    <TextView
-        android:includeFontPadding="false"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="2dp"
-        android:text="@string/minutes"
-        android:textColor="@color/darkGrey"
-        android:textSize="14sp"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/error_tv"

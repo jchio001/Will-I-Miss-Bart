@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
-import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.API.Models.Routes.RoutesFailure;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.Models.Routes.TripsWrapper;
@@ -42,7 +41,7 @@ import java.util.Set;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class RouteFragment extends Fragment {
+public class RoutesFragment extends Fragment {
     @Bind(R.id.progress_bar) ProgressBar progressBar;
     @Bind(R.id.footer_wrapper) LinearLayout footerLayout;
     @Bind(R.id.failure_text) TextView failureText;
@@ -160,11 +159,6 @@ public class RouteFragment extends Fragment {
             loadUserRoutes();
         }
     }
-
-    /*@Subscribe
-    public void realTimeResponse(EtdRespWrapper etdRespWrap) {
-        adapter.onReceiveEstimates(etdRespWrap);
-    }*/
 
     public void loadUserRoutes() {
         progressBar.setVisibility(View.GONE);

@@ -33,7 +33,6 @@
             android:hint="@string/stn_filter_hint"
             android:imeOptions="actionDone"
             android:inputType="text"
-            android:maxLength="4"
             android:singleLine="true"/>
 
     </RelativeLayout>

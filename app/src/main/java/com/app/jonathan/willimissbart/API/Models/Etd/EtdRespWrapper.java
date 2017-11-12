@@ -19,7 +19,7 @@ public class EtdRespWrapper {
         if (etdRoot != null) {
             this.respTime = etdRoot.getTimeAsEpochMs() / 1000;
 
-            // filter out jank/irrelavant etds first
+            // filter out jank/irrelevant etds first
             List<Etd> filtered = Lists.newArrayList();
             EtdStation etdStation = etdRoot.getStations().get(0);
             for (Etd etd : etdStation.getEtds()) {

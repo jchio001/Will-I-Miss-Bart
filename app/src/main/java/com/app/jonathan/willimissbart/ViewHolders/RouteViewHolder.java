@@ -26,8 +26,9 @@ public class RouteViewHolder extends ViewHolder {
     @Bind(R.id.route_fare_info) TextView fairInfo;
 
     private DepartureViewHolder departureViewHolder;
-
     private Trip trip;
+
+    private long timeOfResp = 0;
 
     public RouteViewHolder(View v) {
         super(v);
@@ -37,6 +38,8 @@ public class RouteViewHolder extends ViewHolder {
 
     public void setUp(Trip trip, Estimate estimate, long timeOfResp) {
         this.trip = trip;
+        this.timeOfResp = timeOfResp;
+
         origin.setText(trip.getOrigin());
         dest.setText(trip.getDestination());
         departureTime.setText(itemView.getContext()
@@ -55,8 +58,9 @@ public class RouteViewHolder extends ViewHolder {
 
     @OnClick(R.id.route_card)
     public void onExpandRoute() {
-        Intent intent = new Intent(itemView.getContext(), TripActivity.class);
-        intent.putExtra(Constants.TRIP, (Parcelable) trip);
+        Intent intent = new Intent(itemView.getContext(), TripActivity.class)
+            .putExtra(Constants.TIME_OF_RESP, timeOfResp)
+            .putExtra(Constants.TRIP, (Parcelable) trip);
         itemView.getContext().startActivity(intent);
     }
 }
