@@ -187,22 +187,14 @@ public class RoutesFragment extends Fragment {
 
         if (routeFirstLegHead != null) {
             String originAbbr = userData.get(0).getAbbr();
-            RetrofitClient.getInstance()
-                .getMatchingService()
-                .getEtd("etd", APIConstants.API_KEY, 'y', originAbbr, null)
-                .clone()
-                .enqueue(new EtdCallback().setDestSet(origToDestsMapping.get(originAbbr)));
+            RetrofitClient.getRealTimeEstimates(originAbbr,
+                origToDestsMapping.get(originAbbr));
         }
 
         if (includeReturnRoute && returnFirstLegHead != null) {
             String destAbbr = userData.get(1).getAbbr();
-            RetrofitClient.getInstance()
-                .getMatchingService()
-                .getEtd("etd", APIConstants.API_KEY, 'y', destAbbr, null)
-                .clone()
-                .enqueue(new EtdCallback()
-                    .setDestSet(origToDestsMapping.get(destAbbr))
-                    .isReturnRoute(true));
+            RetrofitClient.getRealTimeEstimates(destAbbr,
+                origToDestsMapping.get(destAbbr));
         }
     }
 

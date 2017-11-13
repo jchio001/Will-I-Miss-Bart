@@ -2,10 +2,12 @@ package com.app.jonathan.willimissbart.API;
 
 import com.app.jonathan.willimissbart.API.Callbacks.BsaCallback;
 import com.app.jonathan.willimissbart.API.Callbacks.DeparturesCallback;
+import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.app.jonathan.willimissbart.API.Callbacks.StationInfoCallback;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Dispatcher;
@@ -55,6 +57,13 @@ public class RetrofitClient {
     }
 
     // TODO: return callback from each API call
+
+    public static void getRealTimeEstimates(String origin, Set<String> trainHeadSet) {
+        getInstance()
+            .getMatchingService()
+            .getEtd("etd", APIConstants.API_KEY, 'y', origin)
+            .enqueue(new EtdCallback().setDestSet(trainHeadSet));
+    }
 
     public static void getBsas() {
         RetrofitClient.getInstance()

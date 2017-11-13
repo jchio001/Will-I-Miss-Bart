@@ -26,8 +26,6 @@ public class LegViewHolder extends ViewHolder {
 
     private Leg leg;
 
-    private long timeOfResp = 0;
-
     public LegViewHolder(View v) {
         super(v);
         ButterKnife.bind(this, v);
@@ -49,7 +47,6 @@ public class LegViewHolder extends ViewHolder {
             EstimatesManager.getEstimates(origin + leg.getTrainHeadStation());
         ViewGroup parent = (ViewGroup) itemView;
         if (estimates != null && parent.getChildCount() == 2) {
-            this.timeOfResp = timeOfResp;
             for (Estimate estimate : estimates) {
                 View v = LayoutInflater.from(itemView.getContext())
                     .inflate(R.layout.layout_departure, null, false);

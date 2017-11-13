@@ -9,14 +9,18 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.app.jonathan.willimissbart.API.APIConstants;
+import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.API.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
+import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.EstimatesListener;
 import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.LegViewHolder;
+import com.google.common.collect.Sets;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -53,6 +57,13 @@ public class TripActivity extends AppCompatActivity implements EstimatesListener
                 legsLayout.addView(v);
             }
         }
+
+        EstimatesManager.register(this);
+
+        if (trip.getLegList().size() == 2) {
+            RetrofitClient.getRealTimeEstimates(trip.getLegList().get(1).getOrigin(),
+                Sets.newHashSet(trip.getLegList().get(1).getTrainHeadStation()));
+        }
     }
 
     @Override
@@ -76,7 +87,8 @@ public class TripActivity extends AppCompatActivity implements EstimatesListener
         for (int i = 0; i < legsLayout.getChildCount(); ++i) {
             View child = legsLayout.getChildAt(i);
             LegViewHolder legViewHolder = (LegViewHolder) child.getTag();
-            legViewHolder.displayEstimates(trip.getOrigin(), etdRespWrapper.getRespTime());
+            legViewHolder.displayEstimates(
+                trip.getLegList().get(i).getOrigin(), etdRespWrapper.getRespTime());
         }
     }
 }

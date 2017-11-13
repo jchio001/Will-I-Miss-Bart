@@ -20,8 +20,7 @@ public interface MatchingService {
     Call<EtdResp> getEtd(@Query("cmd") String cmd,
                          @Query("key") String key,
                          @Query("json") Character json,
-                         @Query("orig") String orig,
-                         @Query("dir") Character dir);
+                         @Query("orig") String orig);
 
     @GET("bsa.aspx")
     Call<BsaResp> getBsa(@Query("cmd") String cmd,
