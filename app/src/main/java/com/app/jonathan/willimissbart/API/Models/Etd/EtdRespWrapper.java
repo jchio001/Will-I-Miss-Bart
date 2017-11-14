@@ -9,12 +9,11 @@ import java.util.Set;
 
 public class EtdRespWrapper {
     private Map<String, List<Estimate>> origDestToEstimates = Maps.newHashMap();
-
+    private String orig;
     private long respTime = 0;
-    private boolean isReturnRoute = false;
 
-    public EtdRespWrapper(EtdRoot etdRoot, Set<String> destSet, boolean isReturnRoute) {
-        this.isReturnRoute = isReturnRoute;
+    public EtdRespWrapper(EtdRoot etdRoot, Set<String> destSet) {
+        this.orig = etdRoot.getStations().get(0).getAbbr();
 
         if (etdRoot != null) {
             this.respTime = etdRoot.getTimeAsEpochMs() / 1000;
@@ -48,11 +47,11 @@ public class EtdRespWrapper {
         return origDestToEstimates;
     }
 
-    public long getRespTime() {
-        return respTime;
+    public String getOrig() {
+        return orig;
     }
 
-    public boolean isReturnRoute() {
-        return isReturnRoute;
+    public long getRespTime() {
+        return respTime;
     }
 }

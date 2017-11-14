@@ -22,9 +22,6 @@ public class RoutesAdapter extends Adapter<RouteViewHolder> implements Estimates
     private List<Trip> trips = Lists.newArrayList();
     private String origAbbr;
 
-    private long routeEtdStationTime = 0;
-    private long returnRouteEtdStationTime = 0;
-
     @Override
     public long getItemId(int position) {
         return position;
@@ -54,18 +51,11 @@ public class RoutesAdapter extends Adapter<RouteViewHolder> implements Estimates
                 + trip.getLegList().get(0).getTrainHeadStation()), null);
         }
 
-        holder.setUp(trip, estimate,
-            trip.getOrigin().equals(origAbbr) ? routeEtdStationTime : returnRouteEtdStationTime);
+        holder.setUp(trip, estimate, EstimatesManager.getEstimatesRespTime(origAbbr));
     }
 
     @Override
     public void onReceiveEstimates(EtdRespWrapper etdRespWrap) {
-        if (etdRespWrap.isReturnRoute()) {
-            this.routeEtdStationTime = etdRespWrap.getRespTime();
-        } else {
-            this.returnRouteEtdStationTime = etdRespWrap.getRespTime();
-        }
-
         notifyDataSetChanged();
     }
 
@@ -75,10 +65,8 @@ public class RoutesAdapter extends Adapter<RouteViewHolder> implements Estimates
 
     public void addAll(List<Trip> trips, UserStationData originData) {
         this.origAbbr = originData.getAbbr();
-        this.routeEtdStationTime = 0;
-        this.returnRouteEtdStationTime = 0;
         this.trips.clear();
-        EstimatesManager.clear();
+        // EstimatesManager.clear();
 
         long now = System.currentTimeMillis();
         List<Trip> filtered = Lists.newArrayList();

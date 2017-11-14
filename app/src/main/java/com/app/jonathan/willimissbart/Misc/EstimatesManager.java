@@ -14,6 +14,7 @@ public class EstimatesManager {
     private static EstimatesManager instance = null;
 
     private Map<String, List<Estimate>> origDestToEstimates = Maps.newHashMap();
+    private Map<String, Long> stationToRespTime = Maps.newHashMap();
     private Set<EstimatesListener> subscribers = Sets.newHashSet();
 
     private EstimatesManager() {
@@ -35,7 +36,8 @@ public class EstimatesManager {
         getInstance().subscribers.remove(subscriber);
     }
 
-    public synchronized static void post(EtdRespWrapper etdRespWrapper) {
+    public synchronized static void persistThenPost(EtdRespWrapper etdRespWrapper) {
+        getInstance().stationToRespTime.put(etdRespWrapper.getOrig(), etdRespWrapper.getRespTime());
         getInstance().origDestToEstimates.putAll(etdRespWrapper.getOrigDestToEstimates());
         for (EstimatesListener subscriber : getInstance().subscribers) {
             subscriber.onReceiveEstimates(etdRespWrapper);
@@ -52,6 +54,15 @@ public class EstimatesManager {
 
     public synchronized static List<Estimate> getEstimates(String origDest) {
         return getInstance().origDestToEstimates.get(origDest);
+    }
+
+    public synchronized static long getEstimatesRespTime(String abbr) {
+        Map<String, Long> stationToRespTime = getInstance().stationToRespTime;
+        if (stationToRespTime.containsKey(abbr)) {
+            return stationToRespTime.get(abbr);
+        } else {
+            return 0;
+        }
     }
 
     public synchronized static List<Estimate> getEstimatesElseRegister(EstimatesListener listener,

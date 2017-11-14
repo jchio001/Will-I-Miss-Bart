@@ -58,7 +58,8 @@ public class RetrofitClient {
 
     // TODO: return callback from each API call
 
-    public static void getRealTimeEstimates(String origin, Set<String> trainHeadSet) {
+    public static void getRealTimeEstimates(String origin,
+                                            Set<String> trainHeadSet) {
         getInstance()
             .getMatchingService()
             .getEtd("etd", APIConstants.API_KEY, 'y', origin)

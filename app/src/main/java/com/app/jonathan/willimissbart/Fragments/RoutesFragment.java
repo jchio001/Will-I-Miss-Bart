@@ -187,14 +187,12 @@ public class RoutesFragment extends Fragment {
 
         if (routeFirstLegHead != null) {
             String originAbbr = userData.get(0).getAbbr();
-            RetrofitClient.getRealTimeEstimates(originAbbr,
-                origToDestsMapping.get(originAbbr));
+            RetrofitClient.getRealTimeEstimates(originAbbr, origToDestsMapping.get(originAbbr));
         }
 
         if (includeReturnRoute && returnFirstLegHead != null) {
             String destAbbr = userData.get(1).getAbbr();
-            RetrofitClient.getRealTimeEstimates(destAbbr,
-                origToDestsMapping.get(destAbbr));
+            RetrofitClient.getRealTimeEstimates(destAbbr, origToDestsMapping.get(destAbbr));
         }
     }
 

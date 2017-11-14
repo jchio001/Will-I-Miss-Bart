@@ -8,8 +8,6 @@ import com.app.jonathan.willimissbart.API.Models.Etd.EtdResp;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.Set;
 
 import retrofit2.Call;
@@ -20,15 +18,9 @@ public class EtdCallback implements Callback<EtdResp> {
     public static final String tag = "EtdCallback";
 
     private Set<String> destSet; // note: all the strings are abbreviations!
-    private boolean isReturnRoute = false;
 
     public EtdCallback setDestSet(Set<String> destSet) {
         this.destSet = destSet;
-        return this;
-    }
-
-    public EtdCallback isReturnRoute(boolean returnRoute) {
-        isReturnRoute = returnRoute;
         return this;
     }
 
@@ -38,10 +30,10 @@ public class EtdCallback implements Callback<EtdResp> {
         switch (resp.code()) {
             case APIConstants.HTTP_STATUS_OK:
                 EstimatesManager
-                    .post(new EtdRespWrapper(resp.body().getRoot(), destSet, isReturnRoute));
+                    .persistThenPost(new EtdRespWrapper(resp.body().getRoot(), destSet));
                 break;
             default:
-                EstimatesManager.post(new EtdRespWrapper(null, destSet, isReturnRoute));
+                EstimatesManager.persistThenPost(new EtdRespWrapper(null, destSet));
                 break;
         }
     }
@@ -49,6 +41,6 @@ public class EtdCallback implements Callback<EtdResp> {
     @Override
     public void onFailure(Call<EtdResp> call, Throwable t) {
         Log.e(tag, "Failed to get etds");
-        EstimatesManager.post(new EtdRespWrapper(null, destSet, isReturnRoute));
+        EstimatesManager.persistThenPost(new EtdRespWrapper(null, destSet));
     }
 }
