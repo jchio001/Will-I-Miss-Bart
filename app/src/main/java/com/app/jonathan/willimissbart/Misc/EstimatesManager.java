@@ -65,6 +65,42 @@ public class EstimatesManager {
         }
     }
 
+    public synchronized static void updateEstimates(int elapsedTime) {
+        int elapsedMinutes = elapsedTime / 60;
+        int elapsedSeconds = elapsedTime % 60;
+
+        Map<String, List<Estimate>> origDestToEstimates = getInstance().origDestToEstimates;
+        Map<String, Long> stationToRespTime = getInstance().stationToRespTime;
+
+        for (Map.Entry<String, List<Estimate>> entry : origDestToEstimates.entrySet()) {
+            List<Estimate> estimates = entry.getValue();
+
+            for (int i = 0; i < estimates.size(); ++i) {
+                Estimate estimate = estimates.get(i);
+                if (estimate.getMinutes().equals("Leaving")) {
+                    estimates.remove(i);
+                    --i;
+                } else {
+                    int updatedMinutes = Integer.valueOf(estimate.getMinutes()) - elapsedMinutes;
+                    if (updatedMinutes < 0) {
+                        estimates.remove(i);
+                        --i;
+                    } else if (updatedMinutes == 0) {
+                        estimate.setMinutes("Leaving");
+                        --i;
+                    } else {
+                        estimate.setMinutes(String.valueOf(updatedMinutes));
+                    }
+                }
+            }
+        }
+
+        // TODO: Fix this logic
+        for (Map.Entry<String, Long> entry : stationToRespTime.entrySet()) {
+            stationToRespTime.put(entry.getKey(), entry.getValue() - elapsedSeconds);
+        }
+    }
+
     public synchronized static List<Estimate> getEstimatesElseRegister(EstimatesListener listener,
                                                                        String origDest) {
         Map<String, List<Estimate>> origDestToEstimates = getInstance().origDestToEstimates;

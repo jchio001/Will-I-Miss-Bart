@@ -39,6 +39,10 @@ public class Estimate implements Serializable {
         return minutes;
     }
 
+    public void setMinutes(String minutes) {
+        this.minutes = minutes;
+    }
+
     public String getPlatform() {
         return platform;
     }

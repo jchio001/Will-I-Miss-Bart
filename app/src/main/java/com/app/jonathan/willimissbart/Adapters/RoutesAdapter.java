@@ -66,7 +66,6 @@ public class RoutesAdapter extends Adapter<RouteViewHolder> implements Estimates
     public void addAll(List<Trip> trips, UserStationData originData) {
         this.origAbbr = originData.getAbbr();
         this.trips.clear();
-        // EstimatesManager.clear();
 
         long now = System.currentTimeMillis();
         List<Trip> filtered = Lists.newArrayList();

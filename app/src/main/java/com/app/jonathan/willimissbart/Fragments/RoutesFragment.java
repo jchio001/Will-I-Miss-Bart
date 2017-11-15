@@ -3,6 +3,7 @@ package com.app.jonathan.willimissbart.Fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +13,12 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.app.jonathan.willimissbart.API.APIConstants;
-import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.app.jonathan.willimissbart.API.Models.Routes.RoutesFailure;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.Models.Routes.TripsWrapper;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.RoutesAdapter;
+import com.app.jonathan.willimissbart.Listeners.SwipeRefresh.RouteRefreshListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 import com.app.jonathan.willimissbart.Misc.Utils;
@@ -42,11 +42,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class RoutesFragment extends Fragment {
+    @Bind(R.id.route_swipe_refresh) SwipeRefreshLayout routeSwipeRefresh;
+    @Bind(R.id.route_recycler) RecyclerView recyclerView;
+
     @Bind(R.id.progress_bar) ProgressBar progressBar;
     @Bind(R.id.footer_wrapper) LinearLayout footerLayout;
     @Bind(R.id.failure_text) TextView failureText;
-    @Bind(R.id.route_recycler) RecyclerView recyclerView;
 
+    private RouteRefreshListener routeRefreshListener;
     private UserRouteFooterViewHolder footer;
     private List<UserStationData> userData;
     private List<UserStationData> updatedUserData;
@@ -67,6 +70,10 @@ public class RoutesFragment extends Fragment {
         ButterKnife.bind(this, v);
         EventBus.getDefault().register(this);
         EstimatesManager.register(adapter);
+
+        routeSwipeRefresh.setEnabled(false);
+        routeRefreshListener = new RouteRefreshListener(routeSwipeRefresh, adapter);
+        routeSwipeRefresh.setOnRefreshListener(routeRefreshListener);
 
         if (getArguments() != null) {
             userData = getArguments().getParcelableArrayList(Constants.USER_DATA);
@@ -162,6 +169,11 @@ public class RoutesFragment extends Fragment {
 
     public void loadUserRoutes() {
         progressBar.setVisibility(View.GONE);
+
+        routeRefreshListener.setRefreshState(Constants.REFRESH_STATE_INACTIVE);
+        routeSwipeRefresh.setRefreshing(false);
+        routeSwipeRefresh.setEnabled(true);
+
         // failureText.setVisibility(View.GONE);
         // recyclerView.setVisibility(View.VISIBLE);
 

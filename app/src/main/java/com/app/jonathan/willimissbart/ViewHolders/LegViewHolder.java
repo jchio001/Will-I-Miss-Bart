@@ -3,11 +3,9 @@ package com.app.jonathan.willimissbart.ViewHolders;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
@@ -31,7 +29,7 @@ public class LegViewHolder extends ViewHolder {
         ButterKnife.bind(this, v);
     }
 
-    public void setUp(Leg leg, String origin, long timeOfResp) {
+    public void setUp(Leg leg, long timeOfResp) {
         this.leg = leg;
         Context context = itemView.getContext();
         trainInfo.setText(context.getString(R.string.train_info,
@@ -39,7 +37,7 @@ public class LegViewHolder extends ViewHolder {
         stopInfo.setText(context.getString(R.string.stop_info,
             leg.getDestination(), leg.getDestTimeMin()));
 
-        displayEstimates(origin, timeOfResp);
+        displayEstimates(leg.getOrigin(), timeOfResp);
     }
 
     public void displayEstimates(String origin, long timeOfResp) {

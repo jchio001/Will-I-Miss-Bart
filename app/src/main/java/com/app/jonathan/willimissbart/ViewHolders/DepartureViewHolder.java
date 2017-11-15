@@ -26,7 +26,6 @@ import java.util.Set;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.internal.Util;
 
 public class DepartureViewHolder extends ViewHolder {
     private static final Set<String> LIGHT_HEX_CODES = ImmutableSet.of(
