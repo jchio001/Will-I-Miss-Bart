@@ -17,8 +17,8 @@ import com.app.jonathan.willimissbart.API.Models.Routes.RoutesFailure;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.Models.Routes.TripsWrapper;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
-import com.app.jonathan.willimissbart.Adapters.RoutesAdapter;
-import com.app.jonathan.willimissbart.Listeners.SwipeRefresh.RouteRefreshListener;
+import com.app.jonathan.willimissbart.Adapters.TripsAdapter;
+import com.app.jonathan.willimissbart.Listeners.SwipeRefresh.TripRefreshListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 import com.app.jonathan.willimissbart.Misc.Utils;
@@ -49,11 +49,11 @@ public class RoutesFragment extends Fragment {
     @Bind(R.id.footer_wrapper) LinearLayout footerLayout;
     @Bind(R.id.failure_text) TextView failureText;
 
-    private RouteRefreshListener routeRefreshListener;
+    private TripRefreshListener routeRefreshListener;
     private UserRouteFooterViewHolder footer;
     private List<UserStationData> userData;
     private List<UserStationData> updatedUserData;
-    private RoutesAdapter adapter = new RoutesAdapter();
+    private TripsAdapter adapter = new TripsAdapter();
     private List<Trip>[] trips = new List[2];
 
     private String routeFirstLegHead = null;
@@ -72,7 +72,7 @@ public class RoutesFragment extends Fragment {
         EstimatesManager.register(adapter);
 
         routeSwipeRefresh.setEnabled(false);
-        routeRefreshListener = new RouteRefreshListener(routeSwipeRefresh, adapter);
+        routeRefreshListener = new TripRefreshListener(routeSwipeRefresh, adapter);
         routeSwipeRefresh.setOnRefreshListener(routeRefreshListener);
 
         if (getArguments() != null) {
@@ -87,7 +87,7 @@ public class RoutesFragment extends Fragment {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.setMargins(0, 0, 0, footerLayout.getMeasuredHeight());
-        recyclerView.setLayoutParams(params);
+        routeSwipeRefresh.setLayoutParams(params);
 
         recyclerView.setAdapter(adapter);
         return v;
@@ -174,16 +174,20 @@ public class RoutesFragment extends Fragment {
         routeSwipeRefresh.setRefreshing(false);
         routeSwipeRefresh.setEnabled(true);
 
-        // failureText.setVisibility(View.GONE);
+        failureText.setVisibility(View.GONE);
         // recyclerView.setVisibility(View.VISIBLE);
 
         boolean includeReturnRoute = SPSingleton.getIncludeReturnRoute(this.getActivity());
-        List<Trip> merged = trips[0] != null ? trips[0] : Lists.<Trip>newArrayList();
-        if (includeReturnRoute && trips[1] != null) {
-            merged.addAll(trips[1]);
+        List<Trip> merged = trips[0] != null ? trips[0] : Lists.newArrayList((Trip) null);
+        if (includeReturnRoute) {
+            if (trips[1] != null) {
+                merged.addAll(trips[1]);
+            } else {
+                merged.addAll(Lists.newArrayList((Trip) null));
+            }
         }
 
-        adapter.addAll(merged, userData.get(0));
+        adapter.addAll(merged, userData);
 
         // TODO: probably don't need a map. Also probably should explain what's going on
         Map<String, Set<String>> origToDestsMapping = Maps.newHashMap();

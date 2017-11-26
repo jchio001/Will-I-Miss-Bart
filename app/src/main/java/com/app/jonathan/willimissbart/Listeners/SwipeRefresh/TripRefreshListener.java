@@ -3,15 +3,15 @@ package com.app.jonathan.willimissbart.Listeners.SwipeRefresh;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
-import com.app.jonathan.willimissbart.Adapters.RoutesAdapter;
+import com.app.jonathan.willimissbart.Adapters.TripsAdapter;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 
-public class RouteRefreshListener extends BaseRefreshListener {
-    private RoutesAdapter adapter;
+public class TripRefreshListener extends BaseRefreshListener {
+    private TripsAdapter adapter;
 
-    public RouteRefreshListener(SwipeRefreshLayout swipeRefreshLayout,
-                                RoutesAdapter adapter) {
+    public TripRefreshListener(SwipeRefreshLayout swipeRefreshLayout,
+                               TripsAdapter adapter) {
         super(swipeRefreshLayout);
         this.adapter = adapter;
     }
@@ -28,13 +28,13 @@ public class RouteRefreshListener extends BaseRefreshListener {
 
         long now = System.currentTimeMillis() / 1000;
         if (now - lastRefreshTime < 60) {
-            Log.i("RouteRefreshListener", "Stop spamming idiot");
+            Log.i("TripRefreshListener", "Stop spamming idiot");
             refreshState = Constants.REFRESH_STATE_INACTIVE;
             swipeRefreshLayout.setRefreshing(false);
             return;
         }
 
-        EstimatesManager.updateEstimates((int) (now - lastRefreshTime));
+        EstimatesManager.updateEstimates(now);
         lastRefreshTime = now;
         refreshState = Constants.REFRESH_STATE_INACTIVE;
         adapter.notifyDataSetChanged();

@@ -1,5 +1,7 @@
 package com.app.jonathan.willimissbart.Misc;
 
+import android.util.Log;
+
 import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
 import com.google.common.collect.Maps;
@@ -14,7 +16,11 @@ public class EstimatesManager {
     private static EstimatesManager instance = null;
 
     private Map<String, List<Estimate>> origDestToEstimates = Maps.newHashMap();
+    // keeps track of when I fetched real time estimates for a specific seconds
     private Map<String, Long> stationToRespTime = Maps.newHashMap();
+    // keeps track of seconds remainder when the user wants to update their estimates
+    private Map<String, Integer> stationToRemainderSeconds = Maps.newHashMap();
+    // keeps track of subscribers for this manager
     private Set<EstimatesListener> subscribers = Sets.newHashSet();
 
     private EstimatesManager() {
@@ -65,50 +71,63 @@ public class EstimatesManager {
         }
     }
 
-    public synchronized static void updateEstimates(int elapsedTime) {
-        int elapsedMinutes = elapsedTime / 60;
-        int elapsedSeconds = elapsedTime % 60;
-
+    public synchronized static void updateEstimates(long refreshTime) {
         Map<String, List<Estimate>> origDestToEstimates = getInstance().origDestToEstimates;
+        Map<String, Integer> stationToRemainderSeconds = getInstance().stationToRemainderSeconds;
         Map<String, Long> stationToRespTime = getInstance().stationToRespTime;
 
+        Map<String, Integer> stationToUpdatedRemainderSeconds = Maps.newHashMap();
+        boolean estimatesUpdated = false;
         for (Map.Entry<String, List<Estimate>> entry : origDestToEstimates.entrySet()) {
             List<Estimate> estimates = entry.getValue();
+            String originStation = entry.getKey().substring(0, 4);
+            long lastRespTime = stationToRespTime.get(originStation);
 
-            for (int i = 0; i < estimates.size(); ++i) {
-                Estimate estimate = estimates.get(i);
-                if (estimate.getMinutes().equals("Leaving")) {
-                    estimates.remove(i);
-                    --i;
-                } else {
-                    int updatedMinutes = Integer.valueOf(estimate.getMinutes()) - elapsedMinutes;
-                    if (updatedMinutes < 0) {
+            long elapsedTime = refreshTime - lastRespTime;
+            if (elapsedTime >= 60) {
+                estimatesUpdated = true;
+
+                if (stationToRemainderSeconds.containsKey(originStation)) {
+                    elapsedTime += stationToRemainderSeconds.get(originStation);
+                }
+
+                int elapsedMinutes = (int) elapsedTime / 60;
+                int elapsedSeconds = (int) elapsedTime % 60;
+
+                if (!stationToUpdatedRemainderSeconds.containsKey(originStation)) {
+                    stationToUpdatedRemainderSeconds.put(originStation, elapsedSeconds);
+                }
+
+                stationToRespTime.put(originStation, refreshTime);
+
+                for (int i = 0; i < estimates.size(); ++i) {
+                    Estimate estimate = estimates.get(i);
+                    if (estimate.getMinutes().equals("Leaving")) {
                         estimates.remove(i);
                         --i;
-                    } else if (updatedMinutes == 0) {
-                        estimate.setMinutes("Leaving");
-                        --i;
                     } else {
-                        estimate.setMinutes(String.valueOf(updatedMinutes));
+                        int updatedMinutes = Integer.valueOf(estimate.getMinutes()) - elapsedMinutes;
+                        if (updatedMinutes < 0) {
+                            estimates.remove(i);
+                            --i;
+                        } else if (updatedMinutes == 0) {
+                            estimate.setMinutes("Leaving");
+                            --i;
+                        } else {
+                            estimate.setMinutes(String.valueOf(updatedMinutes));
+                        }
                     }
                 }
             }
         }
 
-        // TODO: Fix this logic
-        for (Map.Entry<String, Long> entry : stationToRespTime.entrySet()) {
-            stationToRespTime.put(entry.getKey(), entry.getValue() - elapsedSeconds);
-        }
-    }
+        stationToRemainderSeconds.putAll(stationToUpdatedRemainderSeconds);
 
-    public synchronized static List<Estimate> getEstimatesElseRegister(EstimatesListener listener,
-                                                                       String origDest) {
-        Map<String, List<Estimate>> origDestToEstimates = getInstance().origDestToEstimates;
-        if (origDestToEstimates.containsKey(origDest)) {
-            return origDestToEstimates.get(origDest);
-        } else {
-            EstimatesManager.register(listener);
-            return null;
+        if (estimatesUpdated) {
+            Log.i("EstimatesManager", "Estimates updated!");
+            for (EstimatesListener subscriber : getInstance().subscribers) {
+                subscriber.onEstimatesUpdated();
+            }
         }
     }
  }

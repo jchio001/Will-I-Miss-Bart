@@ -16,9 +16,10 @@ public class EtdRespWrapper {
         this.orig = etdRoot.getStations().get(0).getAbbr();
 
         if (etdRoot != null) {
-            this.respTime = etdRoot.getTimeAsEpochMs() / 1000;
+            this.respTime = Math.min(etdRoot.getTimeAsEpochMs() / 1000,
+                System.currentTimeMillis() / 1000);
 
-            // filter out jank/irrelevant etds first
+            // filter out jank/irrelevant etds first. TODO: probably don't need this
             List<Etd> filtered = Lists.newArrayList();
             EtdStation etdStation = etdRoot.getStations().get(0);
             for (Etd etd : etdStation.getEtds()) {
@@ -34,12 +35,6 @@ public class EtdRespWrapper {
             }
         } else {
             respTime = System.currentTimeMillis() / 1000;
-        }
-
-        for (String dest : destSet) {
-            if (!origDestToEstimates.containsKey(dest)) {
-                origDestToEstimates.put(dest, Lists.<Estimate>newArrayList());
-            }
         }
     }
 

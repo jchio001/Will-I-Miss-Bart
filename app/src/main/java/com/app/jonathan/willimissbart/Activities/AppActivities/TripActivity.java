@@ -47,6 +47,7 @@ public class TripActivity extends AppCompatActivity implements EstimatesListener
         destTime.setText(getString(R.string.arriving, trip.getDestTimeMin()));
         fareInfo.setText(getString(R.string.fare_info, trip.getFare(), trip.getClipper()));
 
+        EstimatesManager.updateEstimates(System.currentTimeMillis() / 1000);
         synchronized (this) {
             for (Leg leg : trip.getLegList()) {
                 View v = LayoutInflater.from(this).inflate(R.layout.leg_elem, null, false);
@@ -58,7 +59,7 @@ public class TripActivity extends AppCompatActivity implements EstimatesListener
             EstimatesManager.register(this);
         }
 
-        if (trip.getLegList().size() == 2 && !checkIfEstimatesLoaded(legsLayout.getChildAt(1))) {
+        if (trip.getLegList().size() == 2 && !hasEstimatesLoaded(legsLayout.getChildAt(1))) {
             Log.i("TripActivity", "Loading estimates for 2nd leg...");
             RetrofitClient.getRealTimeEstimates(trip.getLegList().get(1).getOrigin(),
                 Sets.newHashSet(trip.getLegList().get(1).getTrainHeadStation()));
@@ -91,7 +92,12 @@ public class TripActivity extends AppCompatActivity implements EstimatesListener
         }
     }
 
-    public boolean checkIfEstimatesLoaded(View v) {
+    // TODO: do things here
+    @Override
+    public synchronized void onEstimatesUpdated() {
+    }
+
+    public boolean hasEstimatesLoaded(View v) {
         return ((ViewGroup) v).getChildCount() != 2;
     }
 }

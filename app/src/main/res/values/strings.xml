@@ -44,10 +44,10 @@
 
     <string name="enter_days">Enter the days you want to track this station on:</string>
 
-    <string name="departures_as_of">Departures as of %s</string>
     <string name="updated_data">Updated your route.</string>
     <string name="no_etds">No etds for this station.</string>
-    <string name="failed_to_get_etds">Failed to fetch etds. Press here to try again.</string>
+    <string name="failed_to_load_trip">Failed to load trips for %1$s to %2$s</string>
+    <string name="orig_to_dest">%1$s to %2$s</string>
     <string name="origin">From\u0020</string>
     <string name="destination">To\u0020</string>
     <string name="r_u_stupid">You don\'t need a timer for a leaving train.</string>
@@ -98,7 +98,7 @@
     <string name="stop_info">Get off at %1$s at %2$s</string>
     <string name="next_train_estimates">The next trains in this direction leave in:</string>
 
-    <!-- Route Fragment -->
+    <!-- Trip Fragment -->
     <string name="departures_failed">Failed to fetch departures</string>
     <string name="next_train_blurb">The next train for this route leaves in:</string>
 </resources>

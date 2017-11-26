@@ -45,7 +45,7 @@ public class AbstractStationsAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.station_grid_elem, parent, false);
+                .inflate(R.layout.station_grid_cell, parent, false);
             convertView.setTag(new StationsCardViewHolder(convertView, stationInfoViewHolder));
         }
 
