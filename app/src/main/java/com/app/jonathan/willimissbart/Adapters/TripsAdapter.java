@@ -50,7 +50,7 @@ public class TripsAdapter extends Adapter<TripViewHolder> implements EstimatesLi
                 holder.renderFailedTrip(destAbbr, origAbbr);
             }
         } else {
-            holder.renderTrip(trip, getEstimateForTripsFirstLeg(trip),
+            holder.renderTrip(trip, getEstimatesForTripsFirstLeg(trip),
                 EstimatesManager.getEstimatesRespTime(origAbbr));
         }
     }
@@ -68,11 +68,11 @@ public class TripsAdapter extends Adapter<TripViewHolder> implements EstimatesLi
     // For the feed of trips, we also want to provide a real time estimate for the first train
     // of the first leg of a trip. This method will grab us that estimate or return null if it's
     // not found.
-    private Estimate getEstimateForTripsFirstLeg(Trip trip) {
+    private List<Estimate> getEstimatesForTripsFirstLeg(Trip trip) {
         List<Estimate> estimates = EstimatesManager
             .getEstimates(trip.getOrigin() + trip.getLegList().get(0).getTrainHeadStation());
 
-        return estimates == null ? null : Iterables.getFirst(estimates, null);
+        return estimates == null ? null : estimates;
     }
 
     public void addAll(List<Trip> trips, List<UserStationData> userData) {

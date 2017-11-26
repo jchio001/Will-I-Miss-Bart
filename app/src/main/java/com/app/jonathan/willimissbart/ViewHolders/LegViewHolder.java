@@ -48,7 +48,7 @@ public class LegViewHolder extends ViewHolder {
             for (Estimate estimate : estimates) {
                 View v = LayoutInflater.from(itemView.getContext())
                     .inflate(R.layout.layout_departure, null, false);
-                new DepartureViewHolder(v).setUp(leg, estimate, timeOfResp);
+                new EstimateViewHolder(v).renderWithEstimate(leg, estimate, timeOfResp);
                 parent.addView(v);
             }
         }

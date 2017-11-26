@@ -8,6 +8,8 @@
     <string name="fare_info">Fare: %1$s, Clipper: %2$s</string>
     <string name="expand_route">Expand route</string>
     <string name="minutes">minutes</string>
+    <string name="loading">Loading...</string>
+    <string name="no_estimates">No estimates to display</string>
 
     <!-- Stations Grid -->
     <string name="stn_origin">Origin</string>
@@ -44,6 +46,7 @@
 
     <string name="enter_days">Enter the days you want to track this station on:</string>
 
+    <!-- Trips Fragment -->
     <string name="updated_data">Updated your route.</string>
     <string name="no_etds">No etds for this station.</string>
     <string name="failed_to_load_trip">Failed to load trips for %1$s to %2$s</string>

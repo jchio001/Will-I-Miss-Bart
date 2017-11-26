@@ -14,6 +14,8 @@ import com.app.jonathan.willimissbart.Activities.AppActivities.TripActivity;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.R;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -26,7 +28,7 @@ public class TripViewHolder extends ViewHolder {
     @Bind(R.id.trip_arrive_time) TextView arrivalTime;
     @Bind(R.id.trip_fare_info) TextView fairInfo;
 
-    private DepartureViewHolder departureViewHolder;
+    private EstimateViewHolder estimateViewHolder;
     private Trip trip;
 
     private long timeOfResp = 0;
@@ -34,7 +36,7 @@ public class TripViewHolder extends ViewHolder {
     public TripViewHolder(View v) {
         super(v);
         ButterKnife.bind(this, v);
-        departureViewHolder = new DepartureViewHolder(departuresLayout);
+        estimateViewHolder = new EstimateViewHolder(departuresLayout);
     }
 
     @OnClick(R.id.route_card)
@@ -47,7 +49,7 @@ public class TripViewHolder extends ViewHolder {
         }
     }
 
-    public void renderTrip(Trip trip, Estimate estimate, long timeOfResp) {
+    public void renderTrip(Trip trip, List<Estimate> estimates, long timeOfResp) {
         this.trip = trip;
         this.timeOfResp = timeOfResp;
 
@@ -62,15 +64,15 @@ public class TripViewHolder extends ViewHolder {
             fairInfo.setText(itemView.getContext()
                 .getString(R.string.fare_info, trip.getFare(), trip.getClipper()));
 
-            renderEstimate(estimate);
+            renderEstimate(estimates);
         }
     }
 
-    public void renderEstimate(Estimate estimate) {
-        if (estimate == null) {
-            departureViewHolder.setUp(null, null, timeOfResp);
+    public void renderEstimate(List<Estimate> estimates) {
+        if (estimates == null) {
+            estimateViewHolder.renderWithEstimateList(null, estimates, timeOfResp);
         } else {
-            departureViewHolder.setUp(trip.getLegList().get(0), estimate, timeOfResp);
+            estimateViewHolder.renderWithEstimateList(trip.getLegList().get(0), estimates, timeOfResp);
         }
     }
 
