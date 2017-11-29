@@ -61,9 +61,12 @@ public class NotificationAlertDialog extends AlertDialog {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_set_timer_layout, null);
         ButterKnife.bind(this, v);
 
-        infoBlurb.setText(getBlurb());
+        int curEstimate = Utils.getEstimateInSeconds(estimate.getMinutes(), timeOfResp);
+        infoBlurb.setText(getBlurb(curEstimate));
         tensDigitViewHolder = new DigitViewHolder(tensDigit, errorTV, 6);
         onesDigitViewHolder = new DigitViewHolder(onesDigit, errorTV, 10);
+        initDigitsWithCurrentEstimate(curEstimate);
+
         alertDialog = new Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogTheme))
             .setPositiveButton("OK", null)
             .setNegativeButton("CANCEL", new OnClickListener() {
@@ -118,7 +121,7 @@ public class NotificationAlertDialog extends AlertDialog {
         return tensDigitViewHolder.getValue() * 10 + onesDigitViewHolder.getValue();
     }
 
-    private String getBlurb() {
+    private String getBlurb(int curEstimate) {
         return getContext().getString(
             R.string.notif_blurb_format,
             leg.getOrigin(),
@@ -127,12 +130,18 @@ public class NotificationAlertDialog extends AlertDialog {
                 Utils.getEstimateInSeconds(estimate.getMinutes(), timeOfResp)));
     }
 
-    private void showNotification(int estimateInSeconds) {
+    private void showNotification(int duration) {
         Intent intent = new Intent(getContext(), TimerService.class);
         intent.setAction(Constants.UPDATE);
         intent.putExtra(Constants.TITLE, title);
-        intent.putExtra(Constants.SECONDS, estimateInSeconds);
+        intent.putExtra(Constants.SECONDS, duration);
         getContext().startService(intent);
         Toast.makeText(getContext(), R.string.starting_timer, Toast.LENGTH_SHORT).show();
+    }
+
+    private void initDigitsWithCurrentEstimate(int estimateInSeconds) {
+        int estimateInMinutes = estimateInSeconds / 60;
+        tensDigitViewHolder.digit.setText(String.valueOf(estimateInMinutes / 10));
+        onesDigitViewHolder.digit.setText(String.valueOf(estimateInMinutes % 10));
     }
 }

@@ -80,7 +80,7 @@ public class Utils {
      * as the train will be more likely to leave earlier
      * @param min A string representing an estimate in minutes
      * @param timeOfResp The time at which an estimate is fetched (in epoch seconds)
-     * @return A dampened timer estimate
+     * @return A dampened timer estimate in seconds.
      */
     public static int getEstimateInSeconds(String min, long timeOfResp) {
         int minAsInt = Integer.valueOf(min);
@@ -92,35 +92,6 @@ public class Utils {
         }
 
         return minAsInt * 60 * ((minAsInt > 5) ? 98 : 95) / 100 - diff;
-    }
-
-    public static List<FlattenedEstimate> flattenEstimates(EtdStation[] etdStations,
-                                                           List<UserStationData> associatedData,
-                                                           long[] timeOfResponse,
-                                                           boolean[] successArr,
-                                                           int size) {
-        List<FlattenedEstimate> flattenedEstimates = Lists.newArrayList();
-        for (int i = 0; i < size; ++i) {
-            if (successArr[i]) {
-                if (etdStations[i].getEtds() != null && !etdStations[i].getEtds().isEmpty()) {
-                    for (Etd etd : etdStations[i].getEtds()) {
-                        flattenedEstimates.add(
-                            new FlattenedEstimate(associatedData.get(i), etd, timeOfResponse[i], null));
-                        for (Estimate estimate : etd.getEstimates()) {
-                            flattenedEstimates.add(
-                                new FlattenedEstimate(
-                                    associatedData.get(i), etd, timeOfResponse[i], estimate));
-                        }
-                    }
-                } else {
-                    flattenedEstimates.add(new FlattenedEstimate(
-                        associatedData.get(i), null, timeOfResponse[i], null));
-                }
-            } else {
-                flattenedEstimates.add(new FlattenedEstimate(associatedData.get(i)));
-            }
-        }
-        return flattenedEstimates;
     }
 
     public static void hideKeyboard(Activity activity) {

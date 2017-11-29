@@ -10,7 +10,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DigitViewHolder {
-    @Bind(R.id.digit) TextView digit;
+    @Bind(R.id.digit) public TextView digit;
     TextView errorTV;
 
     private int val = 0;
