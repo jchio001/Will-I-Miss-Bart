@@ -10,16 +10,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DigitViewHolder {
-    @Bind(R.id.digit) public TextView digit;
+    @Bind(R.id.digit) TextView digit;
     TextView errorTV;
 
     private int val = 0;
     private int base = 0;
     
-    public DigitViewHolder(View v, TextView errorTV, int base) {
+    public DigitViewHolder(View v, TextView errorTV, int baseVal, int base) {
         ButterKnife.bind(this, v);
         this.errorTV = errorTV;
+        this.val = baseVal;
         this.base = base;
+
+        digit.setText(String.valueOf(baseVal));
     }
 
     @OnClick(R.id.increment)
@@ -39,4 +42,6 @@ public class DigitViewHolder {
     public int getValue() {
         return this.val;
     }
+
+
 }

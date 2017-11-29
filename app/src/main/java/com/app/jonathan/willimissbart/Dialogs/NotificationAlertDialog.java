@@ -61,11 +61,13 @@ public class NotificationAlertDialog extends AlertDialog {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_set_timer_layout, null);
         ButterKnife.bind(this, v);
 
-        int curEstimate = Utils.getEstimateInSeconds(estimate.getMinutes(), timeOfResp);
-        infoBlurb.setText(getBlurb(curEstimate));
-        tensDigitViewHolder = new DigitViewHolder(tensDigit, errorTV, 6);
-        onesDigitViewHolder = new DigitViewHolder(onesDigit, errorTV, 10);
-        initDigitsWithCurrentEstimate(curEstimate);
+        int estimateInSeconds = Utils.getEstimateInSeconds(
+            estimate.getMinutes(), timeOfResp);
+        int estimateInMinutes = estimateInSeconds / 60;
+
+        infoBlurb.setText(getBlurb(estimateInSeconds));
+        tensDigitViewHolder = new DigitViewHolder(tensDigit, errorTV, estimateInMinutes / 10, 6);
+        onesDigitViewHolder = new DigitViewHolder(onesDigit, errorTV, estimateInMinutes % 10, 10);
 
         alertDialog = new Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogTheme))
             .setPositiveButton("OK", null)
@@ -126,8 +128,7 @@ public class NotificationAlertDialog extends AlertDialog {
             R.string.notif_blurb_format,
             leg.getOrigin(),
             leg.getDestination(),
-            Utils.secondsToFormattedString(
-                Utils.getEstimateInSeconds(estimate.getMinutes(), timeOfResp)));
+            Utils.secondsToFormattedString(curEstimate));
     }
 
     private void showNotification(int duration) {
@@ -137,11 +138,5 @@ public class NotificationAlertDialog extends AlertDialog {
         intent.putExtra(Constants.SECONDS, duration);
         getContext().startService(intent);
         Toast.makeText(getContext(), R.string.starting_timer, Toast.LENGTH_SHORT).show();
-    }
-
-    private void initDigitsWithCurrentEstimate(int estimateInSeconds) {
-        int estimateInMinutes = estimateInSeconds / 60;
-        tensDigitViewHolder.digit.setText(String.valueOf(estimateInMinutes / 10));
-        onesDigitViewHolder.digit.setText(String.valueOf(estimateInMinutes % 10));
     }
 }
