@@ -9,10 +9,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
+import com.app.jonathan.willimissbart.API.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.Activities.AppActivities.TripActivity;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.R;
+import com.google.common.collect.Iterables;
 
 import java.util.List;
 
@@ -21,12 +23,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class TripViewHolder extends ViewHolder {
+    private static final String DIRECTION_SNIPPET = "(heading towards %s) ";
+
     @Bind(R.id.departures_layout) RelativeLayout departuresLayout;
     @Bind(R.id.trip_info_layout) LinearLayout tripInfoLayout;
     @Bind(R.id.trip_orig_to_dest) TextView origToDest;
     @Bind(R.id.trip_depart_time) TextView departureTime;
     @Bind(R.id.trip_arrive_time) TextView arrivalTime;
     @Bind(R.id.trip_fare_info) TextView fairInfo;
+    @Bind(R.id.trip_next_train_info) TextView nextTrainInfo;
 
     private EstimateViewHolder estimateViewHolder;
     private Trip trip;
@@ -70,9 +75,16 @@ public class TripViewHolder extends ViewHolder {
 
     public void renderEstimate(List<Estimate> estimates) {
         if (estimates == null) {
+            nextTrainInfo.setText(itemView.getContext().getString(R.string.next_train_blurb, ""));
             estimateViewHolder.renderWithEstimateList(null, estimates, timeOfResp);
         } else {
-            estimateViewHolder.renderWithEstimateList(trip.getLegList().get(0), estimates, timeOfResp);
+            Leg firstLeg = Iterables.getFirst(trip.getLegList(), null);
+            if (firstLeg != null) {
+                nextTrainInfo.setText(itemView.getContext().getString(R.string.next_train_blurb,
+                    String.format(DIRECTION_SNIPPET, firstLeg.getTrainHeadStation())));
+            }
+
+            estimateViewHolder.renderWithEstimateList(firstLeg, estimates, timeOfResp);
         }
     }
 

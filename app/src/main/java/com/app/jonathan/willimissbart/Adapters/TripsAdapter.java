@@ -19,6 +19,10 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 public class TripsAdapter extends Adapter<TripViewHolder> implements EstimatesListener {
+    private static int RENDER_TRIP = 0;
+    private static int RENDER_FAILED_TRIPS = 1;
+    private static int RENDER_FAILED_RETURN_TRIPS = 2;
+
     private List<Trip> trips = Lists.newArrayList();
     private String origAbbr = "";
     private String destAbbr = "";
@@ -43,15 +47,17 @@ public class TripsAdapter extends Adapter<TripViewHolder> implements EstimatesLi
     @Override
     public void onBindViewHolder(TripViewHolder holder, int position) {
         Trip trip = trips.get(position);
-        if (trip == null) {
-            if (position == 0) {
-                holder.renderFailedTrip(origAbbr, destAbbr);
-            } else {
-                holder.renderFailedTrip(destAbbr, origAbbr);
-            }
-        } else {
+        int renderingState = getRenderingState(trip, position);
+
+        if (renderingState == RENDER_TRIP) {
             holder.renderTrip(trip, getEstimatesForTripsFirstLeg(trip),
                 EstimatesManager.getEstimatesRespTime(origAbbr));
+        } else if (renderingState == RENDER_FAILED_TRIPS) {
+            holder.renderFailedTrip(origAbbr, destAbbr);
+        } else if (renderingState == RENDER_FAILED_RETURN_TRIPS) {
+            holder.renderFailedTrip(destAbbr, origAbbr);
+        } else {
+            throw new IllegalArgumentException("Invalid rendering state.");
         }
     }
 
@@ -73,6 +79,14 @@ public class TripsAdapter extends Adapter<TripViewHolder> implements EstimatesLi
             .getEstimates(trip.getOrigin() + trip.getLegList().get(0).getTrainHeadStation());
 
         return estimates == null ? null : estimates;
+    }
+
+    private int getRenderingState(Trip trip, int position) {
+        if (trip != null) {
+            return RENDER_TRIP;
+        } else {
+            return position == 0 ? RENDER_FAILED_TRIPS : RENDER_FAILED_RETURN_TRIPS;
+        }
     }
 
     public void addAll(List<Trip> trips, List<UserStationData> userData) {
