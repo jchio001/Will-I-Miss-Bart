@@ -8,8 +8,9 @@
     <string name="fare_info">Fare: %1$s, Clipper: %2$s</string>
     <string name="expand_route">Expand route</string>
     <string name="minutes">minutes</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading&#8230;</string>
     <string name="no_estimates">No estimates to display</string>
+    <string name="turn_on_location">Location needs to be enabled before finding the nearest station!</string>
 
     <!-- Stations Grid -->
     <string name="stn_origin">Origin</string>
@@ -17,7 +18,6 @@
     <string name="stn_from">From: %s</string>
     <string name="stn_to">To: %s</string>
     <string name="stn_filter_hint">Enter in a station name</string>
-    <string name="turn_on_location">Location needs to be enabled before finding the nearest station!</string>
 
     <!-- Notification Timer -->
     <string name="notif_blurb_format">This train from %1$s to %2$s is leaving in around %3$s. Alert me in: </string>
@@ -36,15 +36,8 @@
     <string name="update">Update</string>
 
     <!-- Onboarding Activity -->
-    <string name="enter_bart_data">Select an origin station and a destination station</string>
+    <string name="enter_bart_data">Select an origin station and a destination station:</string>
     <string name="done">Done</string>
-    <string name="help_blurb">
-        We want to show the stations best suited to your preferences every day. In order to do so, we also need to know:
-        \n\n- The direction from that station you\'re interested in
-        \n- The days of the week you want to track that station
-    </string>
-
-    <string name="enter_days">Enter the days you want to track this station on:</string>
 
     <!-- Trips Fragment -->
     <string name="updated_data">Updated your route.</string>
@@ -64,10 +57,6 @@
     <string name="zero">0</string>
     <string name="longer_time_please">Please enter in a longer timer duration</string>
     <string name="info_blurb">Train leaves in around %s</string>
-
-    <string name="from">From&#160;</string>
-    <string name="going_towards">, going towards&#160;</string>
-    <string name="nothing_to_display">No information to display today. Change the days of your BART stations if you want to see something.</string>
 
     <string name="failed_to_get_bsa">Unable to fetch bsa\'s. Please try again later.</string>
 

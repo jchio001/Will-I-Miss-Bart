@@ -95,7 +95,6 @@ public class OnboardingActivity extends AppCompatActivity {
 
     @SuppressWarnings("unchecked")
     private void setUpActivityLayout() {
-        // TODO: remove this null with actual object
         adapter = new OriginDestStationsAdapter(StationsSingleton.getStations(), null, footer);
         stationGridViewHolder = new StationGridViewHolder(stationGridLayout, adapter, 0, true);
         AlphaAnimation hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
