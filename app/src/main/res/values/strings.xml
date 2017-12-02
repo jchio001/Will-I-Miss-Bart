@@ -62,7 +62,7 @@
     <!-- Timer dialog -->
     <string name="timer_notif_title">Do you want to set an alarm for this train?</string>
     <string name="zero">0</string>
-    <string name="train_probably_left">The train will probably be long gone by then.</string>
+    <string name="longer_time_please">Please enter in a longer timer duration</string>
     <string name="info_blurb">Train leaves in around %s</string>
 
     <string name="from">From&#160;</string>

@@ -53,7 +53,7 @@
         android:layout_marginTop="6dp"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
-        android:text="@string/train_probably_left"
+        android:text="@string/longer_time_please"
         android:textColor="@color/red"
         android:textSize="12sp"
         android:visibility="invisible"/>

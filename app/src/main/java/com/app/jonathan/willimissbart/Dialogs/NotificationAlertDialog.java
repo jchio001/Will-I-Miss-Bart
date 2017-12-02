@@ -58,16 +58,6 @@ public class NotificationAlertDialog extends AlertDialog {
             R.string.notif_title_format,
             leg.getOrigin(),
             leg.getDestination());
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_set_timer_layout, null);
-        ButterKnife.bind(this, v);
-
-        int estimateInSeconds = Utils.getEstimateInSeconds(
-            estimate.getMinutes(), timeOfResp);
-        int estimateInMinutes = estimateInSeconds / 60;
-
-        infoBlurb.setText(getBlurb(estimateInSeconds));
-        tensDigitViewHolder = new DigitViewHolder(tensDigit, errorTV, estimateInMinutes / 10, 6);
-        onesDigitViewHolder = new DigitViewHolder(onesDigit, errorTV, estimateInMinutes % 10, 10);
 
         alertDialog = new Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogTheme))
             .setPositiveButton("OK", null)
@@ -84,7 +74,7 @@ public class NotificationAlertDialog extends AlertDialog {
                 }
             })
             .setTitle(R.string.timer_notif_title)
-            .setView(v)
+            .setView(inflateAndRenderLayout())
             .create();
         alertDialog.setCanceledOnTouchOutside(true);
         setOnShowListener();
@@ -106,8 +96,9 @@ public class NotificationAlertDialog extends AlertDialog {
                     public void onClick(View v) {
                         int estimateInSeconds = Utils.getEstimateInSeconds(estimate.getMinutes(), timeOfResp);
                         int timerDuration = getMinutes() * 60;
-                        if (estimateInSeconds - timerDuration >= 60) {
-                            showNotification(timerDuration);
+
+                        if (timerDuration > 0) {
+                            showNotification(Math.min(timerDuration, estimateInSeconds));
                             alertDialog.dismiss();
                         } else {
                             errorTV.setVisibility(View.VISIBLE);
@@ -117,6 +108,21 @@ public class NotificationAlertDialog extends AlertDialog {
                 });
             }
         });
+    }
+
+    private View inflateAndRenderLayout() {
+        View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_set_timer_layout, null);
+        ButterKnife.bind(this, v);
+
+        int estimateInSeconds = Utils.getEstimateInSeconds(
+            estimate.getMinutes(), timeOfResp);
+        int estimateInMinutes = estimateInSeconds / 60;
+
+        infoBlurb.setText(getBlurb(estimateInSeconds));
+        tensDigitViewHolder = new DigitViewHolder(tensDigit, errorTV, estimateInMinutes / 10, 6);
+        onesDigitViewHolder = new DigitViewHolder(onesDigit, errorTV, estimateInMinutes % 10, 10);
+
+        return v;
     }
 
     private int getMinutes() {
