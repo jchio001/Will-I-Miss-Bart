@@ -47,23 +47,7 @@ public class TripActivity extends AppCompatActivity implements EstimatesListener
         destTime.setText(getString(R.string.arriving, trip.getDestTimeMin()));
         fareInfo.setText(getString(R.string.fare_info, trip.getFare(), trip.getClipper()));
 
-        EstimatesManager.updateEstimates(System.currentTimeMillis() / 1000);
-        synchronized (this) {
-            for (Leg leg : trip.getLegList()) {
-                View v = LayoutInflater.from(this).inflate(R.layout.leg_elem, null, false);
-                LegViewHolder viewHolder = new LegViewHolder(v);
-                viewHolder.setUp(leg, timeOfResp);
-                v.setTag(viewHolder);
-                legsLayout.addView(v);
-            }
-            EstimatesManager.register(this);
-        }
-
-        if (trip.getLegList().size() == 2 && !hasEstimatesLoaded(legsLayout.getChildAt(1))) {
-            Log.i("TripActivity", "Loading estimates for 2nd leg...");
-            RetrofitClient.getRealTimeEstimates(trip.getLegList().get(1).getOrigin(),
-                Sets.newHashSet(trip.getLegList().get(1).getTrainHeadStation()));
-        }
+        renderEstimatesForTripLegs(timeOfResp);
     }
 
     @Override
@@ -99,5 +83,25 @@ public class TripActivity extends AppCompatActivity implements EstimatesListener
 
     public boolean hasEstimatesLoaded(View v) {
         return ((ViewGroup) v).getChildCount() != 2;
+    }
+
+    public void renderEstimatesForTripLegs(long timeOfResp) {
+        EstimatesManager.updateEstimates(System.currentTimeMillis() / 1000);
+        synchronized (this) {
+            for (Leg leg : trip.getLegList()) {
+                View v = LayoutInflater.from(this).inflate(R.layout.leg_elem, null, false);
+                LegViewHolder viewHolder = new LegViewHolder(v);
+                viewHolder.setUp(leg, timeOfResp);
+                v.setTag(viewHolder);
+                legsLayout.addView(v);
+            }
+            EstimatesManager.register(this);
+        }
+
+        if (trip.getLegList().size() == 2 && !hasEstimatesLoaded(legsLayout.getChildAt(1))) {
+            Log.i("TripActivity", "Loading estimates for 2nd leg...");
+            RetrofitClient.getRealTimeEstimates(trip.getLegList().get(1).getOrigin(),
+                Sets.newHashSet(trip.getLegList().get(1).getTrainHeadStation()));
+        }
     }
 }

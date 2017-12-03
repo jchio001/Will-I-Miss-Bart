@@ -92,7 +92,8 @@ public class StationInfoViewHolder {
         stationInfoAddress.setText(stationInfo.getFullAddress());
         stationInfoBlurb.setText(stationInfo.getIntro().getcDataSection().trim());
 
-        // Yes, I did check BART's API and no, I can't do this with a loop.
+        // Yes, I did check BART's API and no, I can't do this with a loop. Each one of these
+        // pieces of information is contained in their own classes rather than a list.
         new StationInfoRowViewHolder(activityTable.getChildAt(0),
             stationInfo.getFood().getcDataSection(), 0);
         new StationInfoRowViewHolder(activityTable.getChildAt(1),
@@ -100,7 +101,6 @@ public class StationInfoViewHolder {
         new StationInfoRowViewHolder(activityTable.getChildAt(2),
             stationInfo.getAttraction().getcDataSection(), 2);
 
-        // TODO: enable this once the animation has ended. QOL update, Low priority.
         stationAddrLayout.setEnabled(true);
 
         // TODO: can I reuse the same animation?

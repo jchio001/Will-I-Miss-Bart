@@ -13,7 +13,6 @@ import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.TripViewHolder;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import java.util.List;

@@ -10,8 +10,8 @@ import com.app.jonathan.willimissbart.ViewHolders.StationsCardViewHolder;
 
 import java.util.List;
 
-public class StationsAdapter extends AbstractStationsAdapter {
-    public StationsAdapter(List<Station> stations, StationInfoViewHolder stationInfoViewHolder) {
+public class SelectStationsAdapter extends AbstractStationsAdapter {
+    public SelectStationsAdapter(List<Station> stations, StationInfoViewHolder stationInfoViewHolder) {
         super(stations, stationInfoViewHolder);
     }
 

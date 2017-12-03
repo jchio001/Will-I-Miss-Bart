@@ -34,6 +34,8 @@ public class SelectStationActivity extends AppCompatActivity {
     private SingleElemStationsAdapter adapter;
     private StationGridViewHolder stationGridViewHolder;
 
+    // This is the index chosen for the current origin if the user wants to select a new
+    // destination, and the current destination if the useer wants to select a new origin
     private int notThisIndex = -1;
 
     @Override
@@ -74,11 +76,9 @@ public class SelectStationActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (stationInfoLayout.getVisibility() == View.VISIBLE &&
-            stationInfoLayout.getHeight() == Utils.getStationInfoLayoutHeight(this)) {
+        if (isStationInfoLayoutOpen()) {
             stationInfoViewHolder.onClose();
         } else {
-
             super.onBackPressed();
         }
     }
@@ -95,5 +95,10 @@ public class SelectStationActivity extends AppCompatActivity {
         } else {
             Utils.showSnackbar(this, parent, R.color.red, R.string.going_in_a_loop);
         }
+    }
+
+    public boolean isStationInfoLayoutOpen() {
+        return stationInfoLayout.getVisibility() == View.VISIBLE &&
+            stationInfoLayout.getHeight() == Utils.getStationInfoLayoutHeight(this);
     }
 }

@@ -97,7 +97,7 @@ public class UserRouteFooterViewHolder {
         }
     }
 
-    public void initAnimations() {
+    private void initAnimations() {
         footerBody.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int measuredHeight = footerBody.getMeasuredHeight();
 

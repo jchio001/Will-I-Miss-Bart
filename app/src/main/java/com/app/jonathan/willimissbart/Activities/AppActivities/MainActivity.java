@@ -44,6 +44,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnPageChange;
+import butterknife.OnPageChange.Callback;
 
 public class MainActivity extends AppCompatActivity {
     @Bind(R.id.drawer_layout) CoordinatorLayout parent;
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             Utils.getStationInfoLayoutHeight(this));
         NotificationPopUpWindow.isChecked = SPSingleton.getString(this, Constants.MUTE_NOTIF)
             .equals(NotificationPopUpWindow.dateFormat.format(new Date()));
-        Utils.loadStations(SPSingleton.getInstance(getApplicationContext()).getPersistedStations());
+        Utils.loadStations(SPSingleton.getPersistedStations(this));
 
         setUpViewPager(getIntent().getExtras());
         tabs.setupWithViewPager(viewPager);
@@ -126,7 +128,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case StationsFragment.PERMISSIONS_CODE:
@@ -135,6 +139,11 @@ public class MainActivity extends AppCompatActivity {
                     stationsFragment.loadStation();
                 }
         }
+    }
+
+    @OnPageChange(value = R.id.view_pager, callback = Callback.PAGE_SELECTED)
+    public void onPageChanged() {
+        Utils.hideKeyboard(context);
     }
 
     @SuppressWarnings("unchecked")
@@ -168,24 +177,6 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager())
             .setTitles(titles)
             .setFragments(fragments);
-
-        // TODO: Butterknife this (again)
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Utils.hideKeyboard(context);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
 
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);

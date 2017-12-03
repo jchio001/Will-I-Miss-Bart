@@ -14,8 +14,7 @@ public class UpdateListener implements AnimatorUpdateListener {
     // forcefully update the height as the animation ticks
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
-        int value = (Integer) animation.getAnimatedValue();
-        footerBody.getLayoutParams().height = value;
+        footerBody.getLayoutParams().height = (Integer) animation.getAnimatedValue();
         footerBody.requestLayout();
     }
 }

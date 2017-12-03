@@ -20,7 +20,7 @@ public class ShowOrHideAnimListener implements AnimationListener {
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        v.setVisibility(View.VISIBLE);
+        v.setVisibility(visibility);
     }
 
     @Override

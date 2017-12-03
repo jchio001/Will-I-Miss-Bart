@@ -49,8 +49,8 @@ public class SPSingleton {
         }
     }
 
-    public String getPersistedStations() {
-        return sp.getString(Constants.STATION_LIST_KEY, "");
+    public static String getPersistedStations(Context context) {
+        return getInstance(context).getSp().getString(Constants.STATION_LIST_KEY, "");
     }
 
     public static String getString(Context context, String key) {

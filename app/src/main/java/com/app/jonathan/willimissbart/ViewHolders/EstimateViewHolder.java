@@ -33,7 +33,10 @@ import butterknife.OnClick;
 public class EstimateViewHolder extends ViewHolder {
     private static final Set<String> LIGHT_HEX_CODES = ImmutableSet.of(
         "#ffffff", "#ffff33");
-    public static Map<String, ColorDrawable> hexToDrawableMap = Maps.newHashMap();
+    private static final int RENDER_ESTIMATE = 0;
+    private static final int RENDER_LOADING_ESTIMATES = 1;
+    private static final int RENDER_NO_ESTIMATES = 2;
+    private static Map<String, ColorDrawable> hexToDrawableMap = Maps.newHashMap();
 
     @Bind(R.id.icon_wrapper) FrameLayout iconWrapper;
     @Bind(R.id.subway_icon) IconTextView subwayIcon;
@@ -89,56 +92,6 @@ public class EstimateViewHolder extends ViewHolder {
         }
     }
 
-    public void renderWithEstimateList(Leg leg, List<Estimate> estimates, long timeOfResp) {
-        this.leg = leg;
-        this.estimates = estimates;
-        this.timeOfResp = timeOfResp;
-        if (estimates != null && estimates.size() > 0) {
-            renderEstimate(Iterables.getFirst(estimates, null));
-        } else {
-            if (estimates == null) {
-                renderLoadingEstimates();
-            } else {
-                renderNoEstimates();
-            }
-        }
-    }
-
-    public void renderWithEstimate(Leg leg, Estimate estimate, long timeOfResp) {
-        this.leg = leg;
-        this.estimates = Lists.newArrayList(estimate);
-        this.timeOfResp = timeOfResp;
-
-        if (estimate != null) {
-            renderEstimate(estimate);
-        } else {
-            renderNoEstimates();
-        }
-    }
-
-    public void renderEstimate(Estimate estimate) {
-        iconWrapper.setVisibility(View.VISIBLE);
-        setAlarm.setVisibility(View.VISIBLE);
-
-        subwayIcon.setTextColor(ContextCompat.getColor(itemView.getContext(),
-            LIGHT_HEX_CODES.contains(estimate.getHexColor()) ? R.color.black : R.color.white));
-        subwayIcon.setBackground(getDrawable(estimate.getHexColor()));
-
-        departureInfo.setText(estimate.getEstimateAsString());
-    }
-
-    public void renderLoadingEstimates() {
-        iconWrapper.setVisibility(View.INVISIBLE);
-        setAlarm.setVisibility(View.INVISIBLE);
-        departureInfo.setText(R.string.loading);
-    }
-
-    public void renderNoEstimates() {
-        iconWrapper.setVisibility(View.GONE);
-        setAlarm.setVisibility(View.GONE);
-        departureInfo.setText(R.string.no_estimates);
-    }
-
     private Drawable getDrawable(String color) {
         ColorDrawable drawable;
         if (hexToDrawableMap.containsKey(color)) {
@@ -166,6 +119,70 @@ public class EstimateViewHolder extends ViewHolder {
             }
         } else {
             return "";
+        }
+    }
+
+    private int getRenderingState(List<Estimate> estimates) {
+        if (estimates != null) {
+            if (estimates.size() > 0) {
+                return RENDER_ESTIMATE;
+            } else {
+                return RENDER_NO_ESTIMATES;
+            }
+        } else {
+            return RENDER_LOADING_ESTIMATES;
+        }
+    }
+
+    private void renderEstimate(Estimate estimate) {
+        iconWrapper.setVisibility(View.VISIBLE);
+        setAlarm.setVisibility(View.VISIBLE);
+
+        subwayIcon.setTextColor(ContextCompat.getColor(itemView.getContext(),
+            LIGHT_HEX_CODES.contains(estimate.getHexColor()) ? R.color.black : R.color.white));
+        subwayIcon.setBackground(getDrawable(estimate.getHexColor()));
+
+        departureInfo.setText(estimate.getEstimateAsString());
+    }
+
+    private void renderLoadingEstimates() {
+        iconWrapper.setVisibility(View.INVISIBLE);
+        setAlarm.setVisibility(View.INVISIBLE);
+        departureInfo.setText(R.string.loading);
+    }
+
+    private void renderNoEstimates() {
+        iconWrapper.setVisibility(View.GONE);
+        setAlarm.setVisibility(View.GONE);
+        departureInfo.setText(R.string.no_estimates);
+    }
+
+    public void renderWithEstimateList(Leg leg, List<Estimate> estimates, long timeOfResp) {
+        this.leg = leg;
+        this.estimates = estimates;
+        this.timeOfResp = timeOfResp;
+
+        int renderingState = getRenderingState(estimates);
+        if (renderingState == RENDER_ESTIMATE) {
+            renderEstimate(Iterables.getFirst(estimates, null));
+        } else if (renderingState == RENDER_LOADING_ESTIMATES) {
+            renderLoadingEstimates();
+        } else if (renderingState == RENDER_NO_ESTIMATES) {
+            renderNoEstimates();
+        } else {
+            throw new IllegalArgumentException("Invalid rendering state.");
+        }
+    }
+
+    public void renderWithEstimate(Leg leg, Estimate estimate, long timeOfResp) {
+        this.leg = leg;
+        this.estimates = Lists.newArrayList(estimate);
+        this.timeOfResp = timeOfResp;
+
+        if (estimate != null) {
+            renderEstimate(estimate);
+        } else {
+            renderNoEstimates();
         }
     }
 }

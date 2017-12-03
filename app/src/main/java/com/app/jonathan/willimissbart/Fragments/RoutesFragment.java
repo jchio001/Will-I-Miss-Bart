@@ -82,12 +82,7 @@ public class RoutesFragment extends Fragment {
         }
         updatedUserData = Lists.newArrayList(userData);
 
-        footer = new UserRouteFooterViewHolder(footerLayout, this, updatedUserData);
-        footerLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        params.setMargins(0, 0, 0, footerLayout.getMeasuredHeight());
-        routeSwipeRefresh.setLayoutParams(params);
+        renderFooter();
 
         recyclerView.setAdapter(adapter);
         return v;
@@ -167,6 +162,23 @@ public class RoutesFragment extends Fragment {
         }
     }
 
+    private List<Trip> mergeFetchedTrips(boolean includeReturnRoute) {
+        List<Trip> merged = trips[0] != null ? trips[0] : Lists.newArrayList((Trip) null);
+        if (includeReturnRoute) {
+            merged.addAll(trips[1] != null ? trips[1] : Lists.newArrayList((Trip) null));
+        }
+        return merged;
+    }
+
+    private void renderFooter() {
+        footer = new UserRouteFooterViewHolder(footerLayout, this, updatedUserData);
+        footerLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params.setMargins(0, 0, 0, footerLayout.getMeasuredHeight());
+        routeSwipeRefresh.setLayoutParams(params);
+    }
+
     public void loadUserRoutes() {
         progressBar.setVisibility(View.GONE);
 
@@ -178,14 +190,7 @@ public class RoutesFragment extends Fragment {
         // recyclerView.setVisibility(View.VISIBLE);
 
         boolean includeReturnRoute = SPSingleton.getIncludeReturnRoute(this.getActivity());
-        List<Trip> merged = trips[0] != null ? trips[0] : Lists.newArrayList((Trip) null);
-        if (includeReturnRoute) {
-            if (trips[1] != null) {
-                merged.addAll(trips[1]);
-            } else {
-                merged.addAll(Lists.newArrayList((Trip) null));
-            }
-        }
+        List<Trip> merged = mergeFetchedTrips(includeReturnRoute);
 
         adapter.addAll(merged, userData);
 

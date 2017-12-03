@@ -55,17 +55,7 @@ public class OnboardingActivity extends AppCompatActivity {
         footer.done.setEnabled(false);
         EventBus.getDefault().register(this);
 
-        String stationsJSON =
-                SPSingleton.getInstance(getApplicationContext()).getPersistedStations();
-        if (stationsJSON.isEmpty()) {
-            RetrofitClient.getInstance()
-                    .getMatchingService()
-                    .getStations("stns", APIConstants.API_KEY, 'y')
-                    .enqueue(new StationsCallback());
-        } else {
-            Utils.loadStations(stationsJSON);
-            setUpActivityLayout();
-        }
+        fetchOrLoadPersistedStations();
     }
 
     @Override
@@ -111,5 +101,19 @@ public class OnboardingActivity extends AppCompatActivity {
         SPSingleton.getInstance(getApplicationContext()).persistStations(
                 new Gson().toJson(StationsSingleton.getStations())
         );
+    }
+
+    private void fetchOrLoadPersistedStations()  {
+        String stationsJSON =
+            SPSingleton.getPersistedStations(this);
+        if (stationsJSON.isEmpty()) {
+            RetrofitClient.getInstance()
+                .getMatchingService()
+                .getStations("stns", APIConstants.API_KEY, 'y')
+                .enqueue(new StationsCallback());
+        } else {
+            Utils.loadStations(stationsJSON);
+            setUpActivityLayout();
+        }
     }
 }

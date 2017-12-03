@@ -48,18 +48,22 @@ public class OriginDestStationsAdapter extends AbstractStationsAdapter {
     }
 
     public void setOriginOrDest(int position) {
-        if (pickingOrigin && position != destIndex) {
-            originIndex = position;
-            pickingOrigin = false;
-        } else if (pickingOrigin && position == destIndex) {
-            destIndex = -1;
-        } else if (!pickingOrigin && position == originIndex){
-            originIndex = -1;
-            pickingOrigin = true;
-        } else if (!pickingOrigin && position != destIndex){
-            destIndex = position;
+        if (pickingOrigin) {
+            if (position != destIndex) {
+                originIndex = position;
+                pickingOrigin = false;
+            } else {
+                destIndex = -1;
+            }
         } else {
-            destIndex = -1;
+            if (position == originIndex) {
+                originIndex = -1;
+                pickingOrigin = true;
+            } else if (position != destIndex) {
+                destIndex = position;
+            } else {
+                destIndex = -1;
+            }
         }
 
         notifyDataSetChanged();

@@ -114,8 +114,7 @@ public class NotificationAlertDialog extends AlertDialog {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_set_timer_layout, null);
         ButterKnife.bind(this, v);
 
-        int estimateInSeconds = Utils.getEstimateInSeconds(
-            estimate.getMinutes(), timeOfResp);
+        int estimateInSeconds = Utils.getEstimateInSeconds(estimate.getMinutes(), timeOfResp);
         int estimateInMinutes = estimateInSeconds / 60;
 
         infoBlurb.setText(getBlurb(estimateInSeconds));
