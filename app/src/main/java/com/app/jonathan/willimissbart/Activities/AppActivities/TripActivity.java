@@ -70,9 +70,11 @@ public class TripActivity extends AppCompatActivity implements EstimatesListener
     public synchronized void onReceiveEstimates(EtdRespWrapper etdRespWrapper) {
         for (int i = 0; i < legsLayout.getChildCount(); ++i) {
             View child = legsLayout.getChildAt(i);
-            LegViewHolder legViewHolder = (LegViewHolder) child.getTag();
-            legViewHolder.displayEstimates(
-                trip.getLegList().get(i).getOrigin(), etdRespWrapper.getRespTime());
+            if (i % 2 == 0) {
+                LegViewHolder legViewHolder = (LegViewHolder) child.getTag();
+                legViewHolder.displayEstimates(
+                    trip.getLegList().get(i / 2).getOrigin(), etdRespWrapper.getRespTime());
+            }
         }
     }
 
@@ -81,15 +83,19 @@ public class TripActivity extends AppCompatActivity implements EstimatesListener
     public synchronized void onEstimatesUpdated() {
     }
 
-    public boolean hasEstimatesLoaded(View v) {
-        return ((ViewGroup) v).getChildCount() != 2;
+    private boolean hasEstimatesLoaded(View v) {
+        return ((LegViewHolder) v.getTag()).getChildCount() != 2;
     }
 
-    public void renderEstimatesForTripLegs(long timeOfResp) {
+    private void renderEstimatesForTripLegs(long timeOfResp) {
         EstimatesManager.updateEstimates(System.currentTimeMillis() / 1000);
         synchronized (this) {
-            for (Leg leg : trip.getLegList()) {
-                View v = LayoutInflater.from(this).inflate(R.layout.leg_elem, null, false);
+            for (int i = 0; i < trip.getLegList().size(); ++i) {
+                Leg leg = trip.getLegList().get(i);
+
+                maybeLoadTransferLayout(i);
+
+                View v = LayoutInflater.from(this).inflate(R.layout.leg_cell, legsLayout, false);
                 LegViewHolder viewHolder = new LegViewHolder(v);
                 viewHolder.setUp(leg, timeOfResp);
                 v.setTag(viewHolder);
@@ -98,10 +104,18 @@ public class TripActivity extends AppCompatActivity implements EstimatesListener
             EstimatesManager.register(this);
         }
 
-        if (trip.getLegList().size() == 2 && !hasEstimatesLoaded(legsLayout.getChildAt(1))) {
+        if (trip.getLegList().size() == 2 && !hasEstimatesLoaded(legsLayout.getChildAt(2))) {
             Log.i("TripActivity", "Loading estimates for 2nd leg...");
             RetrofitClient.getRealTimeEstimates(trip.getLegList().get(1).getOrigin(),
                 Sets.newHashSet(trip.getLegList().get(1).getTrainHeadStation()));
+        }
+    }
+
+    private void maybeLoadTransferLayout(int i) {
+        if (i > 0) {
+            legsLayout.addView(
+                LayoutInflater.from(this)
+                    .inflate(R.layout.layout_transfer, legsLayout, false));
         }
     }
 }

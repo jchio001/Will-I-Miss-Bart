@@ -66,7 +66,7 @@ public class RoutesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_route, container, false);
+        View v = inflater.inflate(R.layout.fragment_trip, container, false);
         ButterKnife.bind(this, v);
         EventBus.getDefault().register(this);
         EstimatesManager.register(adapter);

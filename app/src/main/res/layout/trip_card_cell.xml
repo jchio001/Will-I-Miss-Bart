@@ -5,10 +5,10 @@
     android:id="@+id/route_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginTop="4dp"
+    android:layout_marginBottom="6dp"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginTop="6dp"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="3dp"
     card_view:cardElevation="2dp"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:textColor="@color/darkGrey"
-            android:textSize="24sp"/>
+            android:textSize="26sp"/>
 
         <LinearLayout
             android:id="@+id/trip_info_layout"
@@ -40,14 +40,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/darkGrey"
-                android:textSize="18sp"/>
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/trip_arrive_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/darkGrey"
-                android:textSize="18sp"/>
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/trip_fare_info"
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/darkGrey"
-                android:textSize="14sp"/>
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/trip_next_train_info"
@@ -64,19 +64,10 @@
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/next_train_blurb"
-                android:textColor="@color/darkGrey"/>
+                android:textColor="@color/darkGrey"
+                android:textSize="15sp"/>
 
             <include layout="@layout/layout_departure"/>
-
-            <TextView
-                android:id="@+id/trip_show_more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:padding="3dp"
-                android:text="@string/expand_route"
-                android:textColor="@color/darkGrey"
-                android:textSize="16sp"/>
 
         </LinearLayout>
 

@@ -35,7 +35,7 @@ public class NotificationPopUpWindow extends PopupWindow {
 
     public NotificationPopUpWindow(Context context, List<Bsa> bsaList) {
         super(LayoutInflater.from(context)
-            .inflate(R.layout.pop_up_window_notif, null),
+            .inflate(R.layout.bsa_notif_layout, null),
             800, WRAP_CONTENT);
         ButterKnife.bind(this, getContentView());
         muteNotifCheckBox.setChecked(isChecked);
@@ -43,7 +43,7 @@ public class NotificationPopUpWindow extends PopupWindow {
             ContextCompat.getDrawable(context, R.drawable.background_pop_up_window));
 
         for (Bsa bsa: bsaList) {
-            View v = LayoutInflater.from(context).inflate(R.layout.notif_blurb, null);
+            View v = LayoutInflater.from(context).inflate(R.layout.single_bsa_cell, null);
             new NotifBlurbViewHolder(v, bsa);
             notifFeed.addView(v);
         }

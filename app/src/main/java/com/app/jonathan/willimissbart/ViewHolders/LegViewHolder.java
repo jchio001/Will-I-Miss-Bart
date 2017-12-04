@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
@@ -19,6 +20,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class LegViewHolder extends ViewHolder {
+    @Bind(R.id.main_leg_layout) LinearLayout mainLegLayout;
     @Bind(R.id.train_info) TextView trainInfo;
     @Bind(R.id.stop_info) TextView stopInfo;
 
@@ -43,14 +45,17 @@ public class LegViewHolder extends ViewHolder {
     public void displayEstimates(String origin, long timeOfResp) {
         List<Estimate> estimates =
             EstimatesManager.getEstimates(origin + leg.getTrainHeadStation());
-        ViewGroup parent = (ViewGroup) itemView;
-        if (estimates != null && parent.getChildCount() == 2) {
+        if (estimates != null && mainLegLayout.getChildCount() == 2) {
             for (Estimate estimate : estimates) {
                 View v = LayoutInflater.from(itemView.getContext())
                     .inflate(R.layout.layout_departure, null, false);
                 new EstimateViewHolder(v).renderWithEstimate(leg, estimate, timeOfResp);
-                parent.addView(v);
+                mainLegLayout.addView(v);
             }
         }
+    }
+
+    public int getChildCount() {
+        return mainLegLayout.getChildCount();
     }
 }

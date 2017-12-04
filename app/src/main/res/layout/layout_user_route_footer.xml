@@ -94,7 +94,7 @@
             <CheckBox
                 style="@style/DarkGreyTextBase"
                 android:id="@+id/include_return"
-                android:layout_gravity="end"
+                android:layout_gravity="start"
                 android:layout_marginBottom="8dp"
                 android:text="@string/include_return_route"
                 android:textSize="18sp"

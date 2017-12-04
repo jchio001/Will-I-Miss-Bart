@@ -116,11 +116,7 @@ public class Utils {
                 "dimen", "android");
             int statusBarHeight = activity.getResources().getDimensionPixelSize(resourceId);
 
-            TypedValue tv = new TypedValue();
-            activity.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true);
-            return displayMetrics.heightPixels - (TypedValue.complexToDimensionPixelSize(
-                tv.data, activity.getResources().getDisplayMetrics())) -
-                statusBarHeight;
+            return displayMetrics.heightPixels - statusBarHeight;
         }
 
         return height;

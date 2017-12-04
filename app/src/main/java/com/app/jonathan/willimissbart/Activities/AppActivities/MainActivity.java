@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpNotifIcon(Menu menu) {
         MenuItem notifItem = menu.findItem(R.id.notifications);
-        notifItem.setActionView(R.layout.layout_notif);
+        notifItem.setActionView(R.layout.red_circle_notif_icon);
         notifIcon = MenuItemCompat.getActionView(notifItem);
         notifIcon.setOnClickListener(new View.OnClickListener() {
             @Override

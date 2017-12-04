@@ -53,7 +53,7 @@
     <string name="departures_departure_format">Train from %1$s to %2$s %3$s</string>
 
     <!-- Timer dialog -->
-    <string name="timer_notif_title">Do you want to set an alarm for this train?</string>
+    <string name="timer_notif_title">Set an alarm</string>
     <string name="zero">0</string>
     <string name="longer_time_please">Please enter in a longer timer duration</string>
     <string name="info_blurb">Train leaves in around %s</string>
@@ -92,5 +92,5 @@
 
     <!-- Trip Adapter -->
     <string name="departures_failed">Failed to fetch departures</string>
-    <string name="next_train_blurb">The next train %sfor this route leaves in:</string>
+    <string name="next_train_blurb">The next train(s) %sfor this route leaves in:</string>
 </resources>

@@ -12,7 +12,7 @@
         android:id="@+id/notif_blurb_text"
         android:gravity="center_vertical"
         android:textColor="@color/darkGrey"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"/>
