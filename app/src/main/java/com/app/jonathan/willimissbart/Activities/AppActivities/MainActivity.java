@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     private View redCircle;
 
     private RoutesFragment routeFragment = new RoutesFragment();
-    // private DeparturesFragment departuresFragment = new DeparturesFragment();
     private StationsFragment stationsFragment = new StationsFragment();
     private List<Bsa> bsas = Lists.newArrayList();
     protected final Activity context = this;
@@ -101,11 +100,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.main, menu);
-        setUpNotifIcon(menu);
-        menu.findItem(R.id.map).setIcon(new IconDrawable(this, IoniconsIcons.ion_map)
-            .colorRes(R.color.white)
-            .actionBarSize());
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        setUpMenu(menu);
         return true;
     }
 
@@ -182,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
-    private void setUpNotifIcon(Menu menu) {
+    private void setUpMenu(Menu menu) {
         MenuItem notifItem = menu.findItem(R.id.notifications);
         notifItem.setActionView(R.layout.red_circle_notif_icon);
         notifIcon = MenuItemCompat.getActionView(notifItem);
@@ -199,5 +195,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         redCircle = notifIcon.findViewById(R.id.notif_circle);
+
+        menu.findItem(R.id.map).setIcon(new IconDrawable(this, IoniconsIcons.ion_map)
+            .colorRes(R.color.white)
+            .actionBarSize());
     }
 }

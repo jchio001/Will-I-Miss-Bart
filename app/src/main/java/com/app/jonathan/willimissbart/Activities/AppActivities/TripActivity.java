@@ -1,9 +1,11 @@
 package com.app.jonathan.willimissbart.Activities.AppActivities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,8 @@ import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.LegViewHolder;
 import com.google.common.collect.Sets;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.IoniconsIcons;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -57,10 +61,26 @@ public class TripActivity extends AppCompatActivity implements EstimatesListener
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.trip_menu, menu);
+        menu.findItem(R.id.share).setIcon(new IconDrawable(this, IoniconsIcons.ion_android_share_alt)
+            .colorRes(R.color.white)
+            .actionBarSize());
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
+        } else if (item.getItemId() == R.id.share) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, formatTripForIntent());
+            intent.setType("text/plain");
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -117,5 +137,25 @@ public class TripActivity extends AppCompatActivity implements EstimatesListener
                 LayoutInflater.from(this)
                     .inflate(R.layout.layout_transfer, legsLayout, false));
         }
+    }
+
+    private String formatTripForIntent() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getString(R.string.trip_string_format,
+            trip.getOrigin(), trip.getDestination(),
+            trip.getOrigTimeMin(), trip.getDestTimeMin()));
+
+        int legCnt = trip.getLegList().size();
+        for (int i = 0; i < legCnt; ++i) {
+            Leg leg = trip.getLegList().get(i);
+            sb.append(getString(R.string.trip_leg_format, i + 1, leg.getOrigin(),
+                leg.getTrainHeadStation(), leg.getOrigTimeMin(), leg.getDestination()));
+
+            if (i < legCnt - 1) {
+                sb.append('\n');
+            }
+        }
+
+        return sb.toString();
     }
 }
