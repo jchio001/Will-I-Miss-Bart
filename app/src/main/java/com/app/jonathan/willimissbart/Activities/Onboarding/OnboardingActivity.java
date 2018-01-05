@@ -19,8 +19,8 @@ import com.app.jonathan.willimissbart.Adapters.OriginDestStationsAdapter;
 import com.app.jonathan.willimissbart.Listeners.Animations.Onboarding.InitialAnimation.HideProgressBarAnimListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
-import com.app.jonathan.willimissbart.Persistence.SPSingleton;
-import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
+import com.app.jonathan.willimissbart.Persistence.SPManager;
+import com.app.jonathan.willimissbart.Persistence.StationsManager;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.StationGridViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
@@ -71,7 +71,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
     @Subscribe
     public void onStationsListEvent(StationsResp stationsResp) {
-        StationsSingleton.getInstance().setStations(
+        StationsManager.getInstance().setStations(
                 stationsResp.getStationsRoot().getStations().getStationList()
         );
         persistStations();
@@ -85,7 +85,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
     @SuppressWarnings("unchecked")
     private void setUpActivityLayout() {
-        adapter = new OriginDestStationsAdapter(StationsSingleton.getStations(), null, footer);
+        adapter = new OriginDestStationsAdapter(StationsManager.getStations(), null, footer);
         stationGridViewHolder = new StationGridViewHolder(stationGridLayout, adapter, 0, true);
         AlphaAnimation hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
         hideProgressBar.setDuration(Constants.LONG_DURATION);
@@ -98,14 +98,14 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     private void persistStations() {
-        SPSingleton.getInstance(getApplicationContext()).persistStations(
-                new Gson().toJson(StationsSingleton.getStations())
+        SPManager.getInstance(getApplicationContext()).persistStations(
+                new Gson().toJson(StationsManager.getStations())
         );
     }
 
     private void fetchOrLoadPersistedStations()  {
         String stationsJSON =
-            SPSingleton.getPersistedStations(this);
+            SPManager.getPersistedStations(this);
         if (stationsJSON.isEmpty()) {
             RetrofitClient.getInstance()
                 .getMatchingService()

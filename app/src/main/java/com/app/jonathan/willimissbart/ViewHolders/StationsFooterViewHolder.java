@@ -11,7 +11,7 @@ import com.app.jonathan.willimissbart.Activities.AppActivities.MainActivity;
 import com.app.jonathan.willimissbart.Adapters.OriginDestStationsAdapter;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
-import com.app.jonathan.willimissbart.Persistence.SPSingleton;
+import com.app.jonathan.willimissbart.Persistence.SPManager;
 import com.app.jonathan.willimissbart.R;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class StationsFooterViewHolder {
         }
 
         Activity context = (Activity) contentView.getContext();
-        SPSingleton.persistUserData(context, userData);
+        SPManager.persistUserData(context, userData);
         Intent intent = new Intent(context, MainActivity.class);
         intent.putParcelableArrayListExtra(Constants.USER_DATA, userData);
         contentView.getContext().startActivity(intent);

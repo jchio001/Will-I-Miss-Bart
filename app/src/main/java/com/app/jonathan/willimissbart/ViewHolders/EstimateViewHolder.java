@@ -2,12 +2,10 @@ package com.app.jonathan.willimissbart.ViewHolders;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,30 +14,29 @@ import com.app.jonathan.willimissbart.API.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.Dialogs.NotificationAlertDialog;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.R;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.joanzapata.iconify.widget.IconTextView;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class EstimateViewHolder extends ViewHolder {
-    private static final Set<String> LIGHT_HEX_CODES = ImmutableSet.of(
-        "#ffffff", "#ffff33");
-    private static final int RENDER_ESTIMATE = 0;
-    private static final int RENDER_LOADING_ESTIMATES = 1;
-    private static final int RENDER_NO_ESTIMATES = 2;
-    private static Map<String, ColorDrawable> hexToDrawableMap = Maps.newHashMap();
+    @IntDef({RenderingState.RENDER_ESTIMATE, RenderingState.RENDER_LOADING_ESTIMATES,
+        RenderingState.RENDER_NO_ESTIMATES})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface RenderingState {
+        int RENDER_ESTIMATE = 0;
+        int RENDER_LOADING_ESTIMATES = 1;
+        int RENDER_NO_ESTIMATES = 2;
+    }
 
-    @Bind(R.id.icon_wrapper) FrameLayout iconWrapper;
-    @Bind(R.id.subway_icon) IconTextView subwayIcon;
+    @Bind(R.id.route_color_icon) View routeColorIcon;
     @Bind(R.id.set_alarm) IconTextView setAlarm;
     @Bind(R.id.leaving_in_text) TextView departureInfo;
 
@@ -92,18 +89,6 @@ public class EstimateViewHolder extends ViewHolder {
         }
     }
 
-    private Drawable getDrawable(String color) {
-        ColorDrawable drawable;
-        if (hexToDrawableMap.containsKey(color)) {
-            drawable = hexToDrawableMap.get(color);
-        } else {
-            drawable = new ColorDrawable(Color.parseColor(color));
-            drawable.setColor(Color.parseColor(color));
-            hexToDrawableMap.put(color, drawable);
-        }
-        return drawable;
-    }
-
     private String getRealTimeEstimateText() {
         Estimate estimate = Iterables.getFirst(estimates, null);
         if (estimate != null) {
@@ -122,37 +107,36 @@ public class EstimateViewHolder extends ViewHolder {
         }
     }
 
-    private int getRenderingState(List<Estimate> estimates) {
+    private @RenderingState int getRenderingState(List<Estimate> estimates) {
         if (estimates != null) {
             if (estimates.size() > 0) {
-                return RENDER_ESTIMATE;
+                return RenderingState.RENDER_ESTIMATE;
             } else {
-                return RENDER_NO_ESTIMATES;
+                return RenderingState.RENDER_NO_ESTIMATES;
             }
         } else {
-            return RENDER_LOADING_ESTIMATES;
+            return RenderingState.RENDER_LOADING_ESTIMATES;
         }
     }
 
     private void renderEstimate(Estimate estimate) {
-        iconWrapper.setVisibility(View.VISIBLE);
+        routeColorIcon.setVisibility(View.VISIBLE);
         setAlarm.setVisibility(View.VISIBLE);
 
-        subwayIcon.setTextColor(ContextCompat.getColor(itemView.getContext(),
-            LIGHT_HEX_CODES.contains(estimate.getHexColor()) ? R.color.black : R.color.white));
-        subwayIcon.setBackground(getDrawable(estimate.getHexColor()));
+        GradientDrawable circleBackground = (GradientDrawable) routeColorIcon.getBackground();
+        circleBackground.setColor(Color.parseColor(estimate.getHexColor()));
 
         departureInfo.setText(estimate.getEstimateAsString());
     }
 
     private void renderLoadingEstimates() {
-        iconWrapper.setVisibility(View.INVISIBLE);
+        routeColorIcon.setVisibility(View.INVISIBLE);
         setAlarm.setVisibility(View.INVISIBLE);
         departureInfo.setText(R.string.loading);
     }
 
     private void renderNoEstimates() {
-        iconWrapper.setVisibility(View.GONE);
+        routeColorIcon.setVisibility(View.GONE);
         setAlarm.setVisibility(View.GONE);
         departureInfo.setText(R.string.no_estimates);
     }
@@ -162,15 +146,16 @@ public class EstimateViewHolder extends ViewHolder {
         this.estimates = estimates;
         this.timeOfResp = timeOfResp;
 
-        int renderingState = getRenderingState(estimates);
-        if (renderingState == RENDER_ESTIMATE) {
-            renderEstimate(Iterables.getFirst(estimates, null));
-        } else if (renderingState == RENDER_LOADING_ESTIMATES) {
-            renderLoadingEstimates();
-        } else if (renderingState == RENDER_NO_ESTIMATES) {
-            renderNoEstimates();
-        } else {
-            throw new IllegalArgumentException("Invalid rendering state.");
+        switch (getRenderingState(estimates)) {
+            case RenderingState.RENDER_ESTIMATE:
+                renderEstimate(Iterables.getFirst(estimates, null));
+                break;
+            case RenderingState.RENDER_LOADING_ESTIMATES:
+                renderLoadingEstimates();
+                break;
+            case RenderingState.RENDER_NO_ESTIMATES:
+                renderNoEstimates();
+                break;
         }
     }
 

@@ -26,8 +26,8 @@ import com.app.jonathan.willimissbart.Fragments.RoutesFragment;
 import com.app.jonathan.willimissbart.Fragments.StationsFragment;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
-import com.app.jonathan.willimissbart.Persistence.SPSingleton;
-import com.app.jonathan.willimissbart.PopUpWindows.NotificationPopUpWindow;
+import com.app.jonathan.willimissbart.Persistence.SPManager;
+import com.app.jonathan.willimissbart.PopUpWindows.NotificationWindowManager;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.StationInfoViewHolder;
 import com.google.common.collect.Lists;
@@ -73,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
 
         stationInfoViewHolder = new StationInfoViewHolder(stationInfoLayout,
             Utils.getStationInfoLayoutHeight(this));
-        NotificationPopUpWindow.isChecked = SPSingleton.getString(this, Constants.MUTE_NOTIF)
-            .equals(NotificationPopUpWindow.dateFormat.format(new Date()));
-        Utils.loadStations(SPSingleton.getPersistedStations(this));
+        NotificationWindowManager.isChecked = SPManager.getString(this, Constants.MUTE_NOTIF)
+            .equals(NotificationWindowManager.dateFormat.format(new Date()));
+        Utils.loadStations(SPManager.getPersistedStations(this));
 
         setUpViewPager(getIntent().getExtras());
         tabs.setupWithViewPager(viewPager);
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBsaResponse(BsaResp bsaResp) {
         if (bsaResp.getRoot().getBsaList().size() > 1 ||
             !bsaResp.getRoot().getBsaList().get(0).getStation().isEmpty()) {
-            if (!NotificationPopUpWindow.isChecked) {
+            if (!NotificationWindowManager.isChecked) {
                 redCircle.setVisibility(View.VISIBLE);
             }
         }
@@ -165,9 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<Fragment> fragments = new ArrayList<>();
         routeFragment.setArguments(bundle);
-        // departuresFragment.setArguments(bundle);
         fragments.add(routeFragment);
-        // fragments.add(departuresFragment);
         fragments.add(stationsFragment);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager())
@@ -183,15 +181,23 @@ public class MainActivity extends AppCompatActivity {
         notifItem.setActionView(R.layout.red_circle_notif_icon);
         notifIcon = MenuItemCompat.getActionView(notifItem);
         notifIcon.setOnClickListener(new View.OnClickListener() {
+            private void hideNotificationCircle(int[] pos) {
+                notifIcon.getLocationOnScreen(pos);
+                redCircle.setVisibility(View.INVISIBLE);
+            }
+
+            private void showBSAWindow(View v, int[] pos) {
+                NotificationWindowManager popUpWindow =
+                    new NotificationWindowManager(v.getContext(), bsas);
+                popUpWindow.showAtLocation(parent, Gravity.NO_GRAVITY,
+                    pos[0] - notifIcon.getWidth(), pos[1] + notifIcon.getHeight() + 10);
+            }
+
             @Override
             public void onClick(View v) {
                 int[] pos = new int[2];
-                notifIcon.getLocationOnScreen(pos);
-                NotificationPopUpWindow popUpWindow =
-                    new NotificationPopUpWindow(v.getContext(), bsas);
-                redCircle.setVisibility(View.INVISIBLE);
-                popUpWindow.showAtLocation(parent, Gravity.NO_GRAVITY,
-                    pos[0] - notifIcon.getWidth(), pos[1] + notifIcon.getHeight() + 10);
+                hideNotificationCircle(pos);
+                showBSAWindow(v, pos);
             }
         });
         redCircle = notifIcon.findViewById(R.id.notif_circle);

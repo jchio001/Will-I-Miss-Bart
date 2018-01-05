@@ -14,7 +14,7 @@ import android.widget.ScrollView;
 import com.app.jonathan.willimissbart.Adapters.SingleElemStationsAdapter;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
-import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
+import com.app.jonathan.willimissbart.Persistence.StationsManager;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.StationGridViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationInfoViewHolder;
@@ -51,7 +51,7 @@ public class SelectStationActivity extends AppCompatActivity {
 
         stationInfoViewHolder = new StationInfoViewHolder(stationInfoLayout,
             Utils.getStationInfoLayoutHeight(this));
-        adapter = new SingleElemStationsAdapter(StationsSingleton.getStations(),
+        adapter = new SingleElemStationsAdapter(StationsManager.getStations(),
             stationInfoViewHolder, true)
             .setSelectingOrigin(titleId == R.string.select_origin);
         stationGridViewHolder = new StationGridViewHolder(stationGridLayout, adapter, 0, false);

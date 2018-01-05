@@ -67,7 +67,7 @@
                 android:textColor="@color/darkGrey"
                 android:textSize="15sp"/>
 
-            <include layout="@layout/layout_departure"/>
+            <include layout="@layout/estimate_cell"/>
 
         </LinearLayout>
 

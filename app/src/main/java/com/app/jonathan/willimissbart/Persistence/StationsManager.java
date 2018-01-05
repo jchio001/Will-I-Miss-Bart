@@ -7,17 +7,17 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StationsSingleton {
-    private static StationsSingleton instance;
+public class StationsManager {
+    private static StationsManager instance;
     private List<Station> stations = Lists.newArrayList();
 
-    private StationsSingleton() {
+    private StationsManager() {
         stations = new ArrayList<>();
     }
 
-    public static StationsSingleton getInstance() {
+    public static StationsManager getInstance() {
         if (instance == null) {
-            instance = new StationsSingleton();
+            instance = new StationsManager();
         }
 
         return instance;

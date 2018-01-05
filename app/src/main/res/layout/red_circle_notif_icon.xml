@@ -15,7 +15,7 @@
 
     <View
         android:id="@+id/notif_circle"
-        android:background="@drawable/background_circle"
+        android:background="@drawable/red_notification_circle"
         android:layout_marginRight="1dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"

@@ -10,7 +10,7 @@ import android.widget.PopupWindow;
 
 import com.app.jonathan.willimissbart.API.Models.BSA.Bsa;
 import com.app.jonathan.willimissbart.Misc.Constants;
-import com.app.jonathan.willimissbart.Persistence.SPSingleton;
+import com.app.jonathan.willimissbart.Persistence.SPManager;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.NotifBlurbViewHolder;
 
@@ -25,7 +25,7 @@ import butterknife.OnClick;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-public class NotificationPopUpWindow extends PopupWindow {
+public class NotificationWindowManager extends PopupWindow {
     @Bind(R.id.notif_blurb_feed) LinearLayout notifFeed;
     @Bind(R.id.mute_notif) CheckBox muteNotifCheckBox;
 
@@ -33,7 +33,7 @@ public class NotificationPopUpWindow extends PopupWindow {
     public final static SimpleDateFormat dateFormat = new SimpleDateFormat(
         "yyyy/MM/dd", Locale.ENGLISH);
 
-    public NotificationPopUpWindow(Context context, List<Bsa> bsaList) {
+    public NotificationWindowManager(Context context, List<Bsa> bsaList) {
         super(LayoutInflater.from(context)
             .inflate(R.layout.bsa_notif_layout, null),
             800, WRAP_CONTENT);
@@ -55,10 +55,10 @@ public class NotificationPopUpWindow extends PopupWindow {
     public void onChangeMuteSettings() {
         isChecked = !isChecked;
         if (isChecked) {
-            SPSingleton.putString(notifFeed.getContext(), Constants.MUTE_NOTIF,
+            SPManager.putString(notifFeed.getContext(), Constants.MUTE_NOTIF,
                 dateFormat.format(new Date()));
         } else {
-            SPSingleton.putString(notifFeed.getContext(), Constants.MUTE_NOTIF, "");
+            SPManager.putString(notifFeed.getContext(), Constants.MUTE_NOTIF, "");
         }
     }
 }

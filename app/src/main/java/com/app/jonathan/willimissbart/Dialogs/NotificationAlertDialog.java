@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 // Did not create custom classes for listeners because the code's pretty straightforward in them
 // and will only be used within this class. Also, my package organization is already super bloaty
 // and I'd rather not add more packages that contain 1 class with barely any code.
-public class NotificationAlertDialog extends AlertDialog {
+public class NotificationAlertDialog {
     @Bind(R.id.info_blurb) TextView infoBlurb;
     @Bind(R.id.tens_digit) LinearLayout tensDigit;
     @Bind(R.id.ones_digit) LinearLayout onesDigit;
@@ -44,12 +44,12 @@ public class NotificationAlertDialog extends AlertDialog {
 
     private long timeOfResp;
 
-    public NotificationAlertDialog(Context context,
-                                   final IconTextView alarmIcon,
+    public NotificationAlertDialog(final IconTextView alarmIcon,
                                    Leg leg,
                                    Estimate estimate,
                                    long timeOfResp) {
-        super(context);
+        Context context = alarmIcon.getContext();
+
         this.alarmIcon = alarmIcon;
         this.leg = leg;
         this.estimate = estimate;
@@ -59,15 +59,16 @@ public class NotificationAlertDialog extends AlertDialog {
             leg.getOrigin(),
             leg.getDestination());
 
-        alertDialog = new Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogTheme))
+        alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(
+            alarmIcon.getContext(), R.style.AlertDialogTheme))
             .setPositiveButton("OK", null)
-            .setNegativeButton("CANCEL", new OnClickListener() {
+            .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     alarmIcon.setEnabled(true);
                 }
             })
-            .setOnCancelListener(new OnCancelListener() {
+            .setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                    alarmIcon.setEnabled(true);
@@ -87,7 +88,7 @@ public class NotificationAlertDialog extends AlertDialog {
     // Setting onClickListeners in onShowListener to prevent dialog from being cancelled
     // whenever any button is pressed
     private void setOnShowListener() {
-        alertDialog.setOnShowListener(new OnShowListener() {
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
                 Button positive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
@@ -111,7 +112,8 @@ public class NotificationAlertDialog extends AlertDialog {
     }
 
     private View inflateAndRenderLayout() {
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_set_timer_layout, null);
+        View v = LayoutInflater.from(alarmIcon.getContext())
+            .inflate(R.layout.dialog_set_timer_layout, null);
         ButterKnife.bind(this, v);
 
         int estimateInSeconds = Utils.getEstimateInSeconds(estimate.getMinutes(), timeOfResp);
@@ -129,7 +131,7 @@ public class NotificationAlertDialog extends AlertDialog {
     }
 
     private String getBlurb(int curEstimate) {
-        return getContext().getString(
+        return alarmIcon.getContext().getString(
             R.string.notif_blurb_format,
             leg.getOrigin(),
             leg.getDestination(),
@@ -137,11 +139,12 @@ public class NotificationAlertDialog extends AlertDialog {
     }
 
     private void showNotification(int duration) {
-        Intent intent = new Intent(getContext(), TimerService.class);
+        Context context = alarmIcon.getContext();
+        Intent intent = new Intent(context, TimerService.class);
         intent.setAction(Constants.UPDATE);
         intent.putExtra(Constants.TITLE, title);
         intent.putExtra(Constants.SECONDS, duration);
-        getContext().startService(intent);
-        Toast.makeText(getContext(), R.string.starting_timer, Toast.LENGTH_SHORT).show();
+        context.startService(intent);
+        Toast.makeText(context, R.string.starting_timer, Toast.LENGTH_SHORT).show();
     }
 }

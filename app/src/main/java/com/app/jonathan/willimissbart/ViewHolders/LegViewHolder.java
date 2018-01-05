@@ -5,7 +5,6 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -48,7 +47,7 @@ public class LegViewHolder extends ViewHolder {
         if (estimates != null && mainLegLayout.getChildCount() == 2) {
             for (Estimate estimate : estimates) {
                 View v = LayoutInflater.from(itemView.getContext())
-                    .inflate(R.layout.layout_departure, null, false);
+                    .inflate(R.layout.estimate_cell, null, false);
                 new EstimateViewHolder(v).renderWithEstimate(leg, estimate, timeOfResp);
                 mainLegLayout.addView(v);
             }

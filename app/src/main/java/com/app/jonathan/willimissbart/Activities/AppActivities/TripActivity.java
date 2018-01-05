@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,7 +16,6 @@ import com.app.jonathan.willimissbart.API.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Misc.Constants;
-import com.app.jonathan.willimissbart.Misc.EstimatesListener;
 import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.LegViewHolder;
@@ -28,7 +26,7 @@ import com.joanzapata.iconify.fonts.IoniconsIcons;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class TripActivity extends AppCompatActivity implements EstimatesListener {
+public class TripActivity extends AppCompatActivity implements EstimatesManager.EstimatesListener {
     @Bind(R.id.orig_time) TextView originTime;
     @Bind(R.id.dest_time) TextView destTime;
     @Bind(R.id.fare_info) TextView fareInfo;
@@ -133,9 +131,8 @@ public class TripActivity extends AppCompatActivity implements EstimatesListener
 
     private void maybeLoadTransferLayout(int i) {
         if (i > 0) {
-            legsLayout.addView(
-                LayoutInflater.from(this)
-                    .inflate(R.layout.layout_transfer, legsLayout, false));
+            legsLayout.addView(LayoutInflater.from(this)
+                .inflate(R.layout.layout_transfer, legsLayout, false));
         }
     }
 

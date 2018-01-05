@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.app.jonathan.willimissbart.Activities.AppActivities.MainActivity;
-import com.app.jonathan.willimissbart.Persistence.SPSingleton;
+import com.app.jonathan.willimissbart.Persistence.SPManager;
 import com.app.jonathan.willimissbart.R;
 
 public class SplashActivity extends AppCompatActivity {
@@ -15,7 +15,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        if (!SPSingleton.containsUserData(this)) {
+        if (!SPManager.containsUserData(this)) {
             Intent intent = new Intent(this, OnboardingActivity.class);
             startActivity(intent);
         } else {

@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
-import com.app.jonathan.willimissbart.Misc.EstimatesListener;
 import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
@@ -17,7 +16,7 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-public class TripsAdapter extends Adapter<TripViewHolder> implements EstimatesListener {
+public class TripsAdapter extends Adapter<TripViewHolder> implements EstimatesManager.EstimatesListener {
     private static int RENDER_TRIP = 0;
     private static int RENDER_FAILED_TRIPS = 1;
     private static int RENDER_FAILED_RETURN_TRIPS = 2;

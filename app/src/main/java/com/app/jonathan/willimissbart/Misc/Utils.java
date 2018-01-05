@@ -10,14 +10,13 @@ import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.Models.Station.Station;
 import com.app.jonathan.willimissbart.Notification.TimerNotificationBuilder;
-import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
+import com.app.jonathan.willimissbart.Persistence.StationsManager;
 import com.app.jonathan.willimissbart.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,11 +28,11 @@ import java.util.Locale;
 // Random utility functions
 public class Utils {
     public static void loadStations(String stationsJSON) {
-        if (StationsSingleton.getStations().isEmpty()) {
+        if (StationsManager.getStations().isEmpty()) {
             Gson gson = new Gson();
             Type listType = new TypeToken<List<Station>>() {}.getType();
             List<Station> stations = gson.fromJson(stationsJSON, listType);
-            StationsSingleton.getInstance().setStations(stations);
+            StationsManager.getInstance().setStations(stations);
         }
     }
 
@@ -147,7 +146,7 @@ public class Utils {
         int minIndex = -1;
         double curMin = 0;
 
-        List<Station> stations = StationsSingleton.getStations();
+        List<Station> stations = StationsManager.getStations();
         for (int i = 0; i < stations.size(); ++i) {
             Station station = stations.get(i);
             if (minIndex == -1) {

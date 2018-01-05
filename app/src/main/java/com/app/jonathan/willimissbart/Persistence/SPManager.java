@@ -13,24 +13,24 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SPSingleton {
-    private static SPSingleton instance = null;
+public class SPManager {
+    private static SPManager instance = null;
     private SharedPreferences sp;
     private static Gson gson = new Gson();
 
-    private SPSingleton(Context context) {
+    private SPManager(Context context) {
         sp = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public static SPSingleton getInstance(Context context) {
+    public static SPManager getInstance(Context context) {
         if (instance == null) {
-            instance = new SPSingleton(context);
+            instance = new SPManager(context);
         }
 
         return instance;
     }
 
-    public SharedPreferences getSp() {
+    private SharedPreferences getSp() {
         return sp;
     }
 

@@ -15,7 +15,7 @@ import com.app.jonathan.willimissbart.Listeners.Animations.Generic.UpdateListene
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
-import com.app.jonathan.willimissbart.Persistence.SPSingleton;
+import com.app.jonathan.willimissbart.Persistence.SPManager;
 import com.app.jonathan.willimissbart.R;
 import com.joanzapata.iconify.widget.IconTextView;
 
@@ -44,7 +44,7 @@ public class UserRouteFooterViewHolder {
         this.routeFragment = routeFragment;
         origin.setText(userData.get(0).getAbbr());
         destination.setText(userData.get(1).getAbbr());
-        includeReturn.setChecked(SPSingleton.getIncludeReturnRoute(routeFragment.getContext()));
+        includeReturn.setChecked(SPManager.getIncludeReturnRoute(routeFragment.getContext()));
         this.userData = userData;
         initAnimations();
     }

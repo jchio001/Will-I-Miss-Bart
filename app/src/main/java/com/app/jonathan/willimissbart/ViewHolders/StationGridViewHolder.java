@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.app.jonathan.willimissbart.Adapters.AbstractStationsAdapter;
 import com.app.jonathan.willimissbart.Fragments.StationsFragment;
 import com.app.jonathan.willimissbart.Misc.Utils;
-import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
+import com.app.jonathan.willimissbart.Persistence.StationsManager;
 import com.app.jonathan.willimissbart.R;
 import com.joanzapata.iconify.widget.IconTextView;
 
@@ -112,6 +112,6 @@ public class StationGridViewHolder extends ViewHolder {
     }
 
     public void loadClosestStation(int index) {
-        stationEditText.setText(StationsSingleton.getStations().get(index).getAbbr());
+        stationEditText.setText(StationsManager.getStations().get(index).getAbbr());
     }
 }

@@ -7,6 +7,7 @@ import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsModule;
 
 public class MyApplication extends Application {
+    // TODO: Fix this! This is super jank and 100% leaks. Get the context from the service!
     private static Context context;
 
     @Override

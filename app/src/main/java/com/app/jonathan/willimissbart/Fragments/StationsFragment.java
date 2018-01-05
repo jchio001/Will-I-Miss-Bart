@@ -14,7 +14,7 @@ import android.widget.ScrollView;
 import com.app.jonathan.willimissbart.Activities.AppActivities.MainActivity;
 import com.app.jonathan.willimissbart.Adapters.SelectStationsAdapter;
 import com.app.jonathan.willimissbart.Misc.Utils;
-import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
+import com.app.jonathan.willimissbart.Persistence.StationsManager;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.StationGridViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationInfoViewHolder;
@@ -47,7 +47,7 @@ public class StationsFragment extends Fragment {
 
         stationInfoViewHolder = new WeakReference<>(
             ((MainActivity) getActivity()).getStationInfoViewHolder());
-        adapter = new SelectStationsAdapter(StationsSingleton.getStations(),
+        adapter = new SelectStationsAdapter(StationsManager.getStations(),
             stationInfoViewHolder.get());
         stationGridViewHolder = new StationGridViewHolder(
             stationGridLayout, adapter, PERMISSIONS_CODE, false);

@@ -23,8 +23,8 @@ import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
-import com.app.jonathan.willimissbart.Persistence.SPSingleton;
-import com.app.jonathan.willimissbart.Persistence.StationsSingleton;
+import com.app.jonathan.willimissbart.Persistence.SPManager;
+import com.app.jonathan.willimissbart.Persistence.StationsManager;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.UserRouteFooterViewHolder;
 import com.google.common.collect.Lists;
@@ -78,7 +78,7 @@ public class RoutesFragment extends Fragment {
         if (getArguments() != null) {
             userData = getArguments().getParcelableArrayList(Constants.USER_DATA);
         } else {
-            userData = SPSingleton.getUserData(getActivity());
+            userData = SPManager.getUserData(getActivity());
         }
         updatedUserData = Lists.newArrayList(userData);
 
@@ -92,7 +92,7 @@ public class RoutesFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        boolean includeReturnRoute = SPSingleton.getIncludeReturnRoute(getContext());
+        boolean includeReturnRoute = SPManager.getIncludeReturnRoute(getContext());
         if (!includeReturnRoute) {
             routesCnt = 1;
         }
@@ -189,7 +189,7 @@ public class RoutesFragment extends Fragment {
         failureText.setVisibility(View.GONE);
         // recyclerView.setVisibility(View.VISIBLE);
 
-        boolean includeReturnRoute = SPSingleton.getIncludeReturnRoute(this.getActivity());
+        boolean includeReturnRoute = SPManager.getIncludeReturnRoute(this.getActivity());
         List<Trip> merged = mergeFetchedTrips(includeReturnRoute);
 
         adapter.addAll(merged, userData);
@@ -219,18 +219,18 @@ public class RoutesFragment extends Fragment {
 
     public void updateUserStations(int resultCode, int stationIndex) {
         updatedUserData.set(resultCode - 1, UserStationData.fromStationIndex(stationIndex));
-        footer.updateStations(resultCode, StationsSingleton.getStations()
+        footer.updateStations(resultCode, StationsManager.getStations()
             .get(stationIndex).getAbbr());
     }
 
     public void persistUpdatesAndRefresh() {
         // At this point, userData & updatedUserData need to be identical (in terms of what elements
         // are contained within each list, not do they point to the same list)
-        SPSingleton.persistUserData(getActivity(), updatedUserData);
+        SPManager.persistUserData(getActivity(), updatedUserData);
         userData = Lists.newArrayList(updatedUserData);
 
         boolean isChecked = footer.includeReturn.isChecked();
-        SPSingleton.persistIncludeReturnRoute(getActivity(), isChecked);
+        SPManager.persistIncludeReturnRoute(getActivity(), isChecked);
         RetrofitClient.getCurrentDepartures(
             updatedUserData.get(0).getAbbr(),
             updatedUserData.get(1).getAbbr(),
