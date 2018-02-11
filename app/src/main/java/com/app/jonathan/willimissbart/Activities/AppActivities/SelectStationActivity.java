@@ -77,7 +77,7 @@ public class SelectStationActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (isStationInfoLayoutOpen()) {
-            stationInfoViewHolder.onClose();
+            stationInfoViewHolder.close();
         } else {
             super.onBackPressed();
         }

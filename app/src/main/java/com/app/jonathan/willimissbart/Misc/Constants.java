@@ -38,5 +38,4 @@ public class Constants {
     // REFRESH STATE ENUMS
     public static final int REFRESH_STATE_INACTIVE = 0;
     public static final int REFRESH_STATE_REFRESHING = 1;
-    public static final int REFRESH_STATE_LOADING = 2; // TODO: may not need this
 }

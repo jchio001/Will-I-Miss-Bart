@@ -17,6 +17,5 @@ public class OptionsElemViewHolder {
         ButterKnife.bind(this, v);
         icon.setText(iconId);
         actionText.setText(text);
-        ButterKnife.unbind(this);
     }
 }

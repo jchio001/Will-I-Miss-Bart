@@ -62,7 +62,8 @@ public class TripActivity extends AppCompatActivity implements EstimatesManager.
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.trip_menu, menu);
-        menu.findItem(R.id.share).setIcon(new IconDrawable(this, IoniconsIcons.ion_android_share_alt)
+        menu.findItem(R.id.share)
+            .setIcon(new IconDrawable(this, IoniconsIcons.ion_android_share_alt)
             .colorRes(R.color.white)
             .actionBarSize());
         return true;

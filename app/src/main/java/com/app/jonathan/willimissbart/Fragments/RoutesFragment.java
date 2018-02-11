@@ -44,7 +44,6 @@ import butterknife.ButterKnife;
 public class RoutesFragment extends Fragment {
     @Bind(R.id.route_swipe_refresh) SwipeRefreshLayout routeSwipeRefresh;
     @Bind(R.id.route_recycler) RecyclerView recyclerView;
-
     @Bind(R.id.progress_bar) ProgressBar progressBar;
     @Bind(R.id.footer_wrapper) LinearLayout footerLayout;
     @Bind(R.id.failure_text) TextView failureText;

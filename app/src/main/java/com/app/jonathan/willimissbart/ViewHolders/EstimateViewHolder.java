@@ -78,7 +78,6 @@ public class EstimateViewHolder extends ViewHolder {
                 // Passed in estimates already factors in current time!
                 setAlarm.setEnabled(false);
                 new NotificationAlertDialog(
-                    itemView.getContext(),
                     setAlarm, leg,
                     estimate,
                     timeOfResp).show();

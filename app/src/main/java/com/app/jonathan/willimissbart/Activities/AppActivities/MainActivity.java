@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (stationInfoLayout.getVisibility() == View.VISIBLE) {
-            stationInfoViewHolder.onClose();
+            stationInfoViewHolder.close();
         } else {
             super.onBackPressed();
         }

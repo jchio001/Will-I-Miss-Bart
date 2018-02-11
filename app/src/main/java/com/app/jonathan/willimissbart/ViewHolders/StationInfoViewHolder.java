@@ -48,8 +48,8 @@ public class StationInfoViewHolder {
     // values will already be stored.
     private double lat;
     private double lng;
-
     private int height;
+    private boolean closed = true;
 
     public StationInfoViewHolder(ScrollView stationInfoParent, int height) {
         this.stationInfoParent = stationInfoParent;
@@ -64,16 +64,19 @@ public class StationInfoViewHolder {
     }
 
     @OnClick(R.id.stn_info_close)
-    public void onClose() {
-        hideProgressBar.setAnimationListener(null);
-        hideProgressBar.cancel();
+    public synchronized void close() {
+        if (!closed) {
+            hideProgressBar.setAnimationListener(null);
+            hideProgressBar.cancel();
 
-        showInfoAnim.setAnimationListener(null);
-        showInfoAnim.cancel();
+            showInfoAnim.setAnimationListener(null);
+            showInfoAnim.cancel();
 
-        progressBar.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
 
-        collapseAnimation.start();
+            collapseAnimation.start();
+            closed = true;
+        }
     }
 
     @OnClick(R.id.stn_addr_layout)
@@ -102,8 +105,7 @@ public class StationInfoViewHolder {
             stationInfo.getAttraction().getcDataSection(), 2);
 
         stationAddrLayout.setEnabled(true);
-
-        // TODO: can I reuse the same animation?
+        
         showInfoAnim = new AlphaAnimation(0.0f, 1.0f);
         showInfoAnim.setDuration(Constants.STANDARD_DURATION);
         showInfoAnim.setAnimationListener(new ShowOrHideAnimListener(
@@ -116,12 +118,15 @@ public class StationInfoViewHolder {
         progressBar.startAnimation(hideProgressBar);
     }
 
-    public void show(String abbr) {
-        stationInfoParent.setVisibility(View.VISIBLE);
-        stationInfoTitle.setText(stationInfoParent.getContext()
-            .getString(R.string.stn_info_title, abbr));
-        showLayoutListener.setAbbr(abbr);
-        expandAnimation.start();
+    public synchronized void show(String abbr) {
+        if (closed) {
+            closed = false;
+            stationInfoParent.setVisibility(View.VISIBLE);
+            stationInfoTitle.setText(stationInfoParent.getContext()
+                .getString(R.string.stn_info_title, abbr));
+            showLayoutListener.setAbbr(abbr);
+            expandAnimation.start();
+        }
     }
 
     public void initAnimations() {

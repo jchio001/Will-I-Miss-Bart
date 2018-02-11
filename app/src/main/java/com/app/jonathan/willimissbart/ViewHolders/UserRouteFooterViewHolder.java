@@ -46,7 +46,7 @@ public class UserRouteFooterViewHolder {
         destination.setText(userData.get(1).getAbbr());
         includeReturn.setChecked(SPManager.getIncludeReturnRoute(routeFragment.getContext()));
         this.userData = userData;
-        initAnimations();
+        createAnimations();
     }
 
     @OnClick(R.id.user_route_expand)
@@ -97,7 +97,7 @@ public class UserRouteFooterViewHolder {
         }
     }
 
-    private void initAnimations() {
+    private void createAnimations() {
         footerBody.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int measuredHeight = footerBody.getMeasuredHeight();
 

@@ -15,13 +15,10 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        if (!SPManager.containsUserData(this)) {
-            Intent intent = new Intent(this, OnboardingActivity.class);
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(this,
+            !SPManager.containsUserData(this)
+                ? OnboardingActivity.class : MainActivity.class);
+        startActivity(intent);
         finish();
     }
 }
