@@ -1,18 +1,22 @@
 package com.app.jonathan.willimissbart.API;
 
 import com.app.jonathan.willimissbart.API.Callbacks.BsaCallback;
-import com.app.jonathan.willimissbart.API.Callbacks.DeparturesCallback;
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.app.jonathan.willimissbart.API.Callbacks.StationInfoCallback;
+import com.app.jonathan.willimissbart.API.Models.Routes.DeparturesResp;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -45,6 +49,7 @@ public class RetrofitClient {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .client(client)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(APIConstants.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
@@ -80,12 +85,12 @@ public class RetrofitClient {
             .enqueue(new StationInfoCallback());
     }
 
-    public static void getCurrentDepartures(String orig,
-                                            String dest,
-                                            boolean isReturnRoute) {
-        RetrofitClient.getInstance()
+    public static Single<Response<DeparturesResp>> getCurrentDepartures(String orig,
+                                                                        String dest) {
+        return RetrofitClient.getInstance()
             .getMatchingService()
-            .getDepartures("depart", orig, dest, "now", APIConstants.API_KEY, 'y')
-            .enqueue(new DeparturesCallback(isReturnRoute));
+            .getDepartures("depart", orig, dest,
+                "now", 0, 2, APIConstants.API_KEY, 'y')
+            .subscribeOn(Schedulers.io());
     }
 }

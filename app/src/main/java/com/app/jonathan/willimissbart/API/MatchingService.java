@@ -6,7 +6,10 @@ import com.app.jonathan.willimissbart.API.Models.Routes.DeparturesResp;
 import com.app.jonathan.willimissbart.API.Models.Station.StationsResp;
 import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
 
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -34,10 +37,12 @@ public interface MatchingService {
                                          @Query("json") Character json);
 
     @GET("sched.aspx")
-    Call<DeparturesResp> getDepartures(@Query("cmd") String cmd,
-                                       @Query("orig") String orig,
-                                       @Query("dest") String dest,
-                                       @Query("date") String date,
-                                       @Query("key") String key,
-                                       @Query("json") Character json);
+    Single<Response<DeparturesResp>> getDepartures(@Query("cmd") String cmd,
+                                                   @Query("orig") String orig,
+                                                   @Query("dest") String dest,
+                                                   @Query("date") String date,
+                                                   @Query("b") int before,
+                                                   @Query("a") int after,
+                                                   @Query("key") String key,
+                                                   @Query("json") Character json);
 }

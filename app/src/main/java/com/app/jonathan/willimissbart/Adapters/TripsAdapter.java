@@ -91,21 +91,7 @@ public class TripsAdapter extends Adapter<TripViewHolder> implements EstimatesMa
         this.origAbbr = userData.get(0).getAbbr();
         this.destAbbr = userData.get(1).getAbbr();
         this.trips.clear();
-
-        long now = System.currentTimeMillis();
-        List<Trip> filtered = Lists.newArrayList();
-        for (Trip trip : trips) {
-            if (trip != null) {
-                long tripTime = trip.getEpochTime();
-                if (now < tripTime) {
-                    filtered.add(trip);
-                }
-            } else {
-                filtered.add(trip);
-            }
-        }
-
-        this.trips.addAll(filtered);
+        this.trips.addAll(trips);
         notifyDataSetChanged();
     }
 

@@ -3,6 +3,7 @@ package com.app.jonathan.willimissbart.API.Models.Etd;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +15,7 @@ public class EtdRespWrapper {
 
     public EtdRespWrapper(EtdRoot etdRoot, Set<String> destSet) {
         this.orig = etdRoot.getStations().get(0).getAbbr();
+        destSet = destSet != null ? destSet : new HashSet<>();
 
         if (etdRoot != null) {
             this.respTime = Math.min(etdRoot.getTimeAsEpochMs() / 1000,

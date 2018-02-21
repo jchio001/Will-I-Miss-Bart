@@ -12,10 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.app.jonathan.willimissbart.API.Models.Routes.RoutesFailure;
+import com.app.jonathan.willimissbart.API.Models.Routes.DeparturesResp;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
-import com.app.jonathan.willimissbart.API.Models.Routes.TripsWrapper;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.TripsAdapter;
 import com.app.jonathan.willimissbart.Listeners.SwipeRefresh.TripRefreshListener;
@@ -32,7 +32,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 import java.util.Map;
@@ -40,6 +39,12 @@ import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 public class RoutesFragment extends Fragment {
     @Bind(R.id.route_swipe_refresh) SwipeRefreshLayout routeSwipeRefresh;
@@ -53,12 +58,9 @@ public class RoutesFragment extends Fragment {
     private List<UserStationData> userData;
     private List<UserStationData> updatedUserData;
     private TripsAdapter adapter = new TripsAdapter();
-    private List<Trip>[] trips = new List[2];
 
     private String routeFirstLegHead = null;
     private String returnFirstLegHead = null;
-
-    private int routesCnt = 0;
 
     @Nullable
     @Override
@@ -67,7 +69,6 @@ public class RoutesFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_trip, container, false);
         ButterKnife.bind(this, v);
-        EventBus.getDefault().register(this);
         EstimatesManager.register(adapter);
 
         routeSwipeRefresh.setEnabled(false);
@@ -92,21 +93,38 @@ public class RoutesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         boolean includeReturnRoute = SPManager.getIncludeReturnRoute(getContext());
-        if (!includeReturnRoute) {
-            routesCnt = 1;
-        }
 
-        RetrofitClient.getCurrentDepartures(
+        Single<Response<DeparturesResp>> departuresSingle = RetrofitClient.getCurrentDepartures(
             userData.get(0).getAbbr(),
-            userData.get(1).getAbbr(),
-            false);
+            userData.get(1).getAbbr());
 
+        Single<Response<DeparturesResp>> returnDeparturesSingle = null;
         if (includeReturnRoute) {
-            RetrofitClient.getCurrentDepartures(
+            returnDeparturesSingle = RetrofitClient.getCurrentDepartures(
                 userData.get(1).getAbbr(),
-                userData.get(0).getAbbr(),
-                true);
+                userData.get(0).getAbbr());
         }
+
+        departuresToTripList(departuresSingle, returnDeparturesSingle)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new SingleObserver<List<Trip>>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onSuccess(List<Trip> mergedTrips) {
+                    loadUserRoutes(mergedTrips);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Toast.makeText(RoutesFragment.this.getContext(),
+                        "Wah wah", Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 
     @Override
@@ -115,58 +133,6 @@ public class RoutesFragment extends Fragment {
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
         EstimatesManager.unregister(adapter);
-    }
-
-    @Subscribe
-    public void departuresResponse(TripsWrapper wrapper) {
-        boolean loadFeed = false;
-        synchronized (this) {
-            trips[wrapper.isReturnRoute() ? 1 : 0] = wrapper.getTrips();
-            ++routesCnt;
-
-            if (routesCnt == 2) {
-                loadFeed = true;
-            }
-        }
-
-        if (!wrapper.isReturnRoute()) {
-            routeFirstLegHead = wrapper.getTrips().get(0)
-                .getLegList().get(0)
-                .getTrainHeadStation();
-        } else {
-            returnFirstLegHead = wrapper.getTrips().get(0)
-                .getLegList().get(0)
-                .getTrainHeadStation();
-        }
-
-        if (loadFeed) {
-            loadUserRoutes();
-        }
-    }
-
-    @Subscribe
-    public void departuresFailure(RoutesFailure event) {
-        boolean loadFeed = false;
-        synchronized (this) {
-            trips[event.isReturnRoute() ? 1 : 0] = null;
-            ++routesCnt;
-
-            if (routesCnt == 2) {
-                loadFeed = true;
-            }
-        }
-
-        if (loadFeed) {
-            loadUserRoutes();
-        }
-    }
-
-    private List<Trip> mergeFetchedTrips(boolean includeReturnRoute) {
-        List<Trip> merged = trips[0] != null ? trips[0] : Lists.newArrayList((Trip) null);
-        if (includeReturnRoute) {
-            merged.addAll(trips[1] != null ? trips[1] : Lists.newArrayList((Trip) null));
-        }
-        return merged;
     }
 
     private void renderFooter() {
@@ -178,7 +144,7 @@ public class RoutesFragment extends Fragment {
         routeSwipeRefresh.setLayoutParams(params);
     }
 
-    public void loadUserRoutes() {
+    public void loadUserRoutes(List<Trip> mergedTrips) {
         progressBar.setVisibility(View.GONE);
 
         routeRefreshListener.setRefreshState(Constants.REFRESH_STATE_INACTIVE);
@@ -189,9 +155,8 @@ public class RoutesFragment extends Fragment {
         // recyclerView.setVisibility(View.VISIBLE);
 
         boolean includeReturnRoute = SPManager.getIncludeReturnRoute(this.getActivity());
-        List<Trip> merged = mergeFetchedTrips(includeReturnRoute);
 
-        adapter.addAll(merged, userData);
+        adapter.addAll(mergedTrips, userData);
 
         // TODO: probably don't need a map. Also probably should explain what's going on
         Map<String, Set<String>> origToDestsMapping = Maps.newHashMap();
@@ -232,18 +197,61 @@ public class RoutesFragment extends Fragment {
         SPManager.persistIncludeReturnRoute(getActivity(), isChecked);
         RetrofitClient.getCurrentDepartures(
             updatedUserData.get(0).getAbbr(),
-            updatedUserData.get(1).getAbbr(),
-            false);
-        routesCnt = 1;
+            updatedUserData.get(1).getAbbr());
 
         if (isChecked) {
             RetrofitClient.getCurrentDepartures(
                 updatedUserData.get(1).getAbbr(),
-                updatedUserData.get(0).getAbbr(),
-                true);
-            routesCnt = 0;
+                updatedUserData.get(0).getAbbr());
         }
 
         Utils.showSnackbar(getActivity(), footerLayout, R.color.bartBlue, R.string.updated_data);
+    }
+
+    /**
+     * Merges departures and return route departures together into a Single of List<Trip>
+     * @param departuresRespSingle Single<DeparturesResp> for the user specified route
+     * @param returnDeparturesRespSingle Single<DeparturesResp> for the return route
+     * @return A single containing all the trips merged together
+     */
+    private Single<List<Trip>> departuresToTripList(
+        Single<Response<DeparturesResp>> departuresRespSingle,
+        Single<Response<DeparturesResp>> returnDeparturesRespSingle) {
+        if (returnDeparturesRespSingle != null) {
+            return Single.zip(departuresRespSingle, returnDeparturesRespSingle,
+                (departuresResp, returnDeparturesResp) -> {
+                    List<Trip> mergedTrips = Lists.newArrayList();
+
+                    if (departuresResp.body() != null) {
+                        List<Trip> trips = departuresResp.body()
+                            .getRoot().getSchedule().getRequest().getTrips();
+                        mergedTrips.addAll(trips);
+                        routeFirstLegHead = trips.get(0).getLegList().get(0).getTrainHeadStation();
+
+                    } else {
+                        mergedTrips.add(null);
+                    }
+
+                    if (returnDeparturesResp.body() != null) {
+                        List<Trip> trips = returnDeparturesResp.body()
+                            .getRoot().getSchedule().getRequest().getTrips();
+                        mergedTrips.addAll(trips);
+                        returnFirstLegHead = trips.get(0).getLegList().get(0).getTrainHeadStation();
+                    } else {
+                        mergedTrips.add(null);
+                    }
+
+                    return mergedTrips;
+                });
+        } else {
+            return departuresRespSingle.flatMap(departuresResponse -> {
+                if (departuresResponse.body() != null) {
+                    return Single.just(departuresResponse.body()
+                        .getRoot().getSchedule().getRequest().getTrips());
+                } else {
+                    return Single.just((Lists.newArrayList((Trip) null)));
+                }
+            });
+        }
     }
 }
