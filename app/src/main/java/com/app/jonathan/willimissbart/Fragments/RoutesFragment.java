@@ -21,15 +21,13 @@ import com.app.jonathan.willimissbart.Adapters.TripsAdapter;
 import com.app.jonathan.willimissbart.Listeners.SwipeRefresh.TripRefreshListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.EstimatesManager;
+import com.app.jonathan.willimissbart.Misc.NotGuava;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.Persistence.SPManager;
 import com.app.jonathan.willimissbart.Persistence.StationsManager;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.UserRouteFooterViewHolder;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -80,7 +78,7 @@ public class RoutesFragment extends Fragment {
         } else {
             userData = SPManager.getUserData(getActivity());
         }
-        updatedUserData = Lists.newArrayList(userData);
+        updatedUserData = NotGuava.newArrayList(userData);
 
         renderFooter();
 
@@ -159,11 +157,11 @@ public class RoutesFragment extends Fragment {
         adapter.addAll(mergedTrips, userData);
 
         // TODO: probably don't need a map. Also probably should explain what's going on
-        Map<String, Set<String>> origToDestsMapping = Maps.newHashMap();
+        Map<String, Set<String>> origToDestsMapping = NotGuava.newHashMap();
         for (Trip trip : adapter.getTrips()) {
             if (!origToDestsMapping.containsKey(trip.getOrigin())) {
                 origToDestsMapping.put(trip.getOrigin(),
-                    Sets.newHashSet(trip.getLegList().get(0).getTrainHeadStation()));
+                    NotGuava.newHashSet(trip.getLegList().get(0).getTrainHeadStation()));
             } else {
                 Set<String> destSet = origToDestsMapping.get(trip.getOrigin());
                 destSet.add(trip.getLegList().get(0).getTrainHeadStation());
@@ -191,7 +189,7 @@ public class RoutesFragment extends Fragment {
         // At this point, userData & updatedUserData need to be identical (in terms of what elements
         // are contained within each list, not do they point to the same list)
         SPManager.persistUserData(getActivity(), updatedUserData);
-        userData = Lists.newArrayList(updatedUserData);
+        userData = NotGuava.newArrayList(updatedUserData);
 
         boolean isChecked = footer.includeReturn.isChecked();
         SPManager.persistIncludeReturnRoute(getActivity(), isChecked);
@@ -220,7 +218,7 @@ public class RoutesFragment extends Fragment {
         if (returnDeparturesRespSingle != null) {
             return Single.zip(departuresRespSingle, returnDeparturesRespSingle,
                 (departuresResp, returnDeparturesResp) -> {
-                    List<Trip> mergedTrips = Lists.newArrayList();
+                    List<Trip> mergedTrips = NotGuava.newArrayList();
 
                     if (departuresResp.body() != null) {
                         List<Trip> trips = departuresResp.body()
@@ -249,7 +247,7 @@ public class RoutesFragment extends Fragment {
                     return Single.just(departuresResponse.body()
                         .getRoot().getSchedule().getRequest().getTrips());
                 } else {
-                    return Single.just((Lists.newArrayList((Trip) null)));
+                    return Single.just((NotGuava.newArrayList((Trip) null)));
                 }
             });
         }

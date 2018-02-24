@@ -9,10 +9,10 @@ import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.Misc.EstimatesManager;
+import com.app.jonathan.willimissbart.Misc.NotGuava;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.TripViewHolder;
-import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class TripsAdapter extends Adapter<TripViewHolder> implements EstimatesMa
     private static int RENDER_FAILED_TRIPS = 1;
     private static int RENDER_FAILED_RETURN_TRIPS = 2;
 
-    private List<Trip> trips = Lists.newArrayList();
+    private List<Trip> trips = NotGuava.newArrayList();
     private String origAbbr = "";
     private String destAbbr = "";
 

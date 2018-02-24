@@ -1,7 +1,6 @@
 package com.app.jonathan.willimissbart.API.Models.Etd;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.app.jonathan.willimissbart.Misc.NotGuava;
 
 import java.util.HashSet;
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class EtdRespWrapper {
-    private Map<String, List<Estimate>> origDestToEstimates = Maps.newHashMap();
+    private Map<String, List<Estimate>> origDestToEstimates = NotGuava.newHashMap();
     private String orig;
     private long respTime = 0;
 
@@ -22,7 +21,7 @@ public class EtdRespWrapper {
                 System.currentTimeMillis() / 1000);
 
             // filter out jank/irrelevant etds first. TODO: probably don't need this
-            List<Etd> filtered = Lists.newArrayList();
+            List<Etd> filtered = NotGuava.newArrayList();
             EtdStation etdStation = etdRoot.getStations().get(0);
             for (Etd etd : etdStation.getEtds()) {
                 if (destSet.contains(etd.getAbbreviation())) {

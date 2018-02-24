@@ -1,15 +1,14 @@
 package com.app.jonathan.willimissbart.Persistence;
 
-
 import com.app.jonathan.willimissbart.API.Models.Station.Station;
-import com.google.common.collect.Lists;
+import com.app.jonathan.willimissbart.Misc.NotGuava;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StationsManager {
     private static StationsManager instance;
-    private List<Station> stations = Lists.newArrayList();
+    private List<Station> stations = NotGuava.newArrayList();
 
     private StationsManager() {
         stations = new ArrayList<>();

@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 import java.util.List;
 import java.util.Map;
@@ -20,13 +18,13 @@ public class EstimatesManager {
 
     private static EstimatesManager instance = null;
 
-    private Map<String, List<Estimate>> origDestToEstimates = Maps.newHashMap();
+    private Map<String, List<Estimate>> origDestToEstimates = NotGuava.newHashMap();
     // keeps track of when I fetched real time estimates for a specific seconds
-    private Map<String, Long> stationToRespTime = Maps.newHashMap();
+    private Map<String, Long> stationToRespTime = NotGuava.newHashMap();
     // keeps track of seconds remainder when the user wants to update their estimates
-    private Map<String, Integer> stationToRemainderSeconds = Maps.newHashMap();
+    private Map<String, Integer> stationToRemainderSeconds = NotGuava.newHashMap();
     // keeps track of subscribers for this manager
-    private Set<EstimatesListener> subscribers = Sets.newHashSet();
+    private Set<EstimatesListener> subscribers = NotGuava.newHashSet();
 
     private EstimatesManager() {
     }
@@ -81,7 +79,7 @@ public class EstimatesManager {
         Map<String, Integer> stationToRemainderSeconds = getInstance().stationToRemainderSeconds;
         Map<String, Long> stationToRespTime = getInstance().stationToRespTime;
 
-        Map<String, Integer> stationToUpdatedRemainderSeconds = Maps.newHashMap();
+        Map<String, Integer> stationToUpdatedRemainderSeconds = NotGuava.newHashMap();
         boolean estimatesUpdated = false;
         for (Map.Entry<String, List<Estimate>> entry : origDestToEstimates.entrySet()) {
             List<Estimate> estimates = entry.getValue();

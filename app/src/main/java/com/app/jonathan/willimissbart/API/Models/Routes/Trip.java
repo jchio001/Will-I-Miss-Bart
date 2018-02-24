@@ -3,7 +3,7 @@ package com.app.jonathan.willimissbart.API.Models.Routes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.common.collect.Lists;
+import com.app.jonathan.willimissbart.Misc.NotGuava;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -95,7 +95,7 @@ public class Trip implements Serializable, Parcelable {
         this.tripTime = parcel.readInt();
         this.fare = parcel.readString();
         this.clipper = parcel.readString();
-        this.legList = Lists.newArrayList();
+        this.legList = NotGuava.newArrayList();
         parcel.readTypedList(legList, Leg.CREATOR);
     }
 

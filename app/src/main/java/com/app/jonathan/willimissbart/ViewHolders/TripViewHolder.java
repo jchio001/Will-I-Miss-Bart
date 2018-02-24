@@ -13,8 +13,8 @@ import com.app.jonathan.willimissbart.API.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.Activities.AppActivities.TripActivity;
 import com.app.jonathan.willimissbart.Misc.Constants;
+import com.app.jonathan.willimissbart.Misc.NotGuava;
 import com.app.jonathan.willimissbart.R;
-import com.google.common.collect.Iterables;
 
 import java.util.List;
 
@@ -78,7 +78,7 @@ public class TripViewHolder extends ViewHolder {
             nextTrainInfo.setText(itemView.getContext().getString(R.string.next_train_blurb, ""));
             estimateViewHolder.renderWithEstimateList(null, estimates, timeOfResp);
         } else {
-            Leg firstLeg = Iterables.getFirst(trip.getLegList(), null);
+            Leg firstLeg = NotGuava.getFirst(trip.getLegList(), null);
             if (firstLeg != null) {
                 nextTrainInfo.setText(itemView.getContext().getString(R.string.next_train_blurb,
                     String.format(DIRECTION_SNIPPET, firstLeg.getTrainHeadStation())));

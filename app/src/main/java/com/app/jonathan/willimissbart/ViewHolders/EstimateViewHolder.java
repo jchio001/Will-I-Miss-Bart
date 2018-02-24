@@ -12,10 +12,9 @@ import android.widget.Toast;
 import com.app.jonathan.willimissbart.API.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.API.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.Dialogs.NotificationAlertDialog;
+import com.app.jonathan.willimissbart.Misc.NotGuava;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.R;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.lang.annotation.Retention;
@@ -66,7 +65,7 @@ public class EstimateViewHolder extends ViewHolder {
 
     @OnClick(R.id.set_alarm)
     public void onAlarmIconClick() {
-        Estimate estimate = Iterables.getFirst(estimates, null);
+        Estimate estimate = NotGuava.getFirst(estimates, null);
         if (estimate != null) {
             if (!estimate.getMinutes().equals("Leaving")) {
                 if (Utils.getEstimateInSeconds(estimate.getMinutes(), timeOfResp) < 45) {
@@ -89,7 +88,7 @@ public class EstimateViewHolder extends ViewHolder {
     }
 
     private String getRealTimeEstimateText() {
-        Estimate estimate = Iterables.getFirst(estimates, null);
+        Estimate estimate = NotGuava.getFirst(estimates, null);
         if (estimate != null) {
             int currentEstimate = Utils.getEstimateInSeconds(
                 !estimate.getMinutes().equals("Leaving") ? estimate.getMinutes() : "0",
@@ -147,7 +146,7 @@ public class EstimateViewHolder extends ViewHolder {
 
         switch (getRenderingState(estimates)) {
             case RenderingState.RENDER_ESTIMATE:
-                renderEstimate(Iterables.getFirst(estimates, null));
+                renderEstimate(NotGuava.getFirst(estimates, null));
                 break;
             case RenderingState.RENDER_LOADING_ESTIMATES:
                 renderLoadingEstimates();
@@ -160,7 +159,7 @@ public class EstimateViewHolder extends ViewHolder {
 
     public void renderWithEstimate(Leg leg, Estimate estimate, long timeOfResp) {
         this.leg = leg;
-        this.estimates = Lists.newArrayList(estimate);
+        this.estimates = NotGuava.newArrayList(estimate);
         this.timeOfResp = timeOfResp;
 
         if (estimate != null) {

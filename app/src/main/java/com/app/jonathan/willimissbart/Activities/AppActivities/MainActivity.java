@@ -25,12 +25,12 @@ import com.app.jonathan.willimissbart.Adapters.ViewPagerAdapter;
 import com.app.jonathan.willimissbart.Fragments.RoutesFragment;
 import com.app.jonathan.willimissbart.Fragments.StationsFragment;
 import com.app.jonathan.willimissbart.Misc.Constants;
+import com.app.jonathan.willimissbart.Misc.NotGuava;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.SPManager;
 import com.app.jonathan.willimissbart.PopUpWindows.NotificationWindowManager;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.StationInfoViewHolder;
-import com.google.common.collect.Lists;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RoutesFragment routeFragment = new RoutesFragment();
     private StationsFragment stationsFragment = new StationsFragment();
-    private List<Bsa> bsas = Lists.newArrayList();
+    private List<Bsa> bsas = NotGuava.newArrayList();
     protected final Activity context = this;
 
     @Override

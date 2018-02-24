@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.app.jonathan.willimissbart.API.Models.Station.Station;
+import com.app.jonathan.willimissbart.Misc.NotGuava;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.StationInfoViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationsCardViewHolder;
-import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class AbstractStationsAdapter extends BaseAdapter {
 
     public AbstractStationsAdapter(List<Station> stations,
                                    StationInfoViewHolder stationInfoViewHolder) {
-        this.filteredStations = Lists.newArrayList(stations);
+        this.filteredStations = NotGuava.newArrayList(stations);
         this.stations = stations;
         this.stationInfoViewHolder = stationInfoViewHolder;
     }

@@ -4,12 +4,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.jonathan.willimissbart.API.Models.Station.Station;
+import com.app.jonathan.willimissbart.Misc.NotGuava;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.StationInfoViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationsCardViewHolder;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
-import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +90,7 @@ public class OriginDestStationsAdapter extends AbstractStationsAdapter {
 
         Station originStn = stations.get(originIndex);
         Station destStn = stations.get(destIndex);
-        return Lists.newArrayList(
+        return NotGuava.newArrayList(
             new UserStationData()
                 .setStation(originStn.getName())
                 .setAbbr(originStn.getAbbr())

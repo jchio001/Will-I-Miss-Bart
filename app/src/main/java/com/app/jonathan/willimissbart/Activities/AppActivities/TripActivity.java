@@ -17,9 +17,9 @@ import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.EstimatesManager;
+import com.app.jonathan.willimissbart.Misc.NotGuava;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.LegViewHolder;
-import com.google.common.collect.Sets;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 
@@ -126,7 +126,7 @@ public class TripActivity extends AppCompatActivity implements EstimatesManager.
         if (trip.getLegList().size() == 2 && !hasEstimatesLoaded(legsLayout.getChildAt(2))) {
             Log.i("TripActivity", "Loading estimates for 2nd leg...");
             RetrofitClient.getRealTimeEstimates(trip.getLegList().get(1).getOrigin(),
-                Sets.newHashSet(trip.getLegList().get(1).getTrainHeadStation()));
+                NotGuava.newHashSet(trip.getLegList().get(1).getTrainHeadStation()));
         }
     }
 
