@@ -6,7 +6,6 @@ import com.app.jonathan.willimissbart.API.Models.Routes.DeparturesResp;
 import com.app.jonathan.willimissbart.API.Models.Station.StationsResp;
 import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.Response;

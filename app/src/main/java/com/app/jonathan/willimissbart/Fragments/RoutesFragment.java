@@ -40,6 +40,7 @@ import butterknife.ButterKnife;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
@@ -59,6 +60,26 @@ public class RoutesFragment extends Fragment {
 
     private String routeFirstLegHead = null;
     private String returnFirstLegHead = null;
+
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    SingleObserver<List<Trip>> tripSubscriber = new SingleObserver<List<Trip>>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+            compositeDisposable.add(d);
+        }
+
+        @Override
+        public void onSuccess(List<Trip> mergedTrips) {
+            loadUserRoutes(mergedTrips);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Toast.makeText(RoutesFragment.this.getContext(),
+                "Wah wah", Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Nullable
     @Override
@@ -89,45 +110,14 @@ public class RoutesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         boolean includeReturnRoute = SPManager.getIncludeReturnRoute(getContext());
-
-        Single<Response<DeparturesResp>> departuresSingle = RetrofitClient.getCurrentDepartures(
-            userData.get(0).getAbbr(),
-            userData.get(1).getAbbr());
-
-        Single<Response<DeparturesResp>> returnDeparturesSingle = null;
-        if (includeReturnRoute) {
-            returnDeparturesSingle = RetrofitClient.getCurrentDepartures(
-                userData.get(1).getAbbr(),
-                userData.get(0).getAbbr());
-        }
-
-        departuresToTripList(departuresSingle, returnDeparturesSingle)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new SingleObserver<List<Trip>>() {
-                @Override
-                public void onSubscribe(Disposable d) {
-
-                }
-
-                @Override
-                public void onSuccess(List<Trip> mergedTrips) {
-                    loadUserRoutes(mergedTrips);
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Toast.makeText(RoutesFragment.this.getContext(),
-                        "Wah wah", Toast.LENGTH_SHORT).show();
-                }
-            });
+        getTrips(userData.get(0), userData.get(1), includeReturnRoute);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        compositeDisposable.dispose();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
         EstimatesManager.unregister(adapter);
@@ -150,7 +140,6 @@ public class RoutesFragment extends Fragment {
         routeSwipeRefresh.setEnabled(true);
 
         failureText.setVisibility(View.GONE);
-        // recyclerView.setVisibility(View.VISIBLE);
 
         boolean includeReturnRoute = SPManager.getIncludeReturnRoute(this.getActivity());
 
@@ -186,6 +175,8 @@ public class RoutesFragment extends Fragment {
     }
 
     public void persistUpdatesAndRefresh() {
+        compositeDisposable.dispose();
+
         // At this point, userData & updatedUserData need to be identical (in terms of what elements
         // are contained within each list, not do they point to the same list)
         SPManager.persistUserData(getActivity(), updatedUserData);
@@ -193,17 +184,31 @@ public class RoutesFragment extends Fragment {
 
         boolean isChecked = footer.includeReturn.isChecked();
         SPManager.persistIncludeReturnRoute(getActivity(), isChecked);
-        RetrofitClient.getCurrentDepartures(
-            updatedUserData.get(0).getAbbr(),
-            updatedUserData.get(1).getAbbr());
 
-        if (isChecked) {
-            RetrofitClient.getCurrentDepartures(
-                updatedUserData.get(1).getAbbr(),
-                updatedUserData.get(0).getAbbr());
-        }
+        getTrips(updatedUserData.get(0), updatedUserData.get(1), isChecked);
 
         Utils.showSnackbar(getActivity(), footerLayout, R.color.bartBlue, R.string.updated_data);
+    }
+
+    /** Does RxJava things to get a list of trips */
+    private void getTrips(UserStationData origin,
+                          UserStationData destination,
+                          boolean includeReturnRoute) {
+        Single<Response<DeparturesResp>> departuresSingle = RetrofitClient.getCurrentDepartures(
+            origin.getAbbr(),
+            destination.getAbbr());
+
+        Single<Response<DeparturesResp>> returnDeparturesSingle = null;
+        if (includeReturnRoute) {
+            returnDeparturesSingle = RetrofitClient.getCurrentDepartures(
+                destination.getAbbr(),
+                origin.getAbbr());
+        }
+
+        departuresToTripList(departuresSingle, returnDeparturesSingle)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(tripSubscriber);
     }
 
     /**
