@@ -42,7 +42,6 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 
 public class RoutesFragment extends Fragment {
@@ -61,9 +60,9 @@ public class RoutesFragment extends Fragment {
     private String routeFirstLegHead = null;
     private String returnFirstLegHead = null;
 
-    CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    SingleObserver<List<Trip>> tripSubscriber = new SingleObserver<List<Trip>>() {
+    private final SingleObserver<List<Trip>> tripSubscriber = new SingleObserver<List<Trip>>() {
         @Override
         public void onSubscribe(Disposable d) {
             compositeDisposable.add(d);
@@ -207,7 +206,6 @@ public class RoutesFragment extends Fragment {
         }
 
         departuresToTripList(departuresSingle, returnDeparturesSingle)
-            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(tripSubscriber);
     }

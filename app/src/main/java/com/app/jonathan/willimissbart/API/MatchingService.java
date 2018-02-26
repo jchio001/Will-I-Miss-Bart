@@ -30,10 +30,10 @@ public interface MatchingService {
                          @Query("json") Character json);
 
     @GET("stn.aspx")
-    Call<StationInfoResp> getStationInfo(@Query("cmd") String cmd,
-                                         @Query("key") String key,
-                                         @Query("orig") String orig,
-                                         @Query("json") Character json);
+    Single<Response<StationInfoResp>> getStationInfo(@Query("cmd") String cmd,
+                                                     @Query("key") String key,
+                                                     @Query("orig") String orig,
+                                                     @Query("json") Character json);
 
     @GET("sched.aspx")
     Single<Response<DeparturesResp>> getDepartures(@Query("cmd") String cmd,

@@ -1,5 +1,7 @@
 package com.app.jonathan.willimissbart.ViewHolders;
 
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,10 +14,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.API.Models.StationInfo.Station;
+import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
+import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Listeners.Animations.Generic.ShowOrHideAnimListener;
 import com.app.jonathan.willimissbart.Listeners.Animations.Generic.UpdateListener;
 import com.app.jonathan.willimissbart.Listeners.Animations.StationInfo.HideProgressBarAnimListener;
-import com.app.jonathan.willimissbart.Listeners.Animations.StationInfo.StationInfoAnimListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.R;
 
@@ -27,8 +30,14 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import retrofit2.Response;
 
 public class StationInfoViewHolder {
+
     public ScrollView stationInfoParent;
     @Bind(R.id.stn_addr_layout) public RelativeLayout stationAddrLayout;
     @Bind(R.id.stn_info) public LinearLayout stationInfoLayout;
@@ -42,7 +51,8 @@ public class StationInfoViewHolder {
     private ValueAnimator collapseAnimation;
     private AlphaAnimation showInfoAnim;
     private AlphaAnimation hideProgressBar;
-    private StationInfoAnimListener showLayoutListener;
+
+    private String stationAbbr;
 
     // I don't need to reset the values because by the time the user clicks on this, new lat long
     // values will already be stored.
@@ -51,16 +61,80 @@ public class StationInfoViewHolder {
     private int height;
     private boolean closed = true;
 
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    private final AnimatorListener expandListener = new AnimatorListener() {
+        @Override
+        public void onAnimationStart(Animator animation) {
+            stationInfoParent.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            stationInfoParent.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+            RetrofitClient.getStationInfo(stationAbbr)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(stationInfoSubscriber);
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+        }
+    };
+
+    private final AnimatorListener collapseListener = new AnimatorListener() {
+        @Override
+        public void onAnimationStart(Animator animation) {
+            stationAddrLayout.setEnabled(false);
+            stationInfoLayout.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            stationInfoParent.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+        }
+    };
+
+    private final SingleObserver<Response<StationInfoResp>> stationInfoSubscriber =
+        new SingleObserver<Response<StationInfoResp>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                compositeDisposable.add(d);
+            }
+
+            @Override
+            public void onSuccess(Response<StationInfoResp> stationInfoResp) {
+                onStationInfoResp(stationInfoResp.body().getRoot().getStations().getStation());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        };
+
     public StationInfoViewHolder(ScrollView stationInfoParent, int height) {
         this.stationInfoParent = stationInfoParent;
         this.height = height;
         ButterKnife.bind(this, stationInfoParent);
-        EventBus.getDefault().register(this);
         initAnimations();
     }
 
     public void onDestroy() {
-        EventBus.getDefault().unregister(this);
+        compositeDisposable.dispose();
     }
 
     @OnClick(R.id.stn_info_close)
@@ -72,6 +146,7 @@ public class StationInfoViewHolder {
             showInfoAnim.setAnimationListener(null);
             showInfoAnim.cancel();
 
+            stationInfoParent.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
 
             collapseAnimation.start();
@@ -88,8 +163,7 @@ public class StationInfoViewHolder {
         stationInfoParent.getContext().startActivity(mapIntent);
     }
 
-    @Subscribe
-    public void onStationInfoResp(Station stationInfo) {
+    private void onStationInfoResp(Station stationInfo) {
         lat = stationInfo.getLatitude();
         lng = stationInfo.getLongitude();
         stationInfoAddress.setText(stationInfo.getFullAddress());
@@ -124,7 +198,7 @@ public class StationInfoViewHolder {
             stationInfoParent.setVisibility(View.VISIBLE);
             stationInfoTitle.setText(stationInfoParent.getContext()
                 .getString(R.string.stn_info_title, abbr));
-            showLayoutListener.setAbbr(abbr);
+            stationAbbr = abbr;
             expandAnimation.start();
         }
     }
@@ -133,12 +207,11 @@ public class StationInfoViewHolder {
         expandAnimation = ValueAnimator.ofInt(0, height);
         expandAnimation.setDuration(Constants.SHORT_DURATION);
         expandAnimation.addUpdateListener(new UpdateListener(stationInfoParent));
-        showLayoutListener = new StationInfoAnimListener(this, View.VISIBLE);
-        expandAnimation.addListener(showLayoutListener);
+        expandAnimation.addListener(expandListener);
 
         collapseAnimation = ValueAnimator.ofInt(height, 0);
         collapseAnimation.setDuration(Constants.SHORT_DURATION);
         collapseAnimation.addUpdateListener(new UpdateListener(stationInfoParent));
-        collapseAnimation.addListener(new StationInfoAnimListener(this, View.GONE));
+        collapseAnimation.addListener(collapseListener);
     }
 }

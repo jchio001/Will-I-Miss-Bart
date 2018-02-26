@@ -2,8 +2,8 @@ package com.app.jonathan.willimissbart.API;
 
 import com.app.jonathan.willimissbart.API.Callbacks.BsaCallback;
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
-import com.app.jonathan.willimissbart.API.Callbacks.StationInfoCallback;
 import com.app.jonathan.willimissbart.API.Models.Routes.DeparturesResp;
+import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -78,11 +78,11 @@ public class RetrofitClient {
             .enqueue(new BsaCallback());
     }
 
-    public static void getStationInfo(String abbr) {
-        RetrofitClient.getInstance()
+    public static Single<Response<StationInfoResp>> getStationInfo(String abbr) {
+        return RetrofitClient.getInstance()
             .getMatchingService()
             .getStationInfo("stninfo", APIConstants.API_KEY, abbr, 'y')
-            .enqueue(new StationInfoCallback());
+            .subscribeOn(Schedulers.io());
     }
 
     public static Single<Response<DeparturesResp>> getCurrentDepartures(String orig,
