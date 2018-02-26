@@ -77,7 +77,8 @@ public class RoutesFragment extends Fragment {
         @Override
         public void onError(Throwable e) {
             Toast.makeText(RoutesFragment.this.getContext(),
-                "Wah wah", Toast.LENGTH_SHORT).show();
+                String.format("Wah wah %s", e.getMessage()), Toast.LENGTH_SHORT)
+                .show();
         }
     };
 
@@ -145,7 +146,7 @@ public class RoutesFragment extends Fragment {
 
         adapter.addAll(mergedTrips, userData);
 
-        // TODO: probably don't need a map. Also probably should explain what's going on
+        // TODO: WRITE A BETTER FREAKING COMMENT HERE. DO I NEED A MAP OR NOT?
         Map<String, Set<String>> origToDestsMapping = NotGuava.newHashMap();
         for (Trip trip : adapter.getTrips()) {
             if (!origToDestsMapping.containsKey(trip.getOrigin())) {
