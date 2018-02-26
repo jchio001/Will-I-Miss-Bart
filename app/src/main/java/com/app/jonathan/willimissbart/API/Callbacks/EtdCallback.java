@@ -1,11 +1,10 @@
 package com.app.jonathan.willimissbart.API.Callbacks;
 
-
 import android.util.Log;
 
-import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdResp;
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
+import com.app.jonathan.willimissbart.API.RetrofitClient.StatusCode;
 import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 
 import java.util.Set;
@@ -28,7 +27,7 @@ public class EtdCallback implements Callback<EtdResp> {
     public void onResponse(Call<EtdResp> call, Response<EtdResp> resp) {
         Log.i(tag, "Etds fetched!");
         switch (resp.code()) {
-            case APIConstants.HTTP_STATUS_OK:
+            case StatusCode.HTTP_STATUS_OK:
                 EstimatesManager
                     .persistThenPost(new EtdRespWrapper(resp.body().getRoot(), destSet));
                 break;

@@ -2,10 +2,10 @@ package com.app.jonathan.willimissbart.API.Callbacks;
 
 import android.util.Log;
 
-import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Models.Generic.FailureEvent;
 import com.app.jonathan.willimissbart.API.Models.Station.Station;
 import com.app.jonathan.willimissbart.API.Models.Station.StationsResp;
+import com.app.jonathan.willimissbart.API.RetrofitClient.StatusCode;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -24,7 +24,7 @@ public class StationsCallback implements Callback<StationsResp> {
     public void onResponse(Call<StationsResp> call, Response<StationsResp> resp) {
         Log.i(tag, String.valueOf(resp.code()));
         switch (resp.code()) {
-            case APIConstants.HTTP_STATUS_OK:
+            case StatusCode.HTTP_STATUS_OK:
                 int i = 0;
                 for (Station station : resp.body().getStationsRoot()
                     .getStations().getStationList()) {

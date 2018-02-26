@@ -2,16 +2,15 @@ package com.app.jonathan.willimissbart.API.Callbacks;
 
 import android.util.Log;
 
-import com.app.jonathan.willimissbart.API.APIConstants;
 import com.app.jonathan.willimissbart.API.Models.BSA.BsaResp;
 import com.app.jonathan.willimissbart.API.Models.Generic.FailureEvent;
+import com.app.jonathan.willimissbart.API.RetrofitClient.StatusCode;
 
 import org.greenrobot.eventbus.EventBus;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 
 public class BsaCallback implements Callback<BsaResp> {
     public static final String tag = "BsaCallback";
@@ -20,7 +19,7 @@ public class BsaCallback implements Callback<BsaResp> {
     public void onResponse(Call<BsaResp> call, Response<BsaResp> resp) {
         Log.i(tag, "Got BSA's");
         switch (resp.code()) {
-            case APIConstants.HTTP_STATUS_OK:
+            case StatusCode.HTTP_STATUS_OK:
                 EventBus.getDefault().post(resp.body());
                 break;
             default:

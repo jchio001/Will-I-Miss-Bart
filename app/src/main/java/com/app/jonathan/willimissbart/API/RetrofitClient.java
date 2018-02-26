@@ -1,13 +1,18 @@
 package com.app.jonathan.willimissbart.API;
 
+import android.support.annotation.IntDef;
+
 import com.app.jonathan.willimissbart.API.Callbacks.BsaCallback;
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
+import com.app.jonathan.willimissbart.API.Callbacks.StationsCallback;
 import com.app.jonathan.willimissbart.API.Models.Routes.DeparturesResp;
 import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +25,19 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
 public class RetrofitClient {
+
+    @Retention(SOURCE)
+    @IntDef(StatusCode.HTTP_STATUS_OK)
+    public @interface StatusCode {
+        int HTTP_STATUS_OK = 200;
+    }
+
+    private static final String BASE_URL = "http://api.bart.gov/api/";
+    private static final String API_KEY = "QSZS-5BU6-9U6T-DWE9";
+
     private static RetrofitClient instance;
     private MatchingService matchingService;
 
@@ -50,7 +67,7 @@ public class RetrofitClient {
         Retrofit retrofit = new Retrofit.Builder()
                 .client(client)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(APIConstants.BASE_URL)
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
@@ -67,21 +84,28 @@ public class RetrofitClient {
                                             Set<String> trainHeadSet) {
         getInstance()
             .getMatchingService()
-            .getEtd("etd", APIConstants.API_KEY, 'y', origin)
+            .getEtd("etd", API_KEY, 'y', origin)
             .enqueue(new EtdCallback().setDestSet(trainHeadSet));
     }
 
     public static void getBsas() {
         RetrofitClient.getInstance()
             .getMatchingService()
-            .getBsa("bsa", APIConstants.API_KEY, 'y')
+            .getBsa("bsa", API_KEY, 'y')
             .enqueue(new BsaCallback());
+    }
+
+    public static void getStations() {
+        RetrofitClient.getInstance()
+            .getMatchingService()
+            .getStations("stns", API_KEY, 'y')
+            .enqueue(new StationsCallback());
     }
 
     public static Single<Response<StationInfoResp>> getStationInfo(String abbr) {
         return RetrofitClient.getInstance()
             .getMatchingService()
-            .getStationInfo("stninfo", APIConstants.API_KEY, abbr, 'y')
+            .getStationInfo("stninfo", API_KEY, abbr, 'y')
             .subscribeOn(Schedulers.io());
     }
 
@@ -90,7 +114,7 @@ public class RetrofitClient {
         return RetrofitClient.getInstance()
             .getMatchingService()
             .getDepartures("depart", orig, dest,
-                "now", 0, 2, APIConstants.API_KEY, 'y')
+                "now", 0, 2, API_KEY, 'y')
             .subscribeOn(Schedulers.io());
     }
 }

@@ -10,8 +10,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.app.jonathan.willimissbart.API.APIConstants;
-import com.app.jonathan.willimissbart.API.Callbacks.StationsCallback;
 import com.app.jonathan.willimissbart.API.Models.Generic.FailureEvent;
 import com.app.jonathan.willimissbart.API.Models.Station.StationsResp;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
@@ -107,10 +105,7 @@ public class OnboardingActivity extends AppCompatActivity {
         String stationsJSON =
             SPManager.getPersistedStations(this);
         if (stationsJSON.isEmpty()) {
-            RetrofitClient.getInstance()
-                .getMatchingService()
-                .getStations("stns", APIConstants.API_KEY, 'y')
-                .enqueue(new StationsCallback());
+            RetrofitClient.getStations();
         } else {
             Utils.loadStations(stationsJSON);
             setUpActivityLayout();

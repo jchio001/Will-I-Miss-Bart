@@ -22,9 +22,6 @@ import com.app.jonathan.willimissbart.Listeners.Animations.StationInfo.HideProgr
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.R;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
 import java.util.Locale;
 
 import butterknife.Bind;
