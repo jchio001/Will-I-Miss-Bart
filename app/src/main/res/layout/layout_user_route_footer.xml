@@ -79,7 +79,8 @@
                 android:id="@+id/user_route_expand"
                 android:layout_alignParentRight="true"
                 android:padding="8dp"
-                android:text="@string/ion_arrow_up_b"/>
+                android:text="@string/ion_arrow_up_b"
+                android:textSize="30sp"/>
 
         </RelativeLayout>
 
