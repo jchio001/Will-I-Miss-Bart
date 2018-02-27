@@ -3,8 +3,10 @@ package com.app.jonathan.willimissbart.ViewHolders;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
@@ -17,7 +19,6 @@ import com.app.jonathan.willimissbart.API.Models.StationInfo.Station;
 import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Listeners.Animations.Generic.ShowOrHideAnimListener;
-import com.app.jonathan.willimissbart.Listeners.Animations.Generic.UpdateListener;
 import com.app.jonathan.willimissbart.Listeners.Animations.StationInfo.HideProgressBarAnimListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.R;
@@ -58,7 +59,7 @@ public class StationInfoViewHolder {
     private int height;
     private boolean closed = true;
 
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private Disposable disposable;
 
     private final AnimatorListener expandListener = new AnimatorListener() {
         @Override
@@ -105,11 +106,25 @@ public class StationInfoViewHolder {
         }
     };
 
+    private final AnimatorUpdateListener updateListener = new AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            stationInfoParent.getLayoutParams().height = (Integer) animation.getAnimatedValue();
+            stationInfoParent.requestLayout();
+        }
+    };
+
     private final SingleObserver<Response<StationInfoResp>> stationInfoSubscriber =
         new SingleObserver<Response<StationInfoResp>>() {
             @Override
             public void onSubscribe(Disposable d) {
-                compositeDisposable.add(d);
+                synchronized (StationInfoViewHolder.this) {
+                    if (disposable != null) {
+                        disposable.dispose();
+                    }
+
+                    disposable = d;
+                }
             }
 
             @Override
@@ -119,7 +134,7 @@ public class StationInfoViewHolder {
 
             @Override
             public void onError(Throwable e) {
-
+                Log.w("StationInfo", e.getMessage());
             }
         };
 
@@ -131,19 +146,24 @@ public class StationInfoViewHolder {
     }
 
     public void onDestroy() {
-        compositeDisposable.dispose();
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
     @OnClick(R.id.stn_info_close)
     public synchronized void close() {
         if (!closed) {
+            if (disposable != null) {
+                disposable.dispose();
+            }
+
             hideProgressBar.setAnimationListener(null);
             hideProgressBar.cancel();
 
             showInfoAnim.setAnimationListener(null);
             showInfoAnim.cancel();
 
-            stationInfoParent.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
 
             collapseAnimation.start();
@@ -203,12 +223,12 @@ public class StationInfoViewHolder {
     public void initAnimations() {
         expandAnimation = ValueAnimator.ofInt(0, height);
         expandAnimation.setDuration(Constants.SHORT_DURATION);
-        expandAnimation.addUpdateListener(new UpdateListener(stationInfoParent));
+        expandAnimation.addUpdateListener(updateListener);
         expandAnimation.addListener(expandListener);
 
         collapseAnimation = ValueAnimator.ofInt(height, 0);
         collapseAnimation.setDuration(Constants.SHORT_DURATION);
-        collapseAnimation.addUpdateListener(new UpdateListener(stationInfoParent));
+        collapseAnimation.addUpdateListener(updateListener);
         collapseAnimation.addListener(collapseListener);
     }
 }

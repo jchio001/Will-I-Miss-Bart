@@ -1,6 +1,7 @@
 package com.app.jonathan.willimissbart.ViewHolders;
 
 import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
@@ -11,7 +12,6 @@ import android.widget.TextView;
 import com.app.jonathan.willimissbart.Activities.AppActivities.SelectStationActivity;
 import com.app.jonathan.willimissbart.Fragments.RoutesFragment;
 import com.app.jonathan.willimissbart.Listeners.Animations.Footers.FooterAnimListener;
-import com.app.jonathan.willimissbart.Listeners.Animations.Generic.UpdateListener;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
@@ -37,6 +37,14 @@ public class UserRouteFooterViewHolder {
     private ValueAnimator collapseAnimation;
     // userData is the user's data with pending changes which may or mat not have been persisted
     private List<UserStationData> userData;
+
+    private final AnimatorUpdateListener updateListener = new AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            footerBody.getLayoutParams().height = (Integer) animation.getAnimatedValue();
+            footerBody.requestLayout();
+        }
+    };
 
     public UserRouteFooterViewHolder(View v, RoutesFragment routeFragment,
                                      List<UserStationData> userData) {
@@ -103,12 +111,12 @@ public class UserRouteFooterViewHolder {
 
         expandAnimation = ValueAnimator.ofInt(0, measuredHeight);
         expandAnimation.setDuration(Constants.SHORT_DURATION);
-        expandAnimation.addUpdateListener(new UpdateListener(footerBody));
+        expandAnimation.addUpdateListener(updateListener);
         expandAnimation.addListener(new FooterAnimListener(this, View.VISIBLE));
 
         collapseAnimation = ValueAnimator.ofInt(measuredHeight, 0);
         collapseAnimation.setDuration(Constants.SHORT_DURATION);
-        collapseAnimation.addUpdateListener(new UpdateListener(footerBody));
+        collapseAnimation.addUpdateListener(updateListener);
         collapseAnimation.addListener(new FooterAnimListener(this, View.GONE));
     }
 }
