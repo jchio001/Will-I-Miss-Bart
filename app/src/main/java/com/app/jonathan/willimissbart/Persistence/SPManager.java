@@ -13,6 +13,9 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
+
 public class SPManager {
     private static SPManager instance = null;
     private SharedPreferences sp;
@@ -50,7 +53,14 @@ public class SPManager {
     }
 
     public static String getPersistedStations(Context context) {
-        return getInstance(context).getSp().getString(Constants.STATION_LIST_KEY, "");
+        return getInstance(context).getSp()
+            .getString(Constants.STATION_LIST_KEY, "");
+    }
+
+    public static Single<String> ayncGetPersistedStations(Context context) {
+        return Single.just(getInstance(context).getSp()
+            .getString(Constants.STATION_LIST_KEY, ""))
+            .subscribeOn(Schedulers.io());
     }
 
     public static String getString(Context context, String key) {

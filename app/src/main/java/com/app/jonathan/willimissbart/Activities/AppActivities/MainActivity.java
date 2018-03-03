@@ -110,11 +110,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         if (disposable != null) {
             disposable.dispose();
         }
+
+        super.onDestroy();
     }
 
     @Override

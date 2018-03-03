@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -38,7 +39,7 @@ public class StationGridViewHolder extends ViewHolder {
 
     private WeakReference<AbstractStationsAdapter> adapter;
     private boolean fetchingLocation = false;
-    private Handler handler = new Handler();
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     private int permissionCode = 0;
     private int closestIndex = -1;

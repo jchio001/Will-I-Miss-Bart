@@ -8,6 +8,8 @@ import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.app.jonathan.willimissbart.API.Callbacks.StationsCallback;
 import com.app.jonathan.willimissbart.API.Models.BSA.BsaResp;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
+import com.app.jonathan.willimissbart.API.Models.Station.Station;
+import com.app.jonathan.willimissbart.API.Models.Station.StationsResp;
 import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
 import com.app.jonathan.willimissbart.Misc.NotGuava;
 import com.google.gson.Gson;
@@ -45,6 +47,7 @@ public class RetrofitClient {
 
     private static final String FAILED_DEPARTURES_REQ_TEMPLATE =
         "Departures request failed for from %s to %s";
+    private static final String FAILED_STATIONS_REQ = "Failed to fetch stations";
 
     private static RetrofitClient instance;
     private MatchingService matchingService;
@@ -103,11 +106,14 @@ public class RetrofitClient {
             .subscribeOn(Schedulers.io());
     }
 
-    public static void getStations() {
-        RetrofitClient.getInstance()
+    public static Single<List<Station>> getStations() {
+        return RetrofitClient.getInstance()
             .getMatchingService()
             .getStations("stns", API_KEY, 'y')
-            .enqueue(new StationsCallback());
+            .flatMap(stationsResp -> Single.just(stationsResp.body()
+                .getStationsRoot().getStations().getStationList()))
+            .doOnError(e -> Log.w(LOG_TAG, FAILED_STATIONS_REQ))
+            .subscribeOn(Schedulers.io());
     }
 
     public static Single<Response<StationInfoResp>> getStationInfo(String abbr) {
@@ -131,10 +137,6 @@ public class RetrofitClient {
             .getMatchingService()
             .getDepartures("depart", orig, dest,
                 "now", 0, 2, API_KEY, 'y')
-            .subscribeOn(Schedulers.io())
-            .doOnError(e -> Log.w(LOG_TAG,
-                String.format(FAILED_DEPARTURES_REQ_TEMPLATE, orig, dest)))
-            .onErrorReturnItem(Response.success(null))
             .flatMap(departuresResp -> {
                 if (departuresResp.body() != null) {
                     return Single.just(departuresResp.body()
@@ -142,6 +144,10 @@ public class RetrofitClient {
                 } else {
                     return Single.just(NotGuava.newArrayList((Trip) null));
                 }
-            });
+            })
+            .doOnError(e -> Log.w(LOG_TAG,
+                String.format(FAILED_DEPARTURES_REQ_TEMPLATE, orig, dest)))
+            .onErrorReturnItem(NotGuava.newArrayList())
+            .subscribeOn(Schedulers.io());
     }
 }

@@ -113,8 +113,8 @@ public class RoutesFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         compositeDisposable.dispose();
+        super.onDestroyView();
         ButterKnife.unbind(this);
         EstimatesManager.unregister(adapter);
     }

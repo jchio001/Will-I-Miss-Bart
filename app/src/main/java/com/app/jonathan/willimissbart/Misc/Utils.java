@@ -27,12 +27,15 @@ import java.util.Locale;
 
 // Random utility functions
 public class Utils {
-    public static void loadStations(String stationsJSON) {
+    public static List<Station> loadStations(String stationsJSON) {
         if (StationsManager.getStations().isEmpty()) {
             Gson gson = new Gson();
             Type listType = new TypeToken<List<Station>>() {}.getType();
             List<Station> stations = gson.fromJson(stationsJSON, listType);
             StationsManager.getInstance().setStations(stations);
+            return stations;
+        } else {
+            return NotGuava.newArrayList();
         }
     }
 
