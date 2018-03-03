@@ -1,6 +1,7 @@
 package com.app.jonathan.willimissbart.API;
 
 import android.support.annotation.IntDef;
+import android.util.Log;
 
 import com.app.jonathan.willimissbart.API.Callbacks.BsaCallback;
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
@@ -36,8 +37,13 @@ public class RetrofitClient {
         int HTTP_STATUS_OK = 200;
     }
 
+    private static final String LOG_TAG = "RetrofitClient";
+
     private static final String BASE_URL = "http://api.bart.gov/api/";
     private static final String API_KEY = "QSZS-5BU6-9U6T-DWE9";
+
+    private static final String FAILED_DEPARTURES_REQ_TEMPLATE =
+        "Departures request failed for from %s to %s";
 
     private static RetrofitClient instance;
     private MatchingService matchingService;
@@ -125,6 +131,8 @@ public class RetrofitClient {
             .getDepartures("depart", orig, dest,
                 "now", 0, 2, API_KEY, 'y')
             .subscribeOn(Schedulers.io())
+            .doOnError(e -> Log.w(LOG_TAG,
+                String.format(FAILED_DEPARTURES_REQ_TEMPLATE, orig, dest)))
             .onErrorReturnItem(Response.success(null))
             .flatMap(departuresResp -> {
                 if (departuresResp.body() != null) {
