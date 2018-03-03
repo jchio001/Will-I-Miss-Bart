@@ -29,8 +29,6 @@ import com.app.jonathan.willimissbart.Persistence.StationsManager;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.UserRouteFooterViewHolder;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -118,7 +116,6 @@ public class RoutesFragment extends Fragment {
         super.onDestroyView();
         compositeDisposable.dispose();
         ButterKnife.unbind(this);
-        EventBus.getDefault().unregister(this);
         EstimatesManager.unregister(adapter);
     }
 

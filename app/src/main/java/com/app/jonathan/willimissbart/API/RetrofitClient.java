@@ -6,6 +6,7 @@ import android.util.Log;
 import com.app.jonathan.willimissbart.API.Callbacks.BsaCallback;
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.app.jonathan.willimissbart.API.Callbacks.StationsCallback;
+import com.app.jonathan.willimissbart.API.Models.BSA.BsaResp;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
 import com.app.jonathan.willimissbart.Misc.NotGuava;
@@ -95,11 +96,11 @@ public class RetrofitClient {
             .enqueue(new EtdCallback().setDestSet(trainHeadSet));
     }
 
-    public static void getBsas() {
-        RetrofitClient.getInstance()
+    public static Single<Response<BsaResp>> getBsas() {
+        return RetrofitClient.getInstance()
             .getMatchingService()
             .getBsa("bsa", API_KEY, 'y')
-            .enqueue(new BsaCallback());
+            .subscribeOn(Schedulers.io());
     }
 
     public static void getStations() {

@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.ScrollView;
 
 import com.app.jonathan.willimissbart.API.Models.BSA.Bsa;
-import com.app.jonathan.willimissbart.API.Models.BSA.BsaResp;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.ViewPagerAdapter;
 import com.app.jonathan.willimissbart.Fragments.RoutesFragment;
@@ -34,9 +33,6 @@ import com.app.jonathan.willimissbart.ViewHolders.StationInfoViewHolder;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -46,6 +42,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnPageChange;
 import butterknife.OnPageChange.Callback;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     @Bind(R.id.drawer_layout) CoordinatorLayout parent;
@@ -60,15 +61,40 @@ public class MainActivity extends AppCompatActivity {
 
     private RoutesFragment routeFragment = new RoutesFragment();
     private StationsFragment stationsFragment = new StationsFragment();
-    private List<Bsa> bsas = NotGuava.newArrayList();
+    private List<Bsa> announcements = NotGuava.newArrayList();
     protected final Activity context = this;
+
+    private Disposable disposable;
+
+    private final SingleObserver<List<Bsa>> bsaObserver = new SingleObserver<List<Bsa>>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+            MainActivity.this.disposable = d;
+        }
+
+        @Override
+        public void onSuccess(List<Bsa> announcements) {
+            if (announcements.size() > 1 ||
+                !announcements.get(0).getStation().isEmpty()) {
+                if (!NotificationWindowManager.isChecked) {
+                    redCircle.setVisibility(View.VISIBLE);
+                }
+            }
+
+            MainActivity.this.announcements = announcements;
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            announcements = NotGuava.newArrayList();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        EventBus.getDefault().register(this);
         setSupportActionBar(toolbar);
 
         stationInfoViewHolder = new StationInfoViewHolder(stationInfoLayout,
@@ -79,13 +105,16 @@ public class MainActivity extends AppCompatActivity {
 
         setUpViewPager(getIntent().getExtras());
         tabs.setupWithViewPager(viewPager);
-        RetrofitClient.getBsas();
+        fetchAndDisplayBsas();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
     @Override
@@ -142,17 +171,19 @@ public class MainActivity extends AppCompatActivity {
         Utils.hideKeyboard(context);
     }
 
-    @SuppressWarnings("unchecked")
-    @Subscribe
-    public void onBsaResponse(BsaResp bsaResp) {
-        if (bsaResp.getRoot().getBsaList().size() > 1 ||
-            !bsaResp.getRoot().getBsaList().get(0).getStation().isEmpty()) {
-            if (!NotificationWindowManager.isChecked) {
-                redCircle.setVisibility(View.VISIBLE);
-            }
-        }
-
-        bsas = bsaResp.getRoot().getBsaList();
+    // TODO: handle failed BSA call
+    public void fetchAndDisplayBsas() {
+        RetrofitClient.getBsas()
+            .onErrorReturnItem(Response.success(null))
+            .flatMap(bsaResp -> {
+                if (bsaResp != null && bsaResp.body() != null) {
+                    return Single.just(bsaResp.body().getRoot().getBsaList());
+                } else {
+                    return Single.just(NotGuava.<Bsa>newArrayList());
+                }
+            })
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(bsaObserver);
     }
 
     public StationInfoViewHolder getStationInfoViewHolder() {
@@ -188,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
 
             private void showBSAWindow(View v, int[] pos) {
                 NotificationWindowManager popUpWindow =
-                    new NotificationWindowManager(v.getContext(), bsas);
+                    new NotificationWindowManager(v.getContext(), announcements);
                 popUpWindow.showAtLocation(parent, Gravity.NO_GRAVITY,
                     pos[0] - notifIcon.getWidth(), pos[1] + notifIcon.getHeight() + 10);
             }

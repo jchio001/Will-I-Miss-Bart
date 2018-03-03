@@ -25,9 +25,9 @@ public interface MatchingService {
                          @Query("orig") String orig);
 
     @GET("bsa.aspx")
-    Call<BsaResp> getBsa(@Query("cmd") String cmd,
-                         @Query("key") String key,
-                         @Query("json") Character json);
+    Single<Response<BsaResp>> getBsa(@Query("cmd") String cmd,
+                                     @Query("key") String key,
+                                     @Query("json") Character json);
 
     @GET("stn.aspx")
     Single<Response<StationInfoResp>> getStationInfo(@Query("cmd") String cmd,
