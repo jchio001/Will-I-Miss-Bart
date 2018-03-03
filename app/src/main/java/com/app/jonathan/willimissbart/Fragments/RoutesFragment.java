@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.app.jonathan.willimissbart.API.Models.Routes.DeparturesResp;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.TripsAdapter;
@@ -42,7 +41,6 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import retrofit2.Response;
 
 public class RoutesFragment extends Fragment {
     @Bind(R.id.route_swipe_refresh) SwipeRefreshLayout routeSwipeRefresh;
@@ -194,13 +192,13 @@ public class RoutesFragment extends Fragment {
     private void getTrips(UserStationData origin,
                           UserStationData destination,
                           boolean includeReturnRoute) {
-        Single<Response<DeparturesResp>> departuresSingle = RetrofitClient.getCurrentDepartures(
+        Single<List<Trip>> departuresSingle = RetrofitClient.getTrips(
             origin.getAbbr(),
             destination.getAbbr());
 
-        Single<Response<DeparturesResp>> returnDeparturesSingle = null;
+        Single<List<Trip>> returnDeparturesSingle = null;
         if (includeReturnRoute) {
-            returnDeparturesSingle = RetrofitClient.getCurrentDepartures(
+            returnDeparturesSingle = RetrofitClient.getTrips(
                 destination.getAbbr(),
                 origin.getAbbr());
         }
@@ -211,49 +209,33 @@ public class RoutesFragment extends Fragment {
     }
 
     /**
-     * Merges departures and return route departures together into a Single of List<Trip>
-     * @param departuresRespSingle Single<DeparturesResp> for the user specified route
-     * @param returnDeparturesRespSingle Single<DeparturesResp> for the return route
+     * Merges trips and return trips together into a Single of List<Trip>
+     * @param tripsSingle Single<List<Trip>> for the user specified route
+     * @param returnTripsSingle Single<List<Trip>> for the return route
      * @return A single containing all the trips merged together
      */
     private Single<List<Trip>> departuresToTripList(
-        Single<Response<DeparturesResp>> departuresRespSingle,
-        Single<Response<DeparturesResp>> returnDeparturesRespSingle) {
-        if (returnDeparturesRespSingle != null) {
-            return Single.zip(departuresRespSingle, returnDeparturesRespSingle,
-                (departuresResp, returnDeparturesResp) -> {
+        Single<List<Trip>> tripsSingle,
+        Single<List<Trip>> returnTripsSingle) {
+        if (returnTripsSingle != null) {
+            return Single.zip(tripsSingle, returnTripsSingle,
+                (trips, returnTrips) -> {
                     List<Trip> mergedTrips = NotGuava.newArrayList();
 
-                    if (departuresResp.body() != null) {
-                        List<Trip> trips = departuresResp.body()
-                            .getRoot().getSchedule().getRequest().getTrips();
-                        mergedTrips.addAll(trips);
+                    mergedTrips.addAll(trips);
+                    if (trips.get(0) != null) {
                         routeFirstLegHead = trips.get(0).getLegList().get(0).getTrainHeadStation();
-
-                    } else {
-                        mergedTrips.add(null);
                     }
 
-                    if (returnDeparturesResp.body() != null) {
-                        List<Trip> trips = returnDeparturesResp.body()
-                            .getRoot().getSchedule().getRequest().getTrips();
-                        mergedTrips.addAll(trips);
+                    mergedTrips.addAll(returnTrips);
+                    if (returnTrips.get(0) != null) {
                         returnFirstLegHead = trips.get(0).getLegList().get(0).getTrainHeadStation();
-                    } else {
-                        mergedTrips.add(null);
                     }
 
                     return mergedTrips;
                 });
         } else {
-            return departuresRespSingle.flatMap(departuresResponse -> {
-                if (departuresResponse.body() != null) {
-                    return Single.just(departuresResponse.body()
-                        .getRoot().getSchedule().getRequest().getTrips());
-                } else {
-                    return Single.just((NotGuava.newArrayList((Trip) null)));
-                }
-            });
+            return tripsSingle;
         }
     }
 }

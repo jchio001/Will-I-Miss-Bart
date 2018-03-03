@@ -5,13 +5,15 @@ import android.support.annotation.IntDef;
 import com.app.jonathan.willimissbart.API.Callbacks.BsaCallback;
 import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
 import com.app.jonathan.willimissbart.API.Callbacks.StationsCallback;
-import com.app.jonathan.willimissbart.API.Models.Routes.DeparturesResp;
+import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
+import com.app.jonathan.willimissbart.Misc.NotGuava;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.lang.annotation.Retention;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -108,12 +110,29 @@ public class RetrofitClient {
             .subscribeOn(Schedulers.io());
     }
 
-    public static Single<Response<DeparturesResp>> getCurrentDepartures(String orig,
-                                                                        String dest) {
+    /**
+     * There are 2 cases I'm representing:
+     * - Body exists => return the trips from the Response<DeparturesResp>
+     * - Body is null => return a list containg a single null
+     * As of now, I'll treat pure failure (no network) and failed requests the same
+     * In the future, I can tell the difference by checking the status code (200 & null body) =
+     * pure failure
+     */
+    public static Single<List<Trip>> getTrips(String orig,
+                                              String dest) {
         return RetrofitClient.getInstance()
             .getMatchingService()
             .getDepartures("depart", orig, dest,
                 "now", 0, 2, API_KEY, 'y')
-            .subscribeOn(Schedulers.io());
+            .subscribeOn(Schedulers.io())
+            .onErrorReturnItem(Response.success(null))
+            .flatMap(departuresResp -> {
+                if (departuresResp.body() != null) {
+                    return Single.just(departuresResp.body()
+                        .getRoot().getSchedule().getRequest().getTrips());
+                } else {
+                    return Single.just(NotGuava.newArrayList((Trip) null));
+                }
+            });
     }
 }
