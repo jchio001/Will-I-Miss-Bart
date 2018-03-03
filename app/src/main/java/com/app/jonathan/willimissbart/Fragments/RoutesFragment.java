@@ -59,7 +59,7 @@ public class RoutesFragment extends Fragment {
     private String routeFirstLegHead = null;
     private String returnFirstLegHead = null;
 
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private final SingleObserver<List<Trip>> tripSubscriber = new SingleObserver<List<Trip>>() {
         @Override
@@ -178,6 +178,7 @@ public class RoutesFragment extends Fragment {
 
     public void persistUpdatesAndRefresh() {
         compositeDisposable.dispose();
+        compositeDisposable = new CompositeDisposable();
 
         // At this point, userData & updatedUserData need to be identical (in terms of what elements
         // are contained within each list, not do they point to the same list)
@@ -207,7 +208,7 @@ public class RoutesFragment extends Fragment {
                 origin.getAbbr());
         }
 
-        departuresToTripList(departuresSingle, returnDeparturesSingle)
+        mergeTrips(departuresSingle, returnDeparturesSingle)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(tripSubscriber);
     }
@@ -218,8 +219,8 @@ public class RoutesFragment extends Fragment {
      * @param returnTripsSingle Single<List<Trip>> for the return route
      * @return A single containing all the trips merged together
      */
-    private Single<List<Trip>> departuresToTripList(Single<List<Trip>> tripsSingle,
-                                                    Single<List<Trip>> returnTripsSingle) {
+    private Single<List<Trip>> mergeTrips(Single<List<Trip>> tripsSingle,
+                                          Single<List<Trip>> returnTripsSingle) {
         if (returnTripsSingle != null) {
             return Single.zip(tripsSingle, returnTripsSingle,
                 (trips, returnTrips) -> {
