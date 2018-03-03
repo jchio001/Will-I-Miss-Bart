@@ -2,6 +2,7 @@ package com.app.jonathan.willimissbart.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -130,6 +131,7 @@ public class RoutesFragment extends Fragment {
         routeSwipeRefresh.setLayoutParams(params);
     }
 
+    @UiThread
     public void loadUserRoutes(List<Trip> mergedTrips) {
         progressBar.setVisibility(View.GONE);
 
@@ -141,17 +143,19 @@ public class RoutesFragment extends Fragment {
 
         boolean includeReturnRoute = SPManager.getIncludeReturnRoute(this.getActivity());
 
-        adapter.addAll(mergedTrips, userData);
+        adapter.refresh(mergedTrips, userData);
 
         // TODO: WRITE A BETTER FREAKING COMMENT HERE. DO I NEED A MAP OR NOT?
         Map<String, Set<String>> origToDestsMapping = NotGuava.newHashMap();
         for (Trip trip : adapter.getTrips()) {
-            if (!origToDestsMapping.containsKey(trip.getOrigin())) {
-                origToDestsMapping.put(trip.getOrigin(),
-                    NotGuava.newHashSet(trip.getLegList().get(0).getTrainHeadStation()));
-            } else {
-                Set<String> destSet = origToDestsMapping.get(trip.getOrigin());
-                destSet.add(trip.getLegList().get(0).getTrainHeadStation());
+            if (trip != null) {
+                if (!origToDestsMapping.containsKey(trip.getOrigin())) {
+                    origToDestsMapping.put(trip.getOrigin(),
+                        NotGuava.newHashSet(trip.getLegList().get(0).getTrainHeadStation()));
+                } else {
+                    Set<String> destSet = origToDestsMapping.get(trip.getOrigin());
+                    destSet.add(trip.getLegList().get(0).getTrainHeadStation());
+                }
             }
         }
 
@@ -214,9 +218,8 @@ public class RoutesFragment extends Fragment {
      * @param returnTripsSingle Single<List<Trip>> for the return route
      * @return A single containing all the trips merged together
      */
-    private Single<List<Trip>> departuresToTripList(
-        Single<List<Trip>> tripsSingle,
-        Single<List<Trip>> returnTripsSingle) {
+    private Single<List<Trip>> departuresToTripList(Single<List<Trip>> tripsSingle,
+                                                    Single<List<Trip>> returnTripsSingle) {
         if (returnTripsSingle != null) {
             return Single.zip(tripsSingle, returnTripsSingle,
                 (trips, returnTrips) -> {
@@ -235,7 +238,11 @@ public class RoutesFragment extends Fragment {
                     return mergedTrips;
                 });
         } else {
-            return tripsSingle;
+            return tripsSingle.doOnSuccess(trips -> {
+                if (trips.get(0) != null) {
+                    routeFirstLegHead = trips.get(0).getLegList().get(0).getTrainHeadStation();
+                }
+            });
         }
     }
 }

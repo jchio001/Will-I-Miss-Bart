@@ -87,7 +87,7 @@ public class TripsAdapter extends Adapter<TripViewHolder> implements EstimatesMa
         }
     }
 
-    public void addAll(List<Trip> trips, List<UserStationData> userData) {
+    public void refresh(List<Trip> trips, List<UserStationData> userData) {
         this.origAbbr = userData.get(0).getAbbr();
         this.destAbbr = userData.get(1).getAbbr();
         this.trips.clear();
