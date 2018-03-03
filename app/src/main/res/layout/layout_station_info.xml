@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/stn_info_header"
             android:layout_alignParentTop="true"
             android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                 android:id="@+id/stn_info_close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="center_vertical|start"
                 android:padding="6dp"
                 android:text="@string/ion_close"
                 android:textColor="@color/darkGrey"
@@ -40,17 +40,18 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/darkGrey"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:textStyle="bold"/>
 
-        </LinearLayout>
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/stn_info"
             android:layout_below="@+id/stn_info_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:orientation="vertical"
-            android:layout_marginTop="4dp"
             android:visibility="invisible">
 
             <RelativeLayout
@@ -65,7 +66,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="4dp"
+                    android:padding="6dp"
                     android:text="@string/ion_navigate"
                     android:textColor="@color/darkGrey"
                     android:textSize="24sp"/>
@@ -87,7 +88,7 @@
                 android:id="@+id/stn_info_blurb"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:textColor="@color/darkGrey"
                 android:textSize="18sp"/>
 
