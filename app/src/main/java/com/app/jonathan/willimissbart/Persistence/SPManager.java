@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.app.jonathan.willimissbart.API.Models.Station.Station;
 import com.app.jonathan.willimissbart.Misc.Constants;
+import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Persistence.Models.UserStationData;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -52,14 +54,17 @@ public class SPManager {
         }
     }
 
-    public static String getPersistedStations(Context context) {
-        return getInstance(context).getSp()
-            .getString(Constants.STATION_LIST_KEY, "");
-    }
-
-    public static Single<String> ayncGetPersistedStations(Context context) {
+    public static Single<String> getStationsJson(Context context) {
         return Single.just(getInstance(context).getSp()
             .getString(Constants.STATION_LIST_KEY, ""))
+            .subscribeOn(Schedulers.io());
+    }
+
+    // Only use this method if you're 100% sure that the stations JSON is persisted in
+    // SharedPreferences
+    public static Single<List<Station>> getStations(Context context) {
+        return Single.just(Utils.loadStations(getInstance(context).getSp()
+            .getString(Constants.STATION_LIST_KEY, "")))
             .subscribeOn(Schedulers.io());
     }
 

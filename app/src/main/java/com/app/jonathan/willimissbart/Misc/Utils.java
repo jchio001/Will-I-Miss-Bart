@@ -32,7 +32,7 @@ public class Utils {
             Gson gson = new Gson();
             Type listType = new TypeToken<List<Station>>() {}.getType();
             List<Station> stations = gson.fromJson(stationsJSON, listType);
-            StationsManager.getInstance().setStations(stations);
+            StationsManager.setStations(stations);
             return stations;
         } else {
             return NotGuava.newArrayList();

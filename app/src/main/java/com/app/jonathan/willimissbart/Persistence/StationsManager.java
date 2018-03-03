@@ -6,13 +6,11 @@ import com.app.jonathan.willimissbart.Misc.NotGuava;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.subjects.ReplaySubject;
+
 public class StationsManager {
     private static StationsManager instance;
     private List<Station> stations = NotGuava.newArrayList();
-
-    private StationsManager() {
-        stations = new ArrayList<>();
-    }
 
     public static StationsManager getInstance() {
         if (instance == null) {
@@ -26,7 +24,7 @@ public class StationsManager {
         return getInstance().stations;
     }
 
-    public void setStations(List<Station> stations) {
-        this.stations.addAll(stations);
+    public static void setStations(List<Station> stations) {
+        getInstance().stations.addAll(stations);
     }
 }

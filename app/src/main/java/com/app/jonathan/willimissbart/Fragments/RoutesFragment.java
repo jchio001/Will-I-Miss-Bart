@@ -169,8 +169,7 @@ public class RoutesFragment extends Fragment {
 
     public void updateUserStations(int resultCode, int stationIndex) {
         updatedUserData.set(resultCode - 1, UserStationData.fromStationIndex(stationIndex));
-        footer.updateStations(resultCode, StationsManager.getStations()
-            .get(stationIndex).getAbbr());
+        footer.updateStations(resultCode, StationsManager.getStations().get(stationIndex).getAbbr());
     }
 
     public void persistUpdatesAndRefresh() {

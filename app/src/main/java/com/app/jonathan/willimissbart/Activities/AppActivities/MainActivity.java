@@ -101,11 +101,16 @@ public class MainActivity extends AppCompatActivity {
             Utils.getStationInfoLayoutHeight(this));
         NotificationWindowManager.isChecked = SPManager.getString(this, Constants.MUTE_NOTIF)
             .equals(NotificationWindowManager.dateFormat.format(new Date()));
-        Utils.loadStations(SPManager.getPersistedStations(this));
 
         setUpViewPager(getIntent().getExtras());
         tabs.setupWithViewPager(viewPager);
-        fetchAndDisplayBsas();
+
+        // Rather than parse the stations and then get the announcements, I can just save some time
+        // and just do both at the same time and just zip the result.
+        Single.zip(SPManager.getStations(this),
+            fetchAnnouncements(), (stations, bsa) -> bsa)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(bsaObserver);
     }
 
     @Override
@@ -172,8 +177,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // TODO: handle failed BSA call
-    public void fetchAndDisplayBsas() {
-        RetrofitClient.getBsas()
+    public Single<List<Bsa>> fetchAnnouncements() {
+         return RetrofitClient.getBsas()
             .onErrorReturnItem(Response.success(null))
             .flatMap(bsaResp -> {
                 if (bsaResp != null && bsaResp.body() != null) {
@@ -182,8 +187,7 @@ public class MainActivity extends AppCompatActivity {
                     return Single.just(NotGuava.<Bsa>newArrayList());
                 }
             })
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(bsaObserver);
+            .observeOn(AndroidSchedulers.mainThread());
     }
 
     public StationInfoViewHolder getStationInfoViewHolder() {

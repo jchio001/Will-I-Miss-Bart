@@ -55,8 +55,6 @@ public class OnboardingActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess(List<Station> stations) {
-            StationsManager.getInstance().setStations(stations);
-            persistStations();
             setUpActivityLayout();
         }
 
@@ -113,8 +111,13 @@ public class OnboardingActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * If we need to interact with retrofit to retrieve the stations, initialize the index values
+     * and persist to SharedPreferences. Else, just get retrieve it from SharedPreferences and
+     * nothing else.
+     */
     private void fetchAndHandleStations()  {
-        SPManager.ayncGetPersistedStations(this)
+        SPManager.getStationsJson(this)
             .flatMap(stationsJson -> {
                if (stationsJson.isEmpty()) {
                    return RetrofitClient.getStations()
@@ -122,6 +125,9 @@ public class OnboardingActivity extends AppCompatActivity {
                            for (int i = 0; i < stations.size(); ++i) {
                                stations.get(i).setIndex(i);
                            }
+
+                           StationsManager.setStations(stations);
+                           persistStations();
                        });
                } else {
                    return Single.just(Utils.loadStations(stationsJson));
