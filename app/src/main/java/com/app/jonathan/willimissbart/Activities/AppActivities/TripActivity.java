@@ -16,6 +16,7 @@ import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.API.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
+import com.app.jonathan.willimissbart.Fragments.RoutesFragment;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 import com.app.jonathan.willimissbart.Misc.NotGuava;
@@ -26,7 +27,9 @@ import com.joanzapata.iconify.fonts.IoniconsIcons;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class TripActivity extends AppCompatActivity implements EstimatesManager.EstimatesListener {
     @Bind(R.id.orig_time) TextView originTime;
@@ -35,6 +38,25 @@ public class TripActivity extends AppCompatActivity implements EstimatesManager.
     @Bind(R.id.leg_list) LinearLayout legsLayout;
 
     private Trip trip;
+
+    private final SingleObserver<EtdRespWrapper> etdObserver =
+        new SingleObserver<EtdRespWrapper>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+            }
+
+            @Override
+            public void onSuccess(EtdRespWrapper etdRespWrapper) {
+                EstimatesManager.persistThenPost(etdRespWrapper);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(TripActivity.this,
+                    String.format("Wah wah %s", e.getMessage()), Toast.LENGTH_SHORT)
+                    .show();
+            }
+        };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,9 +152,7 @@ public class TripActivity extends AppCompatActivity implements EstimatesManager.
             RetrofitClient.getRealTimeEstimates(trip.getLegList().get(1).getOrigin(),
                 NotGuava.newHashSet(trip.getLegList().get(1).getTrainHeadStation()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(etdRespWrapper -> Toast.makeText(this, "REEEE", Toast.LENGTH_SHORT).show())
-                .doOnError(e ->
-                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                .subscribeWith(etdObserver);
         }
     }
 
