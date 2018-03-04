@@ -6,7 +6,9 @@
     <color name="bartBlue">#008AD3</color>
     <color name="red">#FF0000</color>
     <color name="white">#FFFFFF</color>
+    <color name="hint_white">#99FFFFFF</color>
     <color name="lightGrey">#D3D3D3</color>
     <color name="darkGrey">#6E6E6E</color>
     <color name="black">#000000</color>
+    <color name="hint_black">#99000000</color>
 </resources>

@@ -53,6 +53,8 @@ public class StationGridViewHolder extends ViewHolder {
 
         if (isOnboarding) {
             stationEditText.setTextColor(ContextCompat.getColor(v.getContext(), R.color.white));
+            stationEditText
+                .setHintTextColor(ContextCompat.getColor(v.getContext(), R.color.hint_white));
         }
 
         if (permissionCode != StationsFragment.PERMISSIONS_CODE) {
