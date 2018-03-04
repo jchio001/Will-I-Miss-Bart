@@ -3,6 +3,9 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     buildToolsVersion "27.0.3"
+    aaptOptions {
+        cruncherEnabled = true
+    }
     defaultConfig {
         applicationId "com.app.jonathan.willimissbart"
         minSdkVersion 16
