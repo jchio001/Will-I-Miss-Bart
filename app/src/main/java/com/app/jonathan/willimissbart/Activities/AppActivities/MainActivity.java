@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess(List<Bsa> announcements) {
-            if (announcements.size() > 1 ||
+            if (announcements.size() > 1 &&
                 !announcements.get(0).getStation().isEmpty()) {
                 if (!NotificationWindowManager.isChecked) {
                     redCircle.setVisibility(View.VISIBLE);

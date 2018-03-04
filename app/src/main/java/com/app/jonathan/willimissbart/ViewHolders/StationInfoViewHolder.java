@@ -195,16 +195,7 @@ public class StationInfoViewHolder {
             stationInfo.getAttraction().getcDataSection(), 2);
 
         stationAddrLayout.setEnabled(true);
-        
-        showInfoAnim = new AlphaAnimation(0.0f, 1.0f);
-        showInfoAnim.setDuration(Constants.STANDARD_DURATION);
-        showInfoAnim.setAnimationListener(new ShowOrHideAnimListener(
-            stationInfoLayout, View.VISIBLE));
 
-        hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
-        hideProgressBar.setDuration(Constants.STANDARD_DURATION);
-        hideProgressBar.setAnimationListener(new HideProgressBarAnimListener(progressBar,
-            showInfoAnim, stationInfoLayout));
         progressBar.startAnimation(hideProgressBar);
     }
 
@@ -229,5 +220,15 @@ public class StationInfoViewHolder {
         collapseAnimation.setDuration(Constants.SHORT_DURATION);
         collapseAnimation.addUpdateListener(updateListener);
         collapseAnimation.addListener(collapseListener);
+
+        showInfoAnim = new AlphaAnimation(0.0f, 1.0f);
+        showInfoAnim.setDuration(Constants.STANDARD_DURATION);
+        showInfoAnim.setAnimationListener(new ShowOrHideAnimListener(
+            stationInfoLayout, View.VISIBLE));
+
+        hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
+        hideProgressBar.setDuration(Constants.STANDARD_DURATION);
+        hideProgressBar.setAnimationListener(new HideProgressBarAnimListener(progressBar,
+            showInfoAnim, stationInfoLayout));
     }
 }

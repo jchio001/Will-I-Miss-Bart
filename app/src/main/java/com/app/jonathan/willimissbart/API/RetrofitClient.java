@@ -154,7 +154,7 @@ public class RetrofitClient {
                     return Single.just(NotGuava.newArrayList((Trip) null));
                 }
             })
-            .onErrorReturnItem(NotGuava.newArrayList())
+            .onErrorReturnItem(NotGuava.newArrayList((Trip) null))
             .subscribeOn(Schedulers.io());
     }
 }

@@ -74,7 +74,7 @@ public class RoutesFragment extends Fragment {
         @Override
         public void onError(Throwable e) {
             Toast.makeText(RoutesFragment.this.getContext(),
-                String.format("Wah wah %s", e.getMessage()), Toast.LENGTH_SHORT)
+                String.format("Trips Wah wah %s", e.getMessage()), Toast.LENGTH_SHORT)
                 .show();
         }
     };
@@ -94,7 +94,7 @@ public class RoutesFragment extends Fragment {
             @Override
             public void onError(Throwable e) {
                 Toast.makeText(RoutesFragment.this.getContext(),
-                    String.format("Wah wah %s", e.getMessage()), Toast.LENGTH_SHORT)
+                    String.format("Etd Wah wah %s", e.getMessage()), Toast.LENGTH_SHORT)
                     .show();
             }
         };
