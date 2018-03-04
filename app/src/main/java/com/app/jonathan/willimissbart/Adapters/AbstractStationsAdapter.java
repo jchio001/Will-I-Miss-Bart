@@ -15,6 +15,7 @@ import com.app.jonathan.willimissbart.ViewHolders.StationsCardViewHolder;
 import java.util.List;
 
 public class AbstractStationsAdapter extends BaseAdapter {
+
     protected List<Station> filteredStations;
     protected List<Station> stations;
     private StationInfoViewHolder stationInfoViewHolder;

@@ -11,6 +11,7 @@ import java.util.Set;
 
 // Singleton class for different components of the app to pull estimates from
 public class EstimatesManager {
+
     public interface EstimatesListener {
         void onReceiveEstimates(EtdRespWrapper etdRespWrapper);
         void onEstimatesUpdated();

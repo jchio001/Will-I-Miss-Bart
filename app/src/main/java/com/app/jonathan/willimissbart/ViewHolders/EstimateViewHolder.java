@@ -26,9 +26,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class EstimateViewHolder extends ViewHolder {
+
+    @Retention(RetentionPolicy.SOURCE)
     @IntDef({RenderingState.RENDER_ESTIMATE, RenderingState.RENDER_LOADING_ESTIMATES,
         RenderingState.RENDER_NO_ESTIMATES})
-    @Retention(RetentionPolicy.SOURCE)
     @interface RenderingState {
         int RENDER_ESTIMATE = 0;
         int RENDER_LOADING_ESTIMATES = 1;

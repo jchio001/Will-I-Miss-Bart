@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class StationsFooterViewHolder {
+
     @Bind(R.id.origin) public TextView origin;
     @Bind(R.id.dest) public TextView dest;
     @Bind(R.id.done) public Button done;

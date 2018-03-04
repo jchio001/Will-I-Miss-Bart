@@ -28,6 +28,7 @@ import butterknife.ButterKnife;
 // and will only be used within this class. Also, my package organization is already super bloaty
 // and I'd rather not add more packages that contain 1 class with barely any code.
 public class NotificationAlertDialog {
+
     @Bind(R.id.info_blurb) TextView infoBlurb;
     @Bind(R.id.tens_digit) LinearLayout tensDigit;
     @Bind(R.id.ones_digit) LinearLayout onesDigit;
@@ -62,18 +63,8 @@ public class NotificationAlertDialog {
         alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(
             alarmIcon.getContext(), R.style.AlertDialogTheme))
             .setPositiveButton("OK", null)
-            .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    alarmIcon.setEnabled(true);
-                }
-            })
-            .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                   alarmIcon.setEnabled(true);
-                }
-            })
+            .setNegativeButton("CANCEL", (dialog, which) -> alarmIcon.setEnabled(true))
+            .setOnCancelListener(dialog -> alarmIcon.setEnabled(true))
             .setTitle(R.string.timer_notif_title)
             .setView(inflateAndRenderLayout())
             .create();
@@ -88,26 +79,20 @@ public class NotificationAlertDialog {
     // Setting onClickListeners in onShowListener to prevent dialog from being cancelled
     // whenever any button is pressed
     private void setOnShowListener() {
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                Button positive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                positive.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int estimateInSeconds = Utils.getEstimateInSeconds(estimate.getMinutes(), timeOfResp);
-                        int timerDuration = getMinutes() * 60;
+        alertDialog.setOnShowListener(dialog -> {
+            Button positive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            positive.setOnClickListener(v -> {
+                int estimateInSeconds = Utils.getEstimateInSeconds(estimate.getMinutes(), timeOfResp);
+                int timerDuration = getMinutes() * 60;
 
-                        if (timerDuration > 0) {
-                            showNotification(Math.min(timerDuration, estimateInSeconds));
-                            alertDialog.dismiss();
-                        } else {
-                            errorTV.setVisibility(View.VISIBLE);
-                        }
-                        alarmIcon.setEnabled(true);
-                    }
-                });
-            }
+                if (timerDuration > 0) {
+                    showNotification(Math.min(timerDuration, estimateInSeconds));
+                    alertDialog.dismiss();
+                } else {
+                    errorTV.setVisibility(View.VISIBLE);
+                }
+                alarmIcon.setEnabled(true);
+            });
         });
     }
 
@@ -120,8 +105,10 @@ public class NotificationAlertDialog {
         int estimateInMinutes = estimateInSeconds / 60;
 
         infoBlurb.setText(getBlurb(estimateInSeconds));
-        tensDigitViewHolder = new DigitViewHolder(tensDigit, errorTV, estimateInMinutes / 10, 6);
-        onesDigitViewHolder = new DigitViewHolder(onesDigit, errorTV, estimateInMinutes % 10, 10);
+        tensDigitViewHolder = new DigitViewHolder(tensDigit,
+            errorTV, estimateInMinutes / 10, 6);
+        onesDigitViewHolder = new DigitViewHolder(onesDigit, errorTV,
+            estimateInMinutes % 10, 10);
 
         return v;
     }

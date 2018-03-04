@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
 public class SelectStationActivity extends AppCompatActivity {
+
     @Bind(R.id.select_station_parent) CoordinatorLayout selectStationParent;
     @Bind(R.id.stn_grid_layout) LinearLayout stationGridLayout;
     @Bind(R.id.stn_grid) GridView stationGrid;

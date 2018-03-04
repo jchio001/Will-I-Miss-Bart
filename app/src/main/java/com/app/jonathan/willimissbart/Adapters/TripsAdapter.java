@@ -16,7 +16,9 @@ import com.app.jonathan.willimissbart.ViewHolders.TripViewHolder;
 
 import java.util.List;
 
-public class TripsAdapter extends Adapter<TripViewHolder> implements EstimatesManager.EstimatesListener {
+public class TripsAdapter extends Adapter<TripViewHolder>
+    implements EstimatesManager.EstimatesListener {
+
     private static int RENDER_TRIP = 0;
     private static int RENDER_FAILED_TRIPS = 1;
     private static int RENDER_FAILED_RETURN_TRIPS = 2;

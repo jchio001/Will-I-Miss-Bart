@@ -26,6 +26,7 @@ import butterknife.OnClick;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class NotificationWindowManager extends PopupWindow {
+
     @Bind(R.id.notif_blurb_feed) LinearLayout notifFeed;
     @Bind(R.id.mute_notif) CheckBox muteNotifCheckBox;
 

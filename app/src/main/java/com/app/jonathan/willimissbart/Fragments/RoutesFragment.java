@@ -43,6 +43,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 public class RoutesFragment extends Fragment {
+
     @Bind(R.id.route_swipe_refresh) SwipeRefreshLayout routeSwipeRefresh;
     @Bind(R.id.route_recycler) RecyclerView recyclerView;
     @Bind(R.id.progress_bar) ProgressBar progressBar;

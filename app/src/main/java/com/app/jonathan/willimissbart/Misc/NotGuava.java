@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class NotGuava {
+
     public static <T> T getFirst(Iterable<T> iterable, T defaultVal)  {
         Iterator<T> iterator = iterable.iterator();
         return iterator.hasNext() ? iterator.next() : defaultVal;

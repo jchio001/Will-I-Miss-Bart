@@ -12,6 +12,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface MatchingService {
+
     @GET("stn.aspx")
     Single<Response<StationsResp>> getStations(@Query("cmd") String cmd,
                                                @Query("key") String key,

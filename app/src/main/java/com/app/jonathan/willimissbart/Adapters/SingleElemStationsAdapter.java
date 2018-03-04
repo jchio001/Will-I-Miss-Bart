@@ -10,6 +10,7 @@ import com.app.jonathan.willimissbart.ViewHolders.StationsCardViewHolder;
 import java.util.List;
 
 public class SingleElemStationsAdapter extends AbstractStationsAdapter {
+
     private boolean selectingOrigin = true;
 
     public SingleElemStationsAdapter(List<Station> stations,

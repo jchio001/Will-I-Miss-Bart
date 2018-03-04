@@ -35,6 +35,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 public class OnboardingActivity extends AppCompatActivity {
+
     @Bind(R.id.activity_station_input) CoordinatorLayout parent;
     @Bind(R.id.stn_grid_layout) LinearLayout stationGridLayout;
     @Bind(R.id.stations_footer) LinearLayout stationsFooter;

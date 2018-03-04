@@ -12,6 +12,7 @@ import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 
 public class HideProgressBarAnimListener implements Animation.AnimationListener {
+
     private ProgressBar progressBar;
     private TextView textView;
     private LinearLayout gridLayout;

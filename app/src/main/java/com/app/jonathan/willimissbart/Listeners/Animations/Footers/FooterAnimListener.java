@@ -7,6 +7,7 @@ import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.ViewHolders.UserRouteFooterViewHolder;
 
 public class FooterAnimListener implements Animator.AnimatorListener {
+
     private UserRouteFooterViewHolder footer;
     private int visibility;
 
@@ -17,7 +18,6 @@ public class FooterAnimListener implements Animator.AnimatorListener {
 
     @Override
     public void onAnimationStart(Animator animation) {
-
     }
 
     @Override
@@ -38,6 +38,5 @@ public class FooterAnimListener implements Animator.AnimatorListener {
 
     @Override
     public void onAnimationRepeat(Animator animation) {
-
     }
 }

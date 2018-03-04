@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class UserRouteFooterViewHolder {
+
     @Bind(R.id.user_route_expansion) public LinearLayout footerBody;
     @Bind(R.id.user_route_expand) public IconTextView expandCollapseIcon;
     @Bind(R.id.user_route_origin) public TextView origin;

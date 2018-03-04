@@ -60,6 +60,8 @@ public class StationInfoViewHolder {
 
     private Disposable disposable;
 
+    /** Animation listeners */
+
     private final AnimatorListener expandListener = new AnimatorListener() {
         @Override
         public void onAnimationStart(Animator animation) {
@@ -113,6 +115,8 @@ public class StationInfoViewHolder {
         }
     };
 
+    /** Rx observers/subscribers */
+
     private final SingleObserver<Response<StationInfoResp>> stationInfoSubscriber =
         new SingleObserver<Response<StationInfoResp>>() {
             @Override
@@ -137,6 +141,8 @@ public class StationInfoViewHolder {
             }
         };
 
+    //** Methods */
+
     public StationInfoViewHolder(ScrollView stationInfoParent, int height) {
         this.stationInfoParent = stationInfoParent;
         this.height = height;
@@ -147,6 +153,24 @@ public class StationInfoViewHolder {
     public void onDestroy() {
         if (disposable != null) {
             disposable.dispose();
+        }
+    }
+
+    public synchronized void show(String abbr) {
+        if (closed) {
+            closed = false;
+
+            showInfoAnim.setAnimationListener(new ShowOrHideAnimListener(
+                stationInfoLayout, View.VISIBLE));
+
+            hideProgressBar.setAnimationListener(new HideProgressBarAnimListener(progressBar,
+                showInfoAnim, stationInfoLayout));
+
+            stationInfoParent.setVisibility(View.VISIBLE);
+            stationInfoTitle.setText(stationInfoParent.getContext()
+                .getString(R.string.stn_info_title, abbr));
+            stationAbbr = abbr;
+            expandAnimation.start();
         }
     }
 
@@ -197,24 +221,6 @@ public class StationInfoViewHolder {
         stationAddrLayout.setEnabled(true);
 
         progressBar.startAnimation(hideProgressBar);
-    }
-
-    public synchronized void show(String abbr) {
-        if (closed) {
-            closed = false;
-
-            showInfoAnim.setAnimationListener(new ShowOrHideAnimListener(
-                stationInfoLayout, View.VISIBLE));
-
-            hideProgressBar.setAnimationListener(new HideProgressBarAnimListener(progressBar,
-                showInfoAnim, stationInfoLayout));
-
-            stationInfoParent.setVisibility(View.VISIBLE);
-            stationInfoTitle.setText(stationInfoParent.getContext()
-                .getString(R.string.stn_info_title, abbr));
-            stationAbbr = abbr;
-            expandAnimation.start();
-        }
     }
 
     public void initAnimations() {

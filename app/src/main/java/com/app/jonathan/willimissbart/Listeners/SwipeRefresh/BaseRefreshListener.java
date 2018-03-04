@@ -6,6 +6,7 @@ import com.app.jonathan.willimissbart.Misc.Constants;
 
 
 public abstract class BaseRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
+
     protected SwipeRefreshLayout swipeRefreshLayout;
     protected int refreshState = Constants.REFRESH_STATE_INACTIVE;
     protected long lastRefreshTime = System.currentTimeMillis() / 1000;

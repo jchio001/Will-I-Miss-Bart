@@ -32,6 +32,7 @@ import io.nlopez.smartlocation.SmartLocation;
 import static butterknife.OnTextChanged.Callback.TEXT_CHANGED;
 
 public class StationGridViewHolder extends ViewHolder {
+
     @Bind(R.id.get_location) IconTextView getLocation;
     @Bind(R.id.stn_search) EditText stationEditText;
     @Bind(R.id.stn_grid) GridView stationGrid;
@@ -97,19 +98,13 @@ public class StationGridViewHolder extends ViewHolder {
         fetchingLocation = true;
         SmartLocation.with(itemView.getContext()).location()
             .oneFix()
-            .start(new OnLocationUpdatedListener() {
-                @Override
-                public void onLocationUpdated(final Location location) {
-                    SmartLocation.with(itemView.getContext()).location().stop();
-                    fetchingLocation = false;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            closestIndex = Utils.getClosestStation(location);
-                            loadClosestStation(closestIndex);
-                        }
-                    });
-                }
+            .start(location -> {
+                SmartLocation.with(itemView.getContext()).location().stop();
+                fetchingLocation = false;
+                handler.post(() -> {
+                    closestIndex = Utils.getClosestStation(location);
+                    loadClosestStation(closestIndex);
+                });
             });
     }
 

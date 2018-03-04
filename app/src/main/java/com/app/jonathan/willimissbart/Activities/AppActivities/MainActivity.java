@@ -49,6 +49,7 @@ import io.reactivex.disposables.Disposable;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+
     @Bind(R.id.drawer_layout) CoordinatorLayout parent;
     @Bind(R.id.stn_info_parent) ScrollView stationInfoLayout;
     @Bind(R.id.toolbar) Toolbar toolbar;

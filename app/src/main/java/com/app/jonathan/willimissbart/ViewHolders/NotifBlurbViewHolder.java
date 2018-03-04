@@ -12,7 +12,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class NotifBlurbViewHolder {
+
     @Bind(R.id.notif_blurb_text) TextView notifBlurb;
+
     private Bsa bsa;
 
     public NotifBlurbViewHolder(View v, Bsa bsa) {

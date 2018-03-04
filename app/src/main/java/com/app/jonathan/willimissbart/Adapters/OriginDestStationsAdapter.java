@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OriginDestStationsAdapter extends AbstractStationsAdapter {
+
     private StationsFooterViewHolder footer;
 
     private boolean pickingOrigin = true;

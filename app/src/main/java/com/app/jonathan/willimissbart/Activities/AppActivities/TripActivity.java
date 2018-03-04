@@ -32,6 +32,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 public class TripActivity extends AppCompatActivity implements EstimatesManager.EstimatesListener {
+
     @Bind(R.id.orig_time) TextView originTime;
     @Bind(R.id.dest_time) TextView destTime;
     @Bind(R.id.fare_info) TextView fareInfo;

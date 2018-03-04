@@ -1,6 +1,5 @@
 package com.app.jonathan.willimissbart.Listeners.Animations.Onboarding.InitialAnimation;
 
-
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -10,6 +9,7 @@ import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 
 public class ShowGridAnimListener implements Animation.AnimationListener {
+
     private LinearLayout gridLayout;
     private StationsFooterViewHolder footer;
 
@@ -25,12 +25,10 @@ public class ShowGridAnimListener implements Animation.AnimationListener {
 
     @Override
     public void onAnimationStart(Animation animation) {
-
     }
 
     @Override
     public void onAnimationRepeat(Animation animation) {
-
     }
 
     @Override

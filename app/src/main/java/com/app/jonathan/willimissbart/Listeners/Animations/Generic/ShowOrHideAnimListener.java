@@ -5,6 +5,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 
 public class ShowOrHideAnimListener implements AnimationListener {
+
     private View v;
     private int visibility;
 
@@ -15,7 +16,6 @@ public class ShowOrHideAnimListener implements AnimationListener {
 
     @Override
     public void onAnimationStart(Animation animation) {
-
     }
 
     @Override
@@ -25,6 +25,5 @@ public class ShowOrHideAnimListener implements AnimationListener {
 
     @Override
     public void onAnimationRepeat(Animation animation) {
-
     }
 }

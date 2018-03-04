@@ -6,6 +6,7 @@ import com.app.jonathan.willimissbart.Misc.NotGuava;
 import java.util.List;
 
 public class StationsManager {
+
     private static StationsManager instance;
     private List<Station> stations = NotGuava.newArrayList();
 

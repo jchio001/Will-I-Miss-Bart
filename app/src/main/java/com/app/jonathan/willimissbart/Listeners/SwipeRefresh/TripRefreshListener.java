@@ -8,6 +8,7 @@ import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 
 public class TripRefreshListener extends BaseRefreshListener {
+
     private TripsAdapter adapter;
 
     public TripRefreshListener(SwipeRefreshLayout swipeRefreshLayout,

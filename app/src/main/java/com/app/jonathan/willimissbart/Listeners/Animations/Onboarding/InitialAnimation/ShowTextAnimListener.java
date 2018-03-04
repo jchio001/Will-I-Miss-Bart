@@ -9,8 +9,8 @@ import android.widget.TextView;
 import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 
-
 public class ShowTextAnimListener implements Animation.AnimationListener {
+
     private TextView textView;
     private LinearLayout gridLayout;
     private StationsFooterViewHolder footer;
@@ -46,6 +46,5 @@ public class ShowTextAnimListener implements Animation.AnimationListener {
 
     @Override
     public void onAnimationRepeat(Animation animation) {
-
     }
 }

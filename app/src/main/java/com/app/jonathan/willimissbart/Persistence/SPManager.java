@@ -19,6 +19,7 @@ import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 public class SPManager {
+
     private static SPManager instance = null;
     private SharedPreferences sp;
     private static Gson gson = new Gson();

@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 public class HideProgressBarAnimListener implements AnimationListener {
+
     private ProgressBar progressBar;
     private AlphaAnimation showInfoAnim;
     private LinearLayout stationInfoLayout;
@@ -22,7 +23,6 @@ public class HideProgressBarAnimListener implements AnimationListener {
 
     @Override
     public void onAnimationStart(Animation animation) {
-
     }
 
     @Override
@@ -33,6 +33,5 @@ public class HideProgressBarAnimListener implements AnimationListener {
 
     @Override
     public void onAnimationRepeat(Animation animation) {
-
     }
 }

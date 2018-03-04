@@ -12,6 +12,7 @@ import com.app.jonathan.willimissbart.Runnables.StartTimerRunnable;
 import com.app.jonathan.willimissbart.Timers.NotificationCountDownTimer;
 
 public class TimerService extends Service {
+
     private NotificationCountDownTimer timer;
 
     @Nullable
@@ -56,5 +57,4 @@ public class TimerService extends Service {
         timer = newTimer;
         new Handler().post(new StartTimerRunnable(timer));
     }
-
 }

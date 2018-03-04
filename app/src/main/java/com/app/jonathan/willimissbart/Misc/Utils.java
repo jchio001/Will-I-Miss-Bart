@@ -27,6 +27,7 @@ import java.util.Locale;
 
 // Random utility functions
 public class Utils {
+
     public static List<Station> loadStations(String stationsJSON) {
         if (StationsManager.getStations().isEmpty()) {
             Gson gson = new Gson();

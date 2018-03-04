@@ -9,6 +9,7 @@ import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.Service.TimerService;
 
 public class NotificationCountDownTimer extends CountDownTimer {
+
     private String title;
     private int time = 0;
 

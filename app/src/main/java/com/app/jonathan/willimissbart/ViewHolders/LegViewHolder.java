@@ -19,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class LegViewHolder extends ViewHolder {
+
     @Bind(R.id.main_leg_layout) LinearLayout mainLegLayout;
     @Bind(R.id.train_info) TextView trainInfo;
     @Bind(R.id.stop_info) TextView stopInfo;

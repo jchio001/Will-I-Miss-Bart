@@ -7,6 +7,7 @@ import com.app.jonathan.willimissbart.ViewHolders.StationsFooterViewHolder;
 
 
 public class ShowFooterAnimListener implements Animation.AnimationListener {
+
     private StationsFooterViewHolder footer;
 
     public ShowFooterAnimListener setFooter(StationsFooterViewHolder footer) {
@@ -16,7 +17,6 @@ public class ShowFooterAnimListener implements Animation.AnimationListener {
 
     @Override
     public void onAnimationStart(Animation animation) {
-
     }
 
     @Override
@@ -27,6 +27,5 @@ public class ShowFooterAnimListener implements Animation.AnimationListener {
 
     @Override
     public void onAnimationRepeat(Animation animation) {
-
     }
 }

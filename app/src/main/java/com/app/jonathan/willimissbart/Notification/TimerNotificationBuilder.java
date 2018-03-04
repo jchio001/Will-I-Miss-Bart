@@ -13,6 +13,7 @@ import com.app.jonathan.willimissbart.Misc.Utils;
 import com.app.jonathan.willimissbart.R;
 
 public class TimerNotificationBuilder {
+
     private Context context = MyApplication.getContext();
     private String title;
 

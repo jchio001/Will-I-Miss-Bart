@@ -10,6 +10,7 @@ import com.app.jonathan.willimissbart.Misc.Constants;
 import com.app.jonathan.willimissbart.Service.TimerService;
 
 public class TimerNotificationReceiver extends BroadcastReceiver {
+
     @Override
     public synchronized void onReceive(Context context, Intent intent) {
         Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);

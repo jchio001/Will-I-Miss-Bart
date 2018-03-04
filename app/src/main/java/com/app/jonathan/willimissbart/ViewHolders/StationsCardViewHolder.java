@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class StationsCardViewHolder {
+
     @Bind(R.id.stn_main_view) public LinearLayout mainView;
     @Bind(R.id.stn_info_icon) public IconTextView infoIcon;
     @Bind(R.id.stn_abbr) public TextView abbr;

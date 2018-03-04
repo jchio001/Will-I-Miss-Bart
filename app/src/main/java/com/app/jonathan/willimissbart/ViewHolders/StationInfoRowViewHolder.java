@@ -12,6 +12,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class StationInfoRowViewHolder {
+
     @Bind(R.id.activity_info_icon) IconTextView activityInfoIcon;
     @Bind(R.id.activity_blurb) TextView activityBlurb;
     @Bind(R.id.bottom_border) View bottomBorder;

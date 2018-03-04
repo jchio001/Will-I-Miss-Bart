@@ -23,6 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class TripViewHolder extends ViewHolder {
+
     private static final String DIRECTION_SNIPPET = "(heading towards %s) ";
 
     @Bind(R.id.departures_layout) RelativeLayout departuresLayout;

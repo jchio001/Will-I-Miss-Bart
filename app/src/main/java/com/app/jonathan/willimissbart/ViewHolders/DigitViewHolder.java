@@ -10,6 +10,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DigitViewHolder {
+
     @Bind(R.id.digit) TextView digit;
     TextView errorTV;
 
@@ -42,6 +43,4 @@ public class DigitViewHolder {
     public int getValue() {
         return this.val;
     }
-
-
 }

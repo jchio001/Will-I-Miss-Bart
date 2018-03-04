@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
 public class StationsFragment extends Fragment {
+
     @Bind(R.id.stn_grid_layout) LinearLayout stationGridLayout;
     @Bind(R.id.stn_info_parent) ScrollView stationInfoLayout;
 

@@ -10,6 +10,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class OptionsElemViewHolder {
+
     @Bind(R.id.icon) IconTextView icon;
     @Bind(R.id.action_text) TextView actionText;
 
