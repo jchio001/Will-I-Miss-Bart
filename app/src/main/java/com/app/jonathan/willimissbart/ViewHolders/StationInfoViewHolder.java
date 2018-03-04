@@ -202,6 +202,13 @@ public class StationInfoViewHolder {
     public synchronized void show(String abbr) {
         if (closed) {
             closed = false;
+
+            showInfoAnim.setAnimationListener(new ShowOrHideAnimListener(
+                stationInfoLayout, View.VISIBLE));
+
+            hideProgressBar.setAnimationListener(new HideProgressBarAnimListener(progressBar,
+                showInfoAnim, stationInfoLayout));
+
             stationInfoParent.setVisibility(View.VISIBLE);
             stationInfoTitle.setText(stationInfoParent.getContext()
                 .getString(R.string.stn_info_title, abbr));
@@ -223,12 +230,8 @@ public class StationInfoViewHolder {
 
         showInfoAnim = new AlphaAnimation(0.0f, 1.0f);
         showInfoAnim.setDuration(Constants.STANDARD_DURATION);
-        showInfoAnim.setAnimationListener(new ShowOrHideAnimListener(
-            stationInfoLayout, View.VISIBLE));
 
         hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
         hideProgressBar.setDuration(Constants.STANDARD_DURATION);
-        hideProgressBar.setAnimationListener(new HideProgressBarAnimListener(progressBar,
-            showInfoAnim, stationInfoLayout));
     }
 }
