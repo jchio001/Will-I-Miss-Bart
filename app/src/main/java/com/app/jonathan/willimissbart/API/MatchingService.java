@@ -7,7 +7,6 @@ import com.app.jonathan.willimissbart.API.Models.Station.StationsResp;
 import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
 
 import io.reactivex.Single;
-import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -19,10 +18,10 @@ public interface MatchingService {
                                                @Query("json") Character json);
 
     @GET("etd.aspx")
-    Call<EtdResp> getEtd(@Query("cmd") String cmd,
-                         @Query("key") String key,
-                         @Query("json") Character json,
-                         @Query("orig") String orig);
+    Single<Response<EtdResp>> getEtd(@Query("cmd") String cmd,
+                                     @Query("key") String key,
+                                     @Query("json") Character json,
+                                     @Query("orig") String orig);
 
     @GET("bsa.aspx")
     Single<Response<BsaResp>> getBsa(@Query("cmd") String cmd,

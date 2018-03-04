@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.API.Models.Routes.Leg;
@@ -25,6 +26,8 @@ import com.joanzapata.iconify.fonts.IoniconsIcons;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class TripActivity extends AppCompatActivity implements EstimatesManager.EstimatesListener {
     @Bind(R.id.orig_time) TextView originTime;
@@ -126,7 +129,11 @@ public class TripActivity extends AppCompatActivity implements EstimatesManager.
         if (trip.getLegList().size() == 2 && !hasEstimatesLoaded(legsLayout.getChildAt(2))) {
             Log.i("TripActivity", "Loading estimates for 2nd leg...");
             RetrofitClient.getRealTimeEstimates(trip.getLegList().get(1).getOrigin(),
-                NotGuava.newHashSet(trip.getLegList().get(1).getTrainHeadStation()));
+                NotGuava.newHashSet(trip.getLegList().get(1).getTrainHeadStation()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(etdRespWrapper -> Toast.makeText(this, "REEEE", Toast.LENGTH_SHORT).show())
+                .doOnError(e ->
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
 

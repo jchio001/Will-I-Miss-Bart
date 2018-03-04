@@ -12,8 +12,8 @@ public class EtdRespWrapper {
     private String orig;
     private long respTime = 0;
 
-    public EtdRespWrapper(EtdRoot etdRoot, Set<String> destSet) {
-        this.orig = etdRoot.getStations().get(0).getAbbr();
+    public EtdRespWrapper(String orig, EtdRoot etdRoot, Set<String> destSet) {
+        this.orig = orig;
         destSet = destSet != null ? destSet : new HashSet<>();
 
         if (etdRoot != null) {

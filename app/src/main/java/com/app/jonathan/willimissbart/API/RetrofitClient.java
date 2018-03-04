@@ -3,14 +3,12 @@ package com.app.jonathan.willimissbart.API;
 import android.support.annotation.IntDef;
 import android.util.Log;
 
-import com.app.jonathan.willimissbart.API.Callbacks.BsaCallback;
-import com.app.jonathan.willimissbart.API.Callbacks.EtdCallback;
-import com.app.jonathan.willimissbart.API.Callbacks.StationsCallback;
 import com.app.jonathan.willimissbart.API.Models.BSA.BsaResp;
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.Models.Station.Station;
-import com.app.jonathan.willimissbart.API.Models.Station.StationsResp;
 import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
+import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 import com.app.jonathan.willimissbart.Misc.NotGuava;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -48,6 +46,7 @@ public class RetrofitClient {
     private static final String FAILED_DEPARTURES_REQ_TEMPLATE =
         "Departures request failed for from %s to %s";
     private static final String FAILED_STATIONS_REQ = "Failed to fetch stations";
+    private static final String FAIL_ETDS_REQ_TEMPLATE = "Failed to fetch etds for %s";
 
     private static RetrofitClient instance;
     private MatchingService matchingService;
@@ -89,14 +88,23 @@ public class RetrofitClient {
         return matchingService;
     }
 
-    // TODO: return callback from each API call
-
-    public static void getRealTimeEstimates(String origin,
-                                            Set<String> trainHeadSet) {
-        getInstance()
+    public static Single<EtdRespWrapper> getRealTimeEstimates(String origin,
+                                                              Set<String> trainHeadSet) {
+        EtdRespWrapper failedEtdResp = new EtdRespWrapper(origin, null, trainHeadSet);
+        return RetrofitClient.getInstance()
             .getMatchingService()
             .getEtd("etd", API_KEY, 'y', origin)
-            .enqueue(new EtdCallback().setDestSet(trainHeadSet));
+            .doOnError(e  -> Log.w(LOG_TAG, String.format(FAIL_ETDS_REQ_TEMPLATE, origin)))
+            .flatMap(etdResp -> {
+                if (etdResp.code() == StatusCode.HTTP_STATUS_OK) {
+                    return Single.just(new EtdRespWrapper(origin,
+                        etdResp.body().getRoot(), trainHeadSet));
+                } else {
+                    return Single.just(failedEtdResp);
+                }
+            })
+            .onErrorReturnItem(failedEtdResp)
+            .subscribeOn(Schedulers.io());
     }
 
     public static Single<Response<BsaResp>> getBsas() {
@@ -137,6 +145,8 @@ public class RetrofitClient {
             .getMatchingService()
             .getDepartures("depart", orig, dest,
                 "now", 0, 2, API_KEY, 'y')
+            .doOnError(e -> Log.w(LOG_TAG,
+                String.format(FAILED_DEPARTURES_REQ_TEMPLATE, orig, dest)))
             .flatMap(departuresResp -> {
                 if (departuresResp.body() != null) {
                     return Single.just(departuresResp.body()
@@ -145,8 +155,6 @@ public class RetrofitClient {
                     return Single.just(NotGuava.newArrayList((Trip) null));
                 }
             })
-            .doOnError(e -> Log.w(LOG_TAG,
-                String.format(FAILED_DEPARTURES_REQ_TEMPLATE, orig, dest)))
             .onErrorReturnItem(NotGuava.newArrayList())
             .subscribeOn(Schedulers.io());
     }

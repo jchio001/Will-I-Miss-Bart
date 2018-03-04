@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.RetrofitClient;
 import com.app.jonathan.willimissbart.Adapters.TripsAdapter;
@@ -77,6 +78,26 @@ public class RoutesFragment extends Fragment {
                 .show();
         }
     };
+
+    private final SingleObserver<EtdRespWrapper> etdObserver =
+        new SingleObserver<EtdRespWrapper>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                compositeDisposable.add(d);
+            }
+
+            @Override
+            public void onSuccess(EtdRespWrapper etdRespWrapper) {
+                EstimatesManager.persistThenPost(etdRespWrapper);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(RoutesFragment.this.getContext(),
+                    String.format("Wah wah %s", e.getMessage()), Toast.LENGTH_SHORT)
+                    .show();
+            }
+        };
 
     @Nullable
     @Override
@@ -158,12 +179,16 @@ public class RoutesFragment extends Fragment {
 
         if (routeFirstLegHead != null) {
             String originAbbr = userData.get(0).getAbbr();
-            RetrofitClient.getRealTimeEstimates(originAbbr, origToDestsMapping.get(originAbbr));
+            RetrofitClient.getRealTimeEstimates(originAbbr, origToDestsMapping.get(originAbbr))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(etdObserver);
         }
 
         if (includeReturnRoute && returnFirstLegHead != null) {
             String destAbbr = userData.get(1).getAbbr();
-            RetrofitClient.getRealTimeEstimates(destAbbr, origToDestsMapping.get(destAbbr));
+            RetrofitClient.getRealTimeEstimates(destAbbr, origToDestsMapping.get(destAbbr))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(etdObserver);
         }
     }
 
