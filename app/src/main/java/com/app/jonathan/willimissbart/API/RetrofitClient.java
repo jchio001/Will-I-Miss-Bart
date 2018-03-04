@@ -8,7 +8,6 @@ import com.app.jonathan.willimissbart.API.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.API.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.API.Models.Station.Station;
 import com.app.jonathan.willimissbart.API.Models.StationInfo.StationInfoResp;
-import com.app.jonathan.willimissbart.Misc.EstimatesManager;
 import com.app.jonathan.willimissbart.Misc.NotGuava;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

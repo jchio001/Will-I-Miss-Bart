@@ -27,7 +27,6 @@ import com.joanzapata.iconify.fonts.IoniconsIcons;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 
 public class TripActivity extends AppCompatActivity implements EstimatesManager.EstimatesListener {
     @Bind(R.id.orig_time) TextView originTime;
