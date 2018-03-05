@@ -14,4 +14,9 @@ public class CDataSection implements Serializable {
     public String getcDataSection() {
         return cDataSection;
     }
+
+    public CDataSection setcDataSection(String cDataSection) {
+        this.cDataSection = cDataSection;
+        return this;
+    }
 }

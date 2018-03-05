@@ -29,6 +29,7 @@
     <!-- BSA Pop up Window -->
     <string name="see_all">See all announcements</string>
     <string name="mute_notif">Mute for today</string>
+    <string name="failed_announcement_req">Failed to retrieve announcements.</string>
 
     <!-- User route footer -->
     <string name="leaving_in">"Leaving in: "</string>

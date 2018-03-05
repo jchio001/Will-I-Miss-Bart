@@ -19,7 +19,6 @@ public class FailureAnimationListener implements Animation.AnimationListener {
 
     @Override
     public void onAnimationStart(Animation animation) {
-
     }
 
     @Override

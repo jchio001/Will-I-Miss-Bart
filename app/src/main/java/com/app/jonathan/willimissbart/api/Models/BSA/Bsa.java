@@ -27,7 +27,7 @@ public class Bsa implements Serializable, SimpleListItem {
 
     @Override
     public String getTag() {
-        return ((!station.isEmpty()) ? (station + ": ") : "") + description.getcDataSection();
+        return ((station != null && !station.isEmpty()) ? (station + ": ") : "") + description.getcDataSection();
     }
 
     public String getStation() {
@@ -36,6 +36,11 @@ public class Bsa implements Serializable, SimpleListItem {
 
     public CDataSection getDescription() {
         return description;
+    }
+
+    public Bsa setDescription(CDataSection description) {
+        this.description = description;
+        return this;
     }
 
     public String getPosted() {

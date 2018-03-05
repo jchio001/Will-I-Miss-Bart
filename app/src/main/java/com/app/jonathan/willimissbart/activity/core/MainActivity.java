@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.ScrollView;
 
 import com.app.jonathan.willimissbart.api.Models.BSA.Bsa;
+import com.app.jonathan.willimissbart.api.Models.Generic.CDataSection;
 import com.app.jonathan.willimissbart.api.RetrofitClient;
 import com.app.jonathan.willimissbart.adapter.ViewPagerAdapter;
 import com.app.jonathan.willimissbart.fragment.RoutesFragment;
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onError(Throwable e) {
-            announcements = NotGuava.newArrayList();
+            MainActivity.this.announcements = NotGuava.newArrayList(getFailureBsa());
         }
     };
 
@@ -185,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                 if (bsaResp != null && bsaResp.body() != null) {
                     return Single.just(bsaResp.body().getRoot().getBsaList());
                 } else {
-                    return Single.just(NotGuava.<Bsa>newArrayList());
+                    return Single.just(NotGuava.newArrayList(getFailureBsa()));
                 }
             })
             .observeOn(AndroidSchedulers.mainThread());
@@ -241,5 +242,11 @@ public class MainActivity extends AppCompatActivity {
         menu.findItem(R.id.map).setIcon(new IconDrawable(this, IoniconsIcons.ion_map)
             .colorRes(R.color.white)
             .actionBarSize());
+    }
+
+    private Bsa getFailureBsa() {
+        return new Bsa()
+            .setDescription(new CDataSection()
+                .setcDataSection(MainActivity.this.getString(R.string.failed_announcement_req)));
     }
 }
