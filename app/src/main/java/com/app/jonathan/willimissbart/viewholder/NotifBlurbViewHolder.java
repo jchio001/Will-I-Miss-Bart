@@ -20,11 +20,11 @@ public class NotifBlurbViewHolder {
     public NotifBlurbViewHolder(View v, Bsa bsa) {
         ButterKnife.bind(this, v);
         this.bsa = bsa;
-        notifBlurb.setText(bsa.getTag());
+        notifBlurb.setText(bsa.getFormattedMessage());
     }
 
     @OnClick(R.id.notif_blurb_parent)
     public void onClick() {
-        Toast.makeText(notifBlurb.getContext(), bsa.getTag(), Toast.LENGTH_LONG).show();
+        Toast.makeText(notifBlurb.getContext(), bsa.getFormattedMessage(), Toast.LENGTH_LONG).show();
     }
 }

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 
-public class Bsa implements Serializable, SimpleListItem {
+public class Bsa implements Serializable {
     @SerializedName("station")
     @Expose
     private String station;
@@ -25,8 +25,7 @@ public class Bsa implements Serializable, SimpleListItem {
     @Expose
     private String expires;
 
-    @Override
-    public String getTag() {
+    public String getFormattedMessage() {
         return ((station != null && !station.isEmpty()) ? (station + ": ") : "") + description.getcDataSection();
     }
 

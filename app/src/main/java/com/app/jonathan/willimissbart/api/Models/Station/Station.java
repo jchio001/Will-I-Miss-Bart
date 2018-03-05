@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Station implements Serializable, SimpleListItem {
+public class Station implements Serializable {
     @SerializedName("name")
     @Expose
     private String name;
@@ -46,11 +46,6 @@ public class Station implements Serializable, SimpleListItem {
     @SerializedName("index")
     @Expose
     private int index = -1;
-
-    @Override
-    public String getTag() {
-        return abbr;
-    }
 
     public String getName() {
         return name;
