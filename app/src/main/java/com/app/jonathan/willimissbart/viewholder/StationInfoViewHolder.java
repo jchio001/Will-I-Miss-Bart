@@ -19,6 +19,7 @@ import com.app.jonathan.willimissbart.api.Models.StationInfo.Station;
 import com.app.jonathan.willimissbart.api.Models.StationInfo.StationInfoResp;
 import com.app.jonathan.willimissbart.api.RetrofitClient;
 import com.app.jonathan.willimissbart.listener.animation.Generic.ShowOrHideAnimListener;
+import com.app.jonathan.willimissbart.listener.animation.StationInfo.FailureAnimationListener;
 import com.app.jonathan.willimissbart.listener.animation.StationInfo.HideProgressBarAnimListener;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.R;
@@ -48,6 +49,7 @@ public class StationInfoViewHolder {
     private ValueAnimator collapseAnimation;
     private AlphaAnimation showInfoAnim;
     private AlphaAnimation hideProgressBar;
+    private AlphaAnimation failureAnimation;
 
     private String stationAbbr;
 
@@ -138,10 +140,11 @@ public class StationInfoViewHolder {
             @Override
             public void onError(Throwable e) {
                 Log.w("StationInfo", e.getMessage());
+                progressBar.startAnimation(failureAnimation);
             }
         };
 
-    //** Methods */
+    /** Methods */
 
     public StationInfoViewHolder(ScrollView stationInfoParent, int height) {
         this.stationInfoParent = stationInfoParent;
@@ -166,6 +169,8 @@ public class StationInfoViewHolder {
             hideProgressBar.setAnimationListener(new HideProgressBarAnimListener(progressBar,
                 showInfoAnim, stationInfoLayout));
 
+            failureAnimation.setAnimationListener(new FailureAnimationListener(progressBar));
+
             stationInfoParent.setVisibility(View.VISIBLE);
             stationInfoTitle.setText(stationInfoParent.getContext()
                 .getString(R.string.stn_info_title, abbr));
@@ -180,6 +185,9 @@ public class StationInfoViewHolder {
             if (disposable != null) {
                 disposable.dispose();
             }
+
+            failureAnimation.setAnimationListener(null);
+            failureAnimation.cancel();
 
             hideProgressBar.setAnimationListener(null);
             hideProgressBar.cancel();
@@ -239,5 +247,8 @@ public class StationInfoViewHolder {
 
         hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
         hideProgressBar.setDuration(Constants.STANDARD_DURATION);
+
+        failureAnimation = new AlphaAnimation(1.0f, 0.0f);
+        failureAnimation.setDuration(Constants.STANDARD_DURATION);
     }
 }

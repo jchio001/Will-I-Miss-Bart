@@ -82,6 +82,7 @@
     <!-- StationInfoLayout -->
     <string name="stn_info_title">Info for %s station</string>
     <string name="whats_nearby">Looking for something to do nearby?</string>
+    <string name="failed_station_info_req">Failed to retrieve station information. Please try again later.</string>
 
     <!-- Trip Activity -->
     <string name="trip_title">Trip for %1$s to %2$s</string>
