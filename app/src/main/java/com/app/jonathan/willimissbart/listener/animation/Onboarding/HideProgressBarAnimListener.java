@@ -1,4 +1,4 @@
-package com.app.jonathan.willimissbart.listener.animation.Onboarding.InitialAnimation;
+package com.app.jonathan.willimissbart.listener.animation.Onboarding;
 
 
 import android.view.View;

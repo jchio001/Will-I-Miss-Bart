@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.UiThread;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -14,7 +16,7 @@ import android.widget.Toast;
 import com.app.jonathan.willimissbart.api.Models.Station.Station;
 import com.app.jonathan.willimissbart.api.RetrofitClient;
 import com.app.jonathan.willimissbart.adapter.OriginDestStationsAdapter;
-import com.app.jonathan.willimissbart.listener.animation.Onboarding.InitialAnimation.HideProgressBarAnimListener;
+import com.app.jonathan.willimissbart.listener.animation.Onboarding.HideProgressBarAnimListener;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.Utils;
 import com.app.jonathan.willimissbart.persistence.SPManager;
@@ -42,6 +44,8 @@ public class OnboardingActivity extends AppCompatActivity {
     @Bind(R.id.onboarding_blurb) TextView onboardingBlurb;
     @Bind(R.id.progress_bar) ProgressBar progressBar;
 
+    private static String LOG_TAG = "Onboarding";
+
     private StationGridViewHolder stationGridViewHolder;
     private StationsFooterViewHolder footer;
     private OriginDestStationsAdapter adapter;
@@ -61,7 +65,10 @@ public class OnboardingActivity extends AppCompatActivity {
 
         @Override
         public void onError(Throwable e) {
-            Toast.makeText(OnboardingActivity.this, "STUBBED", Toast.LENGTH_SHORT).show();
+            Log.w(LOG_TAG, String.format("Error fetching stations: %s", e.getMessage()));
+            progressBar.setVisibility(View.GONE);
+            Utils.showSnackbar(OnboardingActivity.this,
+                parent, R.color.red, R.string.failed_stations_req);
         }
     };
 

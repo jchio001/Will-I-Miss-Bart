@@ -39,6 +39,7 @@
     <!-- Onboarding Activity -->
     <string name="enter_bart_data">Select an origin station and a destination station:</string>
     <string name="done">Done</string>
+    <string name="failed_stations_req">Failed to retrieve stations. Please try again later.</string>
 
     <!-- Trips Fragment -->
     <string name="updated_data">Updated your route.</string>
