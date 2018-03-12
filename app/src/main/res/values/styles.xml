@@ -162,6 +162,9 @@
     </style>
 
     <style name="TripActivityCardTheme" parent="CardView">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?selectableItemBackground</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">8dp</item>
@@ -170,6 +173,17 @@
         <item name="cardCornerRadius">3dp</item>
         <item name="cardElevation">2dp</item>
         <item name="cardUseCompatPadding">true</item>
+    </style>
+
+    <style name="TransferDotTheme">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:text">@string/ion_record</item>
+        <item name="android:textColor">@color/darkGrey</item>
+        <item name="android:textSize">10sp</item>
     </style>
 
 </resources>

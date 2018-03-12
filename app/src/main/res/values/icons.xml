@@ -5,7 +5,6 @@
     <string name="ion_close">{ion-close}</string>
     <string name="ion_record">{ion-record}</string>
     <string name="ion_navigate">{ion-navigate}</string>
-    <string name="ion_location">{ion-location}</string>
     <string name="ios_sad_icon">{ion-sad-outline}</string>
     <string name="ion_arrow_swap">{ion-arrow-swap}</string>
     <string name="ion_close_round">{ion-close-round}</string>
@@ -13,6 +12,7 @@
     <string name="ion_android_walk">{ion-android-walk}</string>
     <string name="ion_arrow_up_b">{ion-arrow-up-b}</string>
     <string name="ion_arrow_down_b">{ion-arrow-down-b}</string>
+    <string name="ion_android_locate">{ion-android-locate}</string>
     <string name="ion_android_subway">{ion-android-subway}</string>
     <string name="ion_android_bicycle">{ion-android-bicycle}</string>
     <string name="ion_android_alarm_clock">{ion-android-alarm-clock}</string>

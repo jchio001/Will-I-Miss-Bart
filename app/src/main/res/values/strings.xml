@@ -97,7 +97,7 @@
     <!-- Leg List Element -->
     <string name="train_info">From %1$s, take train to %2$s leaving at %3$s</string>
     <string name="stop_info">Get off at %1$s at %2$s</string>
-    <string name="next_train_estimates">The next trains in this direction leave in:</string>
+    <string name="next_train_estimates">The next train(s) in this direction leave in:</string>
 
     <!-- Trip Adapter -->
     <string name="departures_failed">Failed to fetch departures</string>

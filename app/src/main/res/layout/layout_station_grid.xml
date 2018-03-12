@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:padding="4dp"
-            android:text="@string/ion_location"
+            android:text="@string/ion_android_locate"
             android:textColor="@color/darkGrey"
             android:textSize="36sp"/>
 
