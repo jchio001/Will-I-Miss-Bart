@@ -116,7 +116,7 @@ public class RoutesFragment extends Fragment {
         if (getArguments() != null) {
             userData = getArguments().getParcelableArrayList(Constants.USER_DATA);
         } else {
-            userData = SPManager.getUserData(getActivity());
+            userData = SPManager.fetchUserData(getActivity());
         }
         updatedUserData = NotGuava.newArrayList(userData);
 
@@ -129,7 +129,7 @@ public class RoutesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        boolean includeReturnRoute = SPManager.getIncludeReturnRoute(getContext());
+        boolean includeReturnRoute = SPManager.fetchIncludeReturnRoute(getContext());
         getTrips(userData.get(0), userData.get(1), includeReturnRoute);
     }
 
@@ -160,7 +160,7 @@ public class RoutesFragment extends Fragment {
 
         failureText.setVisibility(View.GONE);
 
-        boolean includeReturnRoute = SPManager.getIncludeReturnRoute(this.getActivity());
+        boolean includeReturnRoute = SPManager.fetchIncludeReturnRoute(this.getActivity());
 
         adapter.refresh(mergedTrips, userData);
 

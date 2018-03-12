@@ -56,10 +56,10 @@ public class NotificationWindowManager extends PopupWindow {
     public void onChangeMuteSettings() {
         isChecked = !isChecked;
         if (isChecked) {
-            SPManager.putString(notifFeed.getContext(), Constants.MUTE_NOTIF,
+            SPManager.persistString(notifFeed.getContext(), Constants.MUTE_NOTIF,
                 dateFormat.format(new Date()));
         } else {
-            SPManager.putString(notifFeed.getContext(), Constants.MUTE_NOTIF, "");
+            SPManager.persistString(notifFeed.getContext(), Constants.MUTE_NOTIF, "");
         }
     }
 }

@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     private RoutesFragment routeFragment = new RoutesFragment();
     private StationsFragment stationsFragment = new StationsFragment();
     private List<Bsa> announcements = NotGuava.newArrayList();
-    protected final Activity context = this;
 
     private Disposable disposable;
 
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess(List<Bsa> announcements) {
-            if (announcements.size() > 1 &&
+            if (announcements.size() >= 1 &&
                 !announcements.get(0).getStation().isEmpty()) {
                 if (!NotificationWindowManager.isChecked) {
                     redCircle.setVisibility(View.VISIBLE);
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
         stationInfoViewHolder = new StationInfoViewHolder(stationInfoLayout,
             Utils.getStationInfoLayoutHeight(this));
-        NotificationWindowManager.isChecked = SPManager.getString(this, Constants.MUTE_NOTIF)
+        NotificationWindowManager.isChecked = SPManager.fetchString(this, Constants.MUTE_NOTIF)
             .equals(NotificationWindowManager.dateFormat.format(new Date()));
 
         setUpViewPager(getIntent().getExtras());
@@ -109,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Rather than parse the stations and then get the announcements, I can just save some time
         // and just do both at the same time and just zip the result.
-        Single.zip(SPManager.getStations(this),
+        Single.zip(SPManager.fetchStations(this),
             fetchAnnouncements(), (stations, bsa) -> bsa)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(bsaObserver);
@@ -175,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnPageChange(value = R.id.view_pager, callback = Callback.PAGE_SELECTED)
     public void onPageChanged() {
-        Utils.hideKeyboard(context);
+        Utils.hideKeyboard(this);
     }
 
     // TODO: handle failed BSA call

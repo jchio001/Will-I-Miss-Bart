@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.app.jonathan.willimissbart.api.Models.Station.Station;
 import com.app.jonathan.willimissbart.api.RetrofitClient;
@@ -125,7 +124,7 @@ public class OnboardingActivity extends AppCompatActivity {
      * nothing else.
      */
     private void fetchAndHandleStations()  {
-        SPManager.getStationsJson(this)
+        SPManager.fetchStationsJson(this)
             .flatMap(stationsJson -> {
                if (stationsJson.isEmpty()) {
                    return RetrofitClient.getStations()
@@ -138,7 +137,7 @@ public class OnboardingActivity extends AppCompatActivity {
                            persistStations();
                        });
                } else {
-                   return Single.just(Utils.loadStations(stationsJson));
+                   return Single.just(Utils.stationsJsonToList(stationsJson));
                }
             })
             .observeOn(AndroidSchedulers.mainThread())

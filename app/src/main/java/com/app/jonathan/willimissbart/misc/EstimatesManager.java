@@ -27,9 +27,6 @@ public class EstimatesManager {
     // keeps track of subscribers for this manager
     private Set<EstimatesListener> subscribers = NotGuava.newHashSet();
 
-    private EstimatesManager() {
-    }
-
     public synchronized static EstimatesManager getInstance() {
         if (instance == null) {
             instance = new EstimatesManager();
@@ -75,6 +72,7 @@ public class EstimatesManager {
         }
     }
 
+    // TODO: it's obvious what this method does, but the code sucks. pliz fix.
     public synchronized static void updateEstimates(long refreshTime) {
         Map<String, List<Estimate>> origDestToEstimates = getInstance().origDestToEstimates;
         Map<String, Integer> stationToRemainderSeconds = getInstance().stationToRemainderSeconds;

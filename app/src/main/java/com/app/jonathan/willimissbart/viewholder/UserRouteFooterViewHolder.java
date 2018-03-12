@@ -53,7 +53,7 @@ public class UserRouteFooterViewHolder {
         this.routeFragment = routeFragment;
         origin.setText(userData.get(0).getAbbr());
         destination.setText(userData.get(1).getAbbr());
-        includeReturn.setChecked(SPManager.getIncludeReturnRoute(routeFragment.getContext()));
+        includeReturn.setChecked(SPManager.fetchIncludeReturnRoute(routeFragment.getContext()));
         this.userData = userData;
         createAnimations();
     }

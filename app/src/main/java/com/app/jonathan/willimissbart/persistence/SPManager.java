@@ -1,6 +1,5 @@
 package com.app.jonathan.willimissbart.persistence;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -44,7 +43,7 @@ public class SPManager {
         return getInstance(context).getSp().contains(Constants.USER_DATA);
     }
 
-    public static ArrayList<UserStationData> getUserData(Context context) {
+    public static ArrayList<UserStationData> fetchUserData(Context context) {
         String userData = getInstance(context).getSp()
             .getString(Constants.USER_DATA, "");
         if (userData.isEmpty()) {
@@ -55,7 +54,7 @@ public class SPManager {
         }
     }
 
-    public static Single<String> getStationsJson(Context context) {
+    public static Single<String> fetchStationsJson(Context context) {
         return Single.just(getInstance(context).getSp()
             .getString(Constants.STATION_LIST_KEY, ""))
             .subscribeOn(Schedulers.io());
@@ -63,17 +62,17 @@ public class SPManager {
 
     // Only use this method if you're 100% sure that the stations JSON is persisted in
     // SharedPreferences
-    public static Single<List<Station>> getStations(Context context) {
-        return Single.just(Utils.loadStations(getInstance(context).getSp()
+    public static Single<List<Station>> fetchStations(Context context) {
+        return Single.just(Utils.stationsJsonToList(getInstance(context).getSp()
             .getString(Constants.STATION_LIST_KEY, "")))
             .subscribeOn(Schedulers.io());
     }
 
-    public static String getString(Context context, String key) {
+    public static String fetchString(Context context, String key) {
         return getInstance(context).getSp().getString(key, "");
     }
 
-    public static void putString(Context context, String key, String value) {
+    public static void persistString(Context context, String key, String value) {
         getInstance(context).getSp().edit().putString(key, value).apply();
     }
 
@@ -92,7 +91,7 @@ public class SPManager {
             .putBoolean(Constants.INCLUDE_RETURN, includeReturnRoute).apply();
     }
 
-    public static boolean getIncludeReturnRoute(Context context) {
+    public static boolean fetchIncludeReturnRoute(Context context) {
         return getInstance(context).getSp().getBoolean(Constants.INCLUDE_RETURN, false);
     }
 }

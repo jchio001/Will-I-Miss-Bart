@@ -15,10 +15,6 @@ public abstract class BaseRefreshListener implements SwipeRefreshLayout.OnRefres
         this.swipeRefreshLayout = swipeRefreshLayout;
     }
 
-    public int getRefreshState() {
-        return refreshState;
-    }
-
     public BaseRefreshListener setRefreshState(int refreshState) {
         this.refreshState = refreshState;
         return this;
