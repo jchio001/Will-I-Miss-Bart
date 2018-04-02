@@ -16,10 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".service.TimerService"
+            android:name=".timer.TimerService"
             android:exported="false"/>
 
-        <receiver android:name=".broadcastreceiver.TimerNotificationReceiver">
+        <receiver android:name=".timer.TimerNotificationReceiver">
             <intent-filter>
                 <action android:name="WillIMissBart.dismiss"/>
             </intent-filter>

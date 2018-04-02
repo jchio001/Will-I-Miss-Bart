@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.app.jonathan.willimissbart.api.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.api.Models.Routes.Leg;
-import com.app.jonathan.willimissbart.dialog.NotificationAlertDialog;
+import com.app.jonathan.willimissbart.timer.NotificationAlertDialog;
 import com.app.jonathan.willimissbart.misc.NotGuava;
 import com.app.jonathan.willimissbart.misc.Utils;
 import com.app.jonathan.willimissbart.R;

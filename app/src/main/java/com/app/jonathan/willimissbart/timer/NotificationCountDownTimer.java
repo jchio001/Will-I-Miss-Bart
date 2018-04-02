@@ -6,7 +6,6 @@ import android.os.CountDownTimer;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.MyApplication;
 import com.app.jonathan.willimissbart.misc.Utils;
-import com.app.jonathan.willimissbart.service.TimerService;
 
 public class NotificationCountDownTimer extends CountDownTimer {
 

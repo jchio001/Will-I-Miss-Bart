@@ -15,7 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.api.Models.Station.Station;
-import com.app.jonathan.willimissbart.notification.TimerNotificationBuilder;
+import com.app.jonathan.willimissbart.timer.TimerNotificationBuilder;
 import com.app.jonathan.willimissbart.persistence.StationsManager;
 import com.app.jonathan.willimissbart.R;
 import com.google.gson.Gson;
