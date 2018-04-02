@@ -245,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Bsa getFailureBsa() {
         return new Bsa()
+            .setStation("")
             .setDescription(new CDataSection()
                 .setcDataSection(MainActivity.this.getString(R.string.failed_announcement_req)));
     }

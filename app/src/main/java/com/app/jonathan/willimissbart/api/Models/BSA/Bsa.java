@@ -33,6 +33,11 @@ public class Bsa implements Serializable {
         return station;
     }
 
+    public Bsa setStation(String station) {
+        this.station = station;
+        return this;
+    }
+
     public CDataSection getDescription() {
         return description;
     }
