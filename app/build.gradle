@@ -10,8 +10,8 @@ android {
         applicationId "com.app.jonathan.willimissbart"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 24
-        versionName "2.51"
+        versionCode 25
+        versionName "2.52"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -28,7 +28,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:retrofit:2.4.0'
     compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.2'
     compile 'com.android.support:appcompat-v7:27.1.0'
