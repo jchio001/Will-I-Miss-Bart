@@ -12,6 +12,12 @@
     <string name="no_estimates">No estimates to display</string>
     <string name="turn_on_location">Location needs to be enabled before finding the nearest station!</string>
 
+    <!-- Pliz rate dialog -->
+    <string name="can_has_rating">Looks like you\'re a frequent user of this application. I\'d really appreciate it if you rate this app in the Play Store!</string>
+    <string name="yes">Sure!</string>
+    <string name="no">I\'ll pass</string>
+    <string name="play_store_error">Unable to open the Play Store.</string>
+
     <!-- Stations Grid -->
     <string name="stn_origin">Origin</string>
     <string name="stn_dest">Dest.</string>

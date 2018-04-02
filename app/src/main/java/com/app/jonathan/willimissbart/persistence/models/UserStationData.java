@@ -1,4 +1,4 @@
-package com.app.jonathan.willimissbart.persistence.Models;
+package com.app.jonathan.willimissbart.persistence.models;
 
 
 import android.os.Parcel;

@@ -7,6 +7,7 @@ public class Constants {
     public static final String USER_DATA = "USER_DATA";
     public static final String MUTE_NOTIF = "MUTE_NOTIF";
     public static final String INCLUDE_RETURN = "INCLUDE_RETURN";
+    public static final String USAGE_COUNTER = "USAGE_COUNTER";
 
     // ANIMATION DURATION
     public static final int LONG_DURATION = 600;

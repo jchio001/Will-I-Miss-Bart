@@ -24,7 +24,7 @@ import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.EstimatesManager;
 import com.app.jonathan.willimissbart.misc.NotGuava;
 import com.app.jonathan.willimissbart.misc.Utils;
-import com.app.jonathan.willimissbart.persistence.Models.UserStationData;
+import com.app.jonathan.willimissbart.persistence.models.UserStationData;
 import com.app.jonathan.willimissbart.persistence.SPManager;
 import com.app.jonathan.willimissbart.persistence.StationsManager;
 import com.app.jonathan.willimissbart.R;

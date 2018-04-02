@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.app.jonathan.willimissbart.activity.core.MainActivity;
 import com.app.jonathan.willimissbart.adapter.OriginDestStationsAdapter;
 import com.app.jonathan.willimissbart.misc.Constants;
-import com.app.jonathan.willimissbart.persistence.Models.UserStationData;
+import com.app.jonathan.willimissbart.persistence.models.UserStationData;
 import com.app.jonathan.willimissbart.persistence.SPManager;
 import com.app.jonathan.willimissbart.R;
 

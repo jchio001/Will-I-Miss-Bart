@@ -1,8 +1,10 @@
 package com.app.jonathan.willimissbart.activity.core;
 
-import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -17,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.app.jonathan.willimissbart.api.Models.BSA.Bsa;
 import com.app.jonathan.willimissbart.api.Models.Generic.CDataSection;
@@ -50,6 +53,8 @@ import io.reactivex.disposables.Disposable;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int SHOW_DIALOG_THRESHOLD = 6;
 
     @Bind(R.id.drawer_layout) CoordinatorLayout parent;
     @Bind(R.id.stn_info_parent) ScrollView stationInfoLayout;
@@ -112,6 +117,10 @@ public class MainActivity extends AppCompatActivity {
             fetchAnnouncements(), (stations, bsa) -> bsa)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(bsaObserver);
+
+        if (SPManager.incrementUsageCounter(this) == SHOW_DIALOG_THRESHOLD) {
+            createPleaseRateDialog().show();
+        }
     }
 
     @Override
@@ -248,5 +257,25 @@ public class MainActivity extends AppCompatActivity {
             .setStation("")
             .setDescription(new CDataSection()
                 .setcDataSection(MainActivity.this.getString(R.string.failed_announcement_req)));
+    }
+
+    private Dialog createPleaseRateDialog() {
+        return new AlertDialog.Builder(this)
+            .setMessage(R.string.can_has_rating)
+            .setPositiveButton(R.string.yes, (dialog, which) -> {
+                Uri uri =  Uri.parse("market://details?id="
+                    + getApplicationContext().getPackageName());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
+                if (!(getPackageManager().queryIntentActivities(intent, 0).size() > 0)) {
+                    Toast.makeText(this, R.string.play_store_error, Toast.LENGTH_SHORT)
+                        .show();
+                    return;
+                }
+
+                startActivity(intent);
+            })
+            .setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss())
+            .create();
     }
 }

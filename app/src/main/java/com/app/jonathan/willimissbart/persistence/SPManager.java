@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import com.app.jonathan.willimissbart.api.Models.Station.Station;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.Utils;
-import com.app.jonathan.willimissbart.persistence.Models.UserStationData;
+import com.app.jonathan.willimissbart.persistence.models.UserStationData;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -93,5 +93,12 @@ public class SPManager {
 
     public static boolean fetchIncludeReturnRoute(Context context) {
         return getInstance(context).getSp().getBoolean(Constants.INCLUDE_RETURN, false);
+    }
+
+    public static int incrementUsageCounter(Context context) {
+        SharedPreferences sharedPreferences = getInstance(context).getSp();
+        int counter = sharedPreferences.getInt(Constants.USAGE_COUNTER, 0) + 1;
+        sharedPreferences.edit().putInt(Constants.USAGE_COUNTER, counter).apply();
+        return counter;
     }
 }

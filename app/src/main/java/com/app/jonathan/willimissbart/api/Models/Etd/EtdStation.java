@@ -1,6 +1,6 @@
 package com.app.jonathan.willimissbart.api.Models.Etd;
 
-import com.app.jonathan.willimissbart.persistence.Models.UserStationData;
+import com.app.jonathan.willimissbart.persistence.models.UserStationData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

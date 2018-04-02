@@ -14,7 +14,7 @@ import com.app.jonathan.willimissbart.fragment.RoutesFragment;
 import com.app.jonathan.willimissbart.listener.animation.Footers.FooterAnimListener;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.Utils;
-import com.app.jonathan.willimissbart.persistence.Models.UserStationData;
+import com.app.jonathan.willimissbart.persistence.models.UserStationData;
 import com.app.jonathan.willimissbart.persistence.SPManager;
 import com.app.jonathan.willimissbart.R;
 import com.joanzapata.iconify.widget.IconTextView;
