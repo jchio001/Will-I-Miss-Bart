@@ -30,7 +30,7 @@ public class TimerNotificationBuilder {
             .setCustomContentView(createView(time))
             .setOngoing(true)
             .setPriority(isHeadsUp ? Notification.PRIORITY_HIGH : Notification.PRIORITY_DEFAULT)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.mipmap.ic_splash)
             .build();
     }
 
