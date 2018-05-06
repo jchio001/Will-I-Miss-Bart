@@ -5,13 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.api.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.api.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.api.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.misc.EstimatesManager;
 import com.app.jonathan.willimissbart.misc.NotGuava;
 import com.app.jonathan.willimissbart.persistence.models.UserStationData;
-import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.viewholder.TripViewHolder;
 
 import java.util.List;

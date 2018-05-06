@@ -9,12 +9,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.api.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.api.Models.Routes.Leg;
-import com.app.jonathan.willimissbart.timer.NotificationAlertDialog;
 import com.app.jonathan.willimissbart.misc.NotGuava;
 import com.app.jonathan.willimissbart.misc.Utils;
-import com.app.jonathan.willimissbart.R;
+import com.app.jonathan.willimissbart.timer.NotificationAlertDialog;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.lang.annotation.Retention;

@@ -8,10 +8,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.api.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.api.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.misc.EstimatesManager;
-import com.app.jonathan.willimissbart.R;
 
 import java.util.List;
 

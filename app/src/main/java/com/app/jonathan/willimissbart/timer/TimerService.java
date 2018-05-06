@@ -7,9 +7,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.app.jonathan.willimissbart.misc.Constants;
-import com.app.jonathan.willimissbart.timer.TimerNotificationBuilder;
 import com.app.jonathan.willimissbart.runnable.StartTimerRunnable;
-import com.app.jonathan.willimissbart.timer.NotificationCountDownTimer;
 
 public class TimerService extends Service {
 

@@ -11,11 +11,11 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.adapter.SingleElemStationsAdapter;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.Utils;
 import com.app.jonathan.willimissbart.persistence.StationsManager;
-import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.viewholder.StationGridViewHolder;
 import com.app.jonathan.willimissbart.viewholder.StationInfoViewHolder;
 

@@ -3,10 +3,10 @@ package com.app.jonathan.willimissbart.adapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.api.Models.Station.Station;
 import com.app.jonathan.willimissbart.misc.NotGuava;
 import com.app.jonathan.willimissbart.persistence.models.UserStationData;
-import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.viewholder.StationInfoViewHolder;
 import com.app.jonathan.willimissbart.viewholder.StationsCardViewHolder;
 import com.app.jonathan.willimissbart.viewholder.StationsFooterViewHolder;

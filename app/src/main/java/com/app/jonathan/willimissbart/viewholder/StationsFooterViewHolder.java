@@ -7,12 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.activity.core.MainActivity;
 import com.app.jonathan.willimissbart.adapter.OriginDestStationsAdapter;
 import com.app.jonathan.willimissbart.misc.Constants;
-import com.app.jonathan.willimissbart.persistence.models.UserStationData;
 import com.app.jonathan.willimissbart.persistence.SPManager;
-import com.app.jonathan.willimissbart.R;
+import com.app.jonathan.willimissbart.persistence.models.UserStationData;
 
 import java.util.ArrayList;
 

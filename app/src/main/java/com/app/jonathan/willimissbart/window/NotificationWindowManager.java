@@ -8,10 +8,10 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.api.Models.BSA.Bsa;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.persistence.SPManager;
-import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.viewholder.NotifBlurbViewHolder;
 
 import java.text.SimpleDateFormat;

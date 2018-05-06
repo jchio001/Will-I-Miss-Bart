@@ -12,15 +12,15 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.app.jonathan.willimissbart.R;
+import com.app.jonathan.willimissbart.adapter.OriginDestStationsAdapter;
 import com.app.jonathan.willimissbart.api.Models.Station.Station;
 import com.app.jonathan.willimissbart.api.RetrofitClient;
-import com.app.jonathan.willimissbart.adapter.OriginDestStationsAdapter;
 import com.app.jonathan.willimissbart.listener.animation.Onboarding.HideProgressBarAnimListener;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.Utils;
 import com.app.jonathan.willimissbart.persistence.SPManager;
 import com.app.jonathan.willimissbart.persistence.StationsManager;
-import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.viewholder.StationGridViewHolder;
 import com.app.jonathan.willimissbart.viewholder.StationsFooterViewHolder;
 import com.google.gson.Gson;
@@ -49,7 +49,7 @@ public class OnboardingActivity extends AppCompatActivity {
     private StationsFooterViewHolder footer;
     private OriginDestStationsAdapter adapter;
 
-    private Disposable stationDisposable;
+    protected Disposable stationDisposable;
 
     private SingleObserver<List<Station>> stationsObserver = new SingleObserver<List<Station>>() {
         @Override
@@ -99,7 +99,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
     @SuppressWarnings("unchecked")
     @UiThread
-    private void setUpActivityLayout() {
+    protected void setUpActivityLayout() {
         adapter = new OriginDestStationsAdapter(StationsManager.getStations(), null, footer);
         stationGridViewHolder = new StationGridViewHolder(stationGridLayout, adapter, 0, true);
         AlphaAnimation hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
@@ -112,7 +112,7 @@ public class OnboardingActivity extends AppCompatActivity {
         progressBar.startAnimation(hideProgressBar);
     }
 
-    private void persistStations() {
+    protected void persistStations() {
         SPManager.getInstance(getApplicationContext()).persistStations(
                 new Gson().toJson(StationsManager.getStations())
         );

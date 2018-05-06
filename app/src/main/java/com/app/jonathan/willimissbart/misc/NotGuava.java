@@ -9,13 +9,15 @@ import java.util.List;
 
 public class NotGuava {
 
+    private static final int DEFAULT_CAPACITY = 4;
+
     public static <T> T getFirst(Iterable<T> iterable, T defaultVal)  {
         Iterator<T> iterator = iterable.iterator();
         return iterator.hasNext() ? iterator.next() : defaultVal;
     }
 
     public static <T> ArrayList<T> newArrayList() {
-        return new ArrayList<>();
+        return new ArrayList<>(DEFAULT_CAPACITY);
     }
 
     @SafeVarargs
@@ -30,7 +32,7 @@ public class NotGuava {
     }
 
     public static <T> HashSet<T> newHashSet() {
-        return new HashSet<>();
+        return new HashSet<>(DEFAULT_CAPACITY);
     }
 
     @SafeVarargs
@@ -41,6 +43,6 @@ public class NotGuava {
     }
 
     public static <K, V> HashMap<K, V> newHashMap() {
-        return new HashMap<>();
+        return new HashMap<>(DEFAULT_CAPACITY);
     }
 }

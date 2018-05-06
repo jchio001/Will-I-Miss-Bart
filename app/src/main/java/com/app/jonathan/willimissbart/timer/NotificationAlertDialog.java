@@ -11,12 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.api.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.api.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.Utils;
-import com.app.jonathan.willimissbart.R;
-import com.app.jonathan.willimissbart.timer.TimerService;
 import com.app.jonathan.willimissbart.viewholder.DigitViewHolder;
 import com.joanzapata.iconify.widget.IconTextView;
 

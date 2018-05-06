@@ -12,11 +12,11 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.adapter.AbstractStationsAdapter;
 import com.app.jonathan.willimissbart.fragment.StationsFragment;
 import com.app.jonathan.willimissbart.misc.Utils;
 import com.app.jonathan.willimissbart.persistence.StationsManager;
-import com.app.jonathan.willimissbart.R;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.lang.ref.WeakReference;
@@ -36,11 +36,11 @@ public class StationGridViewHolder extends ViewHolder {
     @Bind(R.id.stn_grid) GridView stationGrid;
 
     private WeakReference<AbstractStationsAdapter> adapter;
-    private boolean fetchingLocation = false;
-    private Handler handler = new Handler();
+    protected boolean fetchingLocation = false;
+    protected Handler handler = new Handler();
 
     private int permissionCode = 0;
-    private int closestIndex = -1;
+    protected int closestIndex = -1;
 
     public StationGridViewHolder(View v,
                                  AbstractStationsAdapter adapter,

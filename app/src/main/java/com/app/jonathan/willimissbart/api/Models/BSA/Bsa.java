@@ -1,7 +1,6 @@
 package com.app.jonathan.willimissbart.api.Models.BSA;
 
 import com.app.jonathan.willimissbart.api.Models.Generic.CDataSection;
-import com.app.jonathan.willimissbart.api.Models.Generic.SimpleListItem;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

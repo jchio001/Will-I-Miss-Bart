@@ -11,11 +11,11 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.activity.core.MainActivity;
 import com.app.jonathan.willimissbart.adapter.SelectStationsAdapter;
 import com.app.jonathan.willimissbart.misc.Utils;
 import com.app.jonathan.willimissbart.persistence.StationsManager;
-import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.viewholder.StationGridViewHolder;
 import com.app.jonathan.willimissbart.viewholder.StationInfoViewHolder;
 
@@ -47,7 +47,7 @@ public class StationsFragment extends Fragment {
         ButterKnife.bind(this, v);
 
         stationInfoViewHolder = new WeakReference<>(
-            ((MainActivity) getActivity()).getStationInfoViewHolder());
+            ((MainActivity) getActivity()).stationInfoViewHolder);
         adapter = new SelectStationsAdapter(StationsManager.getStations(),
             stationInfoViewHolder.get());
         stationGridViewHolder = new StationGridViewHolder(

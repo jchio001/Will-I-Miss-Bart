@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.api.Models.StationInfo.Station;
 import com.app.jonathan.willimissbart.api.Models.StationInfo.StationInfoResp;
 import com.app.jonathan.willimissbart.api.RetrofitClient;
@@ -22,7 +23,6 @@ import com.app.jonathan.willimissbart.listener.animation.Generic.ShowOrHideAnimL
 import com.app.jonathan.willimissbart.listener.animation.StationInfo.FailureAnimationListener;
 import com.app.jonathan.willimissbart.listener.animation.StationInfo.HideProgressBarAnimListener;
 import com.app.jonathan.willimissbart.misc.Constants;
-import com.app.jonathan.willimissbart.R;
 
 import java.util.Locale;
 

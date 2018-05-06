@@ -15,19 +15,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.jonathan.willimissbart.R;
+import com.app.jonathan.willimissbart.adapter.TripsAdapter;
 import com.app.jonathan.willimissbart.api.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.api.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.api.RetrofitClient;
-import com.app.jonathan.willimissbart.adapter.TripsAdapter;
 import com.app.jonathan.willimissbart.listener.swiperefresh.TripRefreshListener;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.EstimatesManager;
 import com.app.jonathan.willimissbart.misc.NotGuava;
 import com.app.jonathan.willimissbart.misc.Utils;
-import com.app.jonathan.willimissbart.persistence.models.UserStationData;
 import com.app.jonathan.willimissbart.persistence.SPManager;
 import com.app.jonathan.willimissbart.persistence.StationsManager;
-import com.app.jonathan.willimissbart.R;
+import com.app.jonathan.willimissbart.persistence.models.UserStationData;
 import com.app.jonathan.willimissbart.viewholder.UserRouteFooterViewHolder;
 
 import java.util.List;
@@ -56,10 +56,10 @@ public class RoutesFragment extends Fragment {
     private List<UserStationData> updatedUserData;
     private TripsAdapter adapter = new TripsAdapter();
 
-    private String routeFirstLegHead = null;
-    private String returnFirstLegHead = null;
+    protected String routeFirstLegHead = null;
+    protected String returnFirstLegHead = null;
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    protected CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private final SingleObserver<List<Trip>> tripSubscriber = new SingleObserver<List<Trip>>() {
         @Override

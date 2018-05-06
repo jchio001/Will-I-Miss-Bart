@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.api.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.api.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.api.Models.Routes.Trip;
@@ -19,7 +20,6 @@ import com.app.jonathan.willimissbart.api.RetrofitClient;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.EstimatesManager;
 import com.app.jonathan.willimissbart.misc.NotGuava;
-import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.viewholder.LegViewHolder;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
@@ -39,10 +39,13 @@ public class TripActivity extends AppCompatActivity implements EstimatesManager.
 
     private Trip trip;
 
+    protected Disposable disposable;
+
     private final SingleObserver<EtdRespWrapper> etdObserver =
         new SingleObserver<EtdRespWrapper>() {
             @Override
             public void onSubscribe(Disposable d) {
+                disposable = d;
             }
 
             @Override
@@ -78,6 +81,10 @@ public class TripActivity extends AppCompatActivity implements EstimatesManager.
 
     @Override
     protected void onDestroy() {
+        if (disposable != null) {
+            disposable.dispose();
+        }
+
         EstimatesManager.unregister(this);
         super.onDestroy();
     }

@@ -4,8 +4,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.app.jonathan.willimissbart.api.Models.BSA.Bsa;
 import com.app.jonathan.willimissbart.R;
+import com.app.jonathan.willimissbart.api.Models.BSA.Bsa;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

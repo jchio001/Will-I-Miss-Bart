@@ -8,13 +8,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.app.jonathan.willimissbart.R;
+import com.app.jonathan.willimissbart.activity.core.TripActivity;
 import com.app.jonathan.willimissbart.api.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.api.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.api.Models.Routes.Trip;
-import com.app.jonathan.willimissbart.activity.core.TripActivity;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.NotGuava;
-import com.app.jonathan.willimissbart.R;
 
 import java.util.List;
 

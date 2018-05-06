@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.app.jonathan.willimissbart.misc.Utils;
 import com.app.jonathan.willimissbart.R;
+import com.app.jonathan.willimissbart.misc.Utils;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.lang.ref.WeakReference;
