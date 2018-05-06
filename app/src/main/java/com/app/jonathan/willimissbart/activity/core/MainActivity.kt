@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onError(e: Throwable) {
-            this@MainActivity.announcements = NotGuava.newArrayList();
+            this@MainActivity.announcements = getFailureBsa()
         }
     })
 
@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity() {
                     if (bsaResp.body() != null) {
                         return@flatMap Single.just(bsaResp.body()?.root?.bsaList!!)
                     } else
-                        return@flatMap Single.just(NotGuava.newArrayList<Bsa>())
+                        return@flatMap Single.just(getFailureBsa())
                 }
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -219,17 +219,17 @@ class MainActivity : AppCompatActivity() {
                 .actionBarSize()
     }
 
-    private fun getFailureBsa(): Bsa {
-        return Bsa()
+    private fun getFailureBsa(): ArrayList<Bsa> {
+        return NotGuava.newArrayList(Bsa()
                 .setStation("")
                 .setDescription(CDataSection()
-                        .setcDataSection(getString(R.string.failed_announcement_req)))
+                        .setcDataSection(getString(R.string.failed_announcement_req))))
     }
 
     private fun createPleaseRateDialog(): Dialog {
         return AlertDialog.Builder(this)
                 .setMessage(R.string.can_has_rating)
-                .setPositiveButton(R.string.yes) { dialog, which ->
+                .setPositiveButton(R.string.yes) { _, _ ->
                     val uri = Uri.parse("market://details?id="
                             + applicationContext.packageName)
                     val intent = Intent(Intent.ACTION_VIEW, uri)
@@ -242,7 +242,7 @@ class MainActivity : AppCompatActivity() {
 
                     startActivity(intent)
                 }
-                .setNegativeButton(R.string.no) { dialog, which -> dialog.dismiss() }
+                .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
                 .create()
     }
 }
