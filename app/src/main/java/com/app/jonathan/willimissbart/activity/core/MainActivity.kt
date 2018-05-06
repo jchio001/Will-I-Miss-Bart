@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
     private val bsaObserver = (object:SingleObserver<List<Bsa>> {
         override fun onSubscribe(d: Disposable) {
-            this@KotlinMainActivity.disposable = disposable
+            this@MainActivity.disposable = disposable
         }
 
         override fun onSuccess(t: List<Bsa>) {
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onError(e: Throwable) {
-            this@KotlinMainActivity.announcements = NotGuava.newArrayList();
+            this@MainActivity.announcements = NotGuava.newArrayList();
         }
     })
 
