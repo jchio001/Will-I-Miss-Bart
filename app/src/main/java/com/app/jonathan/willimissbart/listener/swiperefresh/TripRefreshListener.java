@@ -35,7 +35,6 @@ public class TripRefreshListener extends BaseRefreshListener {
             return;
         }
 
-        EstimatesManager.updateEstimates(now);
         lastRefreshTime = now;
         refreshState = Constants.REFRESH_STATE_INACTIVE;
         adapter.notifyDataSetChanged();

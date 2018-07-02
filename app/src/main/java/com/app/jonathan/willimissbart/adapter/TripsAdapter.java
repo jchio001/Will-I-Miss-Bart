@@ -16,8 +16,7 @@ import com.app.jonathan.willimissbart.viewholder.TripViewHolder;
 
 import java.util.List;
 
-public class TripsAdapter extends Adapter<TripViewHolder>
-    implements EstimatesManager.EstimatesListener {
+public class TripsAdapter extends Adapter<TripViewHolder> {
 
     private static int RENDER_TRIP = 0;
     private static int RENDER_FAILED_TRIPS = 1;
@@ -26,6 +25,8 @@ public class TripsAdapter extends Adapter<TripViewHolder>
     private List<Trip> trips = NotGuava.newArrayList();
     private String origAbbr = "";
     private String destAbbr = "";
+
+    private EstimatesManager estimatesManager = EstimatesManager.get();
 
     @Override
     public long getItemId(int position) {
@@ -50,8 +51,7 @@ public class TripsAdapter extends Adapter<TripViewHolder>
         int renderingState = getRenderingState(trip, position);
 
         if (renderingState == RENDER_TRIP) {
-            holder.renderTrip(trip, getEstimatesForTripsFirstLeg(trip),
-                EstimatesManager.getEstimatesRespTime(origAbbr));
+            holder.renderTrip(trip, getEstimatesForTripsFirstLeg(trip));
         } else if (renderingState == RENDER_FAILED_TRIPS) {
             holder.renderFailedTrip(origAbbr, destAbbr);
         } else if (renderingState == RENDER_FAILED_RETURN_TRIPS) {
@@ -61,24 +61,14 @@ public class TripsAdapter extends Adapter<TripViewHolder>
         }
     }
 
-    @Override
-    public void onReceiveEstimates(EtdRespWrapper etdRespWrap) {
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public void onEstimatesUpdated() {
-        notifyDataSetChanged();
-    }
-
     // For the feed of trips, we also want to provide a real time estimate for the first train
     // of the first leg of a trip. This method will grab us that estimate or return null if it's
     // not found.
     private List<Estimate> getEstimatesForTripsFirstLeg(Trip trip) {
-        List<Estimate> estimates = EstimatesManager
-            .getEstimates(trip.getOrigin() + trip.getLegList().get(0).getTrainHeadStation());
+        List<Estimate> estimates = estimatesManager
+            .getEstimates().get(trip.getOrigin() + trip.getLegList().get(0).getTrainHeadStation());
 
-        return estimates == null ? null : estimates;
+        return estimates;
     }
 
     private int getRenderingState(Trip trip, int position) {

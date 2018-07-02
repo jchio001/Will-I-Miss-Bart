@@ -30,7 +30,7 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
-public class TripActivity extends AppCompatActivity implements EstimatesManager.EstimatesListener {
+public class TripActivity extends AppCompatActivity {
 
     @Bind(R.id.orig_time) TextView originTime;
     @Bind(R.id.dest_time) TextView destTime;
@@ -41,6 +41,8 @@ public class TripActivity extends AppCompatActivity implements EstimatesManager.
 
     protected Disposable disposable;
 
+    protected EstimatesManager estimatesManager = EstimatesManager.get();
+
     private final SingleObserver<EtdRespWrapper> etdObserver =
         new SingleObserver<EtdRespWrapper>() {
             @Override
@@ -50,7 +52,7 @@ public class TripActivity extends AppCompatActivity implements EstimatesManager.
 
             @Override
             public void onSuccess(EtdRespWrapper etdRespWrapper) {
-                EstimatesManager.persistThenPost(etdRespWrapper);
+                estimatesManager.persistThenPost(etdRespWrapper);
             }
 
             @Override
@@ -85,7 +87,6 @@ public class TripActivity extends AppCompatActivity implements EstimatesManager.
             disposable.dispose();
         }
 
-        EstimatesManager.unregister(this);
         super.onDestroy();
     }
 
@@ -116,31 +117,13 @@ public class TripActivity extends AppCompatActivity implements EstimatesManager.
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public synchronized void onReceiveEstimates(EtdRespWrapper etdRespWrapper) {
-        for (int i = 0; i < legsLayout.getChildCount(); ++i) {
-            View child = legsLayout.getChildAt(i);
-            if (i % 2 == 0) {
-                LegViewHolder legViewHolder = (LegViewHolder) child.getTag();
-                legViewHolder.displayEstimates(
-                    trip.getLegList().get(i / 2).getOrigin(), etdRespWrapper.getRespTime());
-            }
-        }
-    }
-
-    // TODO: do things here
-    @Override
-    public synchronized void onEstimatesUpdated() {
-    }
-
     private boolean hasEstimatesLoaded(View v) {
         return ((LegViewHolder) v.getTag()).getChildCount() != 2;
     }
 
     private void renderEstimatesForTripLegs(long timeOfResp) {
-        EstimatesManager.updateEstimates(System.currentTimeMillis() / 1000);
         synchronized (this) {
-            for (int i = 0; i < trip.getLegList().size(); ++i) {
+            for (int i = 0, size = trip.getLegList().size(); i < size; ++i) {
                 Leg leg = trip.getLegList().get(i);
 
                 maybeLoadTransferLayout(i);
@@ -151,12 +134,11 @@ public class TripActivity extends AppCompatActivity implements EstimatesManager.
                 v.setTag(viewHolder);
                 legsLayout.addView(v);
             }
-            EstimatesManager.register(this);
         }
 
         if (trip.getLegList().size() == 2 && !hasEstimatesLoaded(legsLayout.getChildAt(2))) {
             Log.i("TripActivity", "Loading estimates for 2nd leg...");
-            RetrofitClient.getRealTimeEstimates(trip.getLegList().get(1).getOrigin(),
+            RetrofitClient.get().getRealTimeEstimates(trip.getLegList().get(1).getOrigin(),
                 NotGuava.newHashSet(trip.getLegList().get(1).getTrainHeadStation()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(etdObserver);
@@ -176,8 +158,7 @@ public class TripActivity extends AppCompatActivity implements EstimatesManager.
             trip.getOrigin(), trip.getDestination(),
             trip.getOrigTimeMin(), trip.getDestTimeMin()));
 
-        int legCnt = trip.getLegList().size();
-        for (int i = 0; i < legCnt; ++i) {
+        for (int i = 0, legCnt = trip.getLegList().size(); i < legCnt; ++i) {
             Leg leg = trip.getLegList().get(i);
             sb.append(getString(R.string.trip_leg_format, i + 1, leg.getOrigin(),
                 leg.getTrainHeadStation(), leg.getOrigTimeMin(), leg.getDestination()));

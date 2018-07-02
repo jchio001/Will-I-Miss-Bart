@@ -12,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class UserStationData implements Serializable, Parcelable {
+
     @SerializedName("station")
     @Expose
     private String station;
@@ -90,5 +91,4 @@ public class UserStationData implements Serializable, Parcelable {
             .setAbbr(station.getAbbr())
             .setStationIndex(stationIndex);
     }
-
 }

@@ -43,7 +43,7 @@ public class OnboardingActivity extends AppCompatActivity {
     @Bind(R.id.onboarding_blurb) TextView onboardingBlurb;
     @Bind(R.id.progress_bar) ProgressBar progressBar;
 
-    private static String LOG_TAG = "Onboarding";
+    private static final String LOG_TAG = "Onboarding";
 
     private StationGridViewHolder stationGridViewHolder;
     private StationsFooterViewHolder footer;
@@ -102,6 +102,7 @@ public class OnboardingActivity extends AppCompatActivity {
     protected void setUpActivityLayout() {
         adapter = new OriginDestStationsAdapter(StationsManager.getStations(), null, footer);
         stationGridViewHolder = new StationGridViewHolder(stationGridLayout, adapter, 0, true);
+
         AlphaAnimation hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
         hideProgressBar.setDuration(Constants.LONG_DURATION);
         hideProgressBar.setAnimationListener(new HideProgressBarAnimListener()
@@ -129,7 +130,7 @@ public class OnboardingActivity extends AppCompatActivity {
                if (stationsJson.isEmpty()) {
                    return RetrofitClient.getStations()
                        .doOnSuccess(stations -> {
-                           for (int i = 0; i < stations.size(); ++i) {
+                           for (int i = 0, size = stations.size(); i < size; ++i) {
                                stations.get(i).setIndex(i);
                            }
 

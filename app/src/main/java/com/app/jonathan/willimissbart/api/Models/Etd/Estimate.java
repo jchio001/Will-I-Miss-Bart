@@ -68,7 +68,7 @@ public class Estimate implements Serializable {
     }
 
     public String getEstimateAsString() {
-        if (minutes.equals("Leaving")) {
+        if (minutes.equals("Leaving") || minutes.equals("0")) {
             return "Leaving now!";
         } else {
             if (minutes.equals("1")) {

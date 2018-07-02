@@ -17,13 +17,14 @@ import android.widget.Toast;
 
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.adapter.TripsAdapter;
-import com.app.jonathan.willimissbart.api.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.api.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.api.RetrofitClient;
 import com.app.jonathan.willimissbart.listener.swiperefresh.TripRefreshListener;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.EstimatesManager;
+import com.app.jonathan.willimissbart.misc.EstimatesManager.EstimatesEvent;
 import com.app.jonathan.willimissbart.misc.NotGuava;
+import com.app.jonathan.willimissbart.misc.RouteBundle;
 import com.app.jonathan.willimissbart.misc.Utils;
 import com.app.jonathan.willimissbart.persistence.SPManager;
 import com.app.jonathan.willimissbart.persistence.StationsManager;
@@ -36,6 +37,7 @@ import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -55,6 +57,8 @@ public class RoutesFragment extends Fragment {
     private List<UserStationData> userData;
     private List<UserStationData> updatedUserData;
     private TripsAdapter adapter = new TripsAdapter();
+
+    protected EstimatesManager estimatesManager = EstimatesManager.get();
 
     protected String routeFirstLegHead = null;
     protected String returnFirstLegHead = null;
@@ -80,23 +84,24 @@ public class RoutesFragment extends Fragment {
         }
     };
 
-    private final SingleObserver<EtdRespWrapper> etdObserver =
-        new SingleObserver<EtdRespWrapper>() {
+    private final Observer<EstimatesEvent> estimatesMangerObserver =
+        new Observer<EstimatesEvent>() {
             @Override
             public void onSubscribe(Disposable d) {
                 compositeDisposable.add(d);
             }
 
             @Override
-            public void onSuccess(EtdRespWrapper etdRespWrapper) {
-                EstimatesManager.persistThenPost(etdRespWrapper);
+            public void onNext(EstimatesEvent estimatesEvent) {
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(RoutesFragment.this.getContext(),
-                    String.format("Etd Wah wah %s", e.getMessage()), Toast.LENGTH_SHORT)
-                    .show();
+            }
+
+            @Override
+            public void onComplete() {
             }
         };
 
@@ -107,7 +112,6 @@ public class RoutesFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_trip, container, false);
         ButterKnife.bind(this, v);
-        EstimatesManager.register(adapter);
 
         routeSwipeRefresh.setEnabled(false);
         routeRefreshListener = new TripRefreshListener(routeSwipeRefresh, adapter);
@@ -131,6 +135,7 @@ public class RoutesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         boolean includeReturnRoute = SPManager.fetchIncludeReturnRoute(getContext());
         getTrips(userData.get(0), userData.get(1), includeReturnRoute);
+        estimatesManager.subscribe(estimatesMangerObserver);
     }
 
     @Override
@@ -138,7 +143,6 @@ public class RoutesFragment extends Fragment {
         compositeDisposable.dispose();
         super.onDestroyView();
         ButterKnife.unbind(this);
-        EstimatesManager.unregister(adapter);
     }
 
     private void renderFooter() {
@@ -176,21 +180,22 @@ public class RoutesFragment extends Fragment {
                     destSet.add(trip.getLegList().get(0).getTrainHeadStation());
                 }
             }
+
         }
 
+        RouteBundle routeBundle = null;
         if (routeFirstLegHead != null) {
             String originAbbr = userData.get(0).getAbbr();
-            RetrofitClient.getRealTimeEstimates(originAbbr, origToDestsMapping.get(originAbbr))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(etdObserver);
+            routeBundle = new RouteBundle(originAbbr, origToDestsMapping.get(originAbbr));
         }
 
+        RouteBundle returnRouteBundle = null;
         if (includeReturnRoute && returnFirstLegHead != null) {
             String destAbbr = userData.get(1).getAbbr();
-            RetrofitClient.getRealTimeEstimates(destAbbr, origToDestsMapping.get(destAbbr))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(etdObserver);
+            returnRouteBundle = new RouteBundle(destAbbr, origToDestsMapping.get(destAbbr));
         }
+
+        estimatesManager.populateWithFeedEstimates(routeBundle, returnRouteBundle);
     }
 
     public void updateUserStations(int resultCode, int stationIndex) {
@@ -215,7 +220,7 @@ public class RoutesFragment extends Fragment {
         Utils.showSnackbar(getActivity(), footerLayout, R.color.bartBlue, R.string.updated_data);
     }
 
-    /** Does RxJava things to get a list of trips */
+    // Does RxJava things to get a list of trips
     private void getTrips(UserStationData origin,
                           UserStationData destination,
                           boolean includeReturnRoute) {

@@ -3,6 +3,7 @@ package com.app.jonathan.willimissbart.activity.core;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,18 +37,21 @@ public class SelectStationActivity extends AppCompatActivity {
     private StationGridViewHolder stationGridViewHolder;
 
     // This is the index chosen for the current origin if the user wants to select a new
-    // destination, and the current destination if the useer wants to select a new origin
-    private int notThisIndex = -1;
+    // destination, and the current destination if the user wants to select a new origin
+    private int prevSelectedIndex = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_station);
         Bundle bundle = getIntent().getExtras();
+
         int titleId = bundle.getInt(Constants.TITLE);
-        notThisIndex = bundle.getInt(Constants.NOT_THIS_INDEX);
-        getSupportActionBar().setTitle(getIntent().getExtras().getInt(Constants.TITLE));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        prevSelectedIndex = bundle.getInt(Constants.NOT_THIS_INDEX);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(titleId);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         ButterKnife.bind(this);
 
         stationInfoViewHolder = new StationInfoViewHolder(stationInfoLayout,
@@ -86,10 +90,9 @@ public class SelectStationActivity extends AppCompatActivity {
 
     @OnItemClick(R.id.stn_grid)
     public void onStationSelected(AdapterView<?> parent, int position) {
-        if (position != notThisIndex) {
-            Intent intent = new Intent();
-            intent.putExtra(Constants.STATION_INDEX,
-                adapter.getItem(position).getIndex());
+        if (position != prevSelectedIndex) {
+            Intent intent = new Intent()
+                .putExtra(Constants.STATION_INDEX, adapter.getItem(position).getIndex());
             setResult(adapter.isSelectingOrigin() ?
                 Constants.UPDATED_ORIGIN : Constants.UPDATED_DEST, intent);
             finish();

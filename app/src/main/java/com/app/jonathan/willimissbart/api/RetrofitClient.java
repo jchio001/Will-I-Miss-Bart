@@ -50,7 +50,7 @@ public class RetrofitClient {
     private static RetrofitClient instance;
     private MatchingService matchingService;
 
-    public static RetrofitClient getInstance() {
+    public static RetrofitClient get() {
         if (instance == null) {
             instance = new RetrofitClient();
         }
@@ -87,10 +87,10 @@ public class RetrofitClient {
         return matchingService;
     }
 
-    public static Single<EtdRespWrapper> getRealTimeEstimates(String origin,
-                                                              Set<String> trainHeadSet) {
+    public Single<EtdRespWrapper> getRealTimeEstimates(String origin,
+                                                       Set<String> trainHeadSet) {
         EtdRespWrapper failedEtdResp = new EtdRespWrapper(origin, null, trainHeadSet);
-        return RetrofitClient.getInstance()
+        return RetrofitClient.get()
             .getMatchingService()
             .getEtd("etd", API_KEY, 'y', origin)
             .doOnError(e  -> Log.w(LOG_TAG, String.format(FAIL_ETDS_REQ_TEMPLATE, origin)))
@@ -107,14 +107,14 @@ public class RetrofitClient {
     }
 
     public static Single<Response<BsaResp>> getBsas() {
-        return RetrofitClient.getInstance()
+        return RetrofitClient.get()
             .getMatchingService()
             .getBsa("bsa", API_KEY, 'y')
             .subscribeOn(Schedulers.io());
     }
 
     public static Single<List<Station>> getStations() {
-        return RetrofitClient.getInstance()
+        return RetrofitClient.get()
             .getMatchingService()
             .getStations("stns", API_KEY, 'y')
             .flatMap(stationsResp -> Single.just(stationsResp.body()
@@ -124,7 +124,7 @@ public class RetrofitClient {
     }
 
     public static Single<Response<StationInfoResp>> getStationInfo(String abbr) {
-        return RetrofitClient.getInstance()
+        return RetrofitClient.get()
             .getMatchingService()
             .getStationInfo("stninfo", API_KEY, abbr, 'y')
             .subscribeOn(Schedulers.io());
@@ -140,7 +140,7 @@ public class RetrofitClient {
      */
     public static Single<List<Trip>> getTrips(String orig,
                                               String dest) {
-        return RetrofitClient.getInstance()
+        return RetrofitClient.get()
             .getMatchingService()
             .getDepartures("depart", orig, dest,
                 "now", 0, 2, API_KEY, 'y')

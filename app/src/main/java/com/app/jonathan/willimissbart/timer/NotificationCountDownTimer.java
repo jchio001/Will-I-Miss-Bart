@@ -29,10 +29,10 @@ public class NotificationCountDownTimer extends CountDownTimer {
     public void onFinish() {
         --time;
         if (time > 0) {
-            Intent intent = new Intent(MyApplication.getContext(), TimerService.class);
-            intent.setAction(Constants.UPDATE);
-            intent.putExtra(Constants.TITLE, title);
-            intent.putExtra(Constants.SECONDS, time);
+            Intent intent = new Intent(MyApplication.getContext(), TimerService.class)
+                .setAction(Constants.UPDATE)
+                .putExtra(Constants.TITLE, title)
+                .putExtra(Constants.SECONDS, time);
             MyApplication.getContext().startService(intent);
         } else {
             Utils.createOrUpdateNotification(title, -1);

@@ -1,135 +1,165 @@
 package com.app.jonathan.willimissbart.misc;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.app.jonathan.willimissbart.api.Models.Etd.Estimate;
+import com.app.jonathan.willimissbart.api.Models.Etd.EtdResp;
 import com.app.jonathan.willimissbart.api.Models.Etd.EtdRespWrapper;
+import com.app.jonathan.willimissbart.api.RetrofitClient;
+import com.app.jonathan.willimissbart.fragment.RoutesFragment;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.BehaviorSubject;
 
 // Singleton class for different components of the app to pull estimates from
 public class EstimatesManager {
 
-    public interface EstimatesListener {
-        void onReceiveEstimates(EtdRespWrapper etdRespWrapper);
-        void onEstimatesUpdated();
+    public enum EstimatesEvent {
+        UPDATE,
     }
 
     private static EstimatesManager instance = null;
 
-    private Map<String, List<Estimate>> origDestToEstimates = NotGuava.newHashMap();
-    // keeps track of when I fetched real time estimates for a specific seconds
-    private Map<String, Long> stationToRespTime = NotGuava.newHashMap();
-    // keeps track of seconds remainder when the user wants to update their estimates
-    private Map<String, Integer> stationToRemainderSeconds = NotGuava.newHashMap();
-    // keeps track of subscribers for this manager
-    private Set<EstimatesListener> subscribers = NotGuava.newHashSet();
+    protected Map<String, List<Estimate>> origDestToEstimates = NotGuava.newHashMap();
 
-    public synchronized static EstimatesManager getInstance() {
+    protected BehaviorSubject<EstimatesEvent> estimatesSubject = BehaviorSubject.create();
+
+    protected CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    private RetrofitClient retrofitClient = RetrofitClient.get();
+
+    public synchronized static EstimatesManager get() {
         if (instance == null) {
-            instance = new EstimatesManager();
+            synchronized (EstimatesManager.class) {
+                if (instance == null) {
+                    instance = new EstimatesManager();
+                }
+            }
         }
 
         return instance;
     }
 
-    public synchronized static void register(EstimatesListener subscriber) {
-        getInstance().subscribers.add(subscriber);
+    public void subscribe(Observer<EstimatesEvent> estimatesEventObserver) {
+        estimatesSubject
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(estimatesEventObserver);
     }
 
-    public synchronized static void unregister(EstimatesListener subscriber) {
-        getInstance().subscribers.remove(subscriber);
+    public void persistThenPost(EtdRespWrapper etdRespWrapper) {
+        origDestToEstimates.putAll(etdRespWrapper.getOrigDestToEstimates());
+        estimatesSubject.onNext(EstimatesEvent.UPDATE);
     }
 
-    public synchronized static void persistThenPost(EtdRespWrapper etdRespWrapper) {
-        getInstance().stationToRespTime.put(etdRespWrapper.getOrig(), etdRespWrapper.getRespTime());
-        getInstance().origDestToEstimates.putAll(etdRespWrapper.getOrigDestToEstimates());
-        for (EstimatesListener subscriber : getInstance().subscribers) {
-            subscriber.onReceiveEstimates(etdRespWrapper);
+    public Map<String, List<Estimate>> getEstimates() {
+      return origDestToEstimates;
+    }
+
+    public void invalidate() {
+        compositeDisposable.dispose();
+        compositeDisposable = new CompositeDisposable();
+        origDestToEstimates.clear();
+    }
+
+    public void populateWithFeedEstimates(@NonNull RouteBundle routeBundle,
+                                          @Nullable RouteBundle returnRouteBundle) {
+        invalidate();
+
+        SingleObserver<EtdRespWrapper> etdObserver =
+            new SingleObserver<EtdRespWrapper>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+                    compositeDisposable.add(d);
+                }
+
+                @Override
+                public void onSuccess(EtdRespWrapper etdRespWrapper) {
+                    origDestToEstimates.putAll(etdRespWrapper.getOrigDestToEstimates());
+                    estimatesSubject.onNext(EstimatesEvent.UPDATE);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.w("EstimatesManager",
+                        String.format("Failed to get estimates for %s", routeBundle.getOrigin()));
+                }
+            };
+
+        retrofitClient
+            .getRealTimeEstimates(routeBundle.getOrigin(), routeBundle.getTrainHeadStations())
+            .subscribe(etdObserver);
+
+        if (returnRouteBundle != null) {
+            retrofitClient
+                .getRealTimeEstimates(returnRouteBundle.getOrigin(),
+                    returnRouteBundle.getTrainHeadStations())
+                .subscribe(etdObserver);
         }
     }
 
-    public synchronized static void clear() {
-        getInstance().origDestToEstimates.clear();
-    }
-
-    public synchronized static boolean containsKey(String origDest) {
-        return getInstance().origDestToEstimates.containsKey(origDest);
-    }
-
-    public synchronized static List<Estimate> getEstimates(String origDest) {
-        return getInstance().origDestToEstimates.get(origDest);
-    }
-
-    public synchronized static long getEstimatesRespTime(String abbr) {
-        Map<String, Long> stationToRespTime = getInstance().stationToRespTime;
-        if (stationToRespTime.containsKey(abbr)) {
-            return stationToRespTime.get(abbr);
-        } else {
-            return 0;
-        }
-    }
-
-    // TODO: it's obvious what this method does, but the code sucks. pliz fix.
-    public synchronized static void updateEstimates(long refreshTime) {
-        Map<String, List<Estimate>> origDestToEstimates = getInstance().origDestToEstimates;
-        Map<String, Integer> stationToRemainderSeconds = getInstance().stationToRemainderSeconds;
-        Map<String, Long> stationToRespTime = getInstance().stationToRespTime;
-
-        Map<String, Integer> stationToUpdatedRemainderSeconds = NotGuava.newHashMap();
-        boolean estimatesUpdated = false;
-        for (Map.Entry<String, List<Estimate>> entry : origDestToEstimates.entrySet()) {
-            List<Estimate> estimates = entry.getValue();
-            String originStation = entry.getKey().substring(0, 4);
-            long lastRespTime = stationToRespTime.get(originStation);
-
-            long elapsedTime = refreshTime - lastRespTime;
-            if (elapsedTime >= 60) {
-                estimatesUpdated = true;
-
-                if (stationToRemainderSeconds.containsKey(originStation)) {
-                    elapsedTime += stationToRemainderSeconds.get(originStation);
+    public synchronized void beginMinutelyUpdateJob() {
+        Observable.interval(1, TimeUnit.MINUTES)
+            .subscribeOn(Schedulers.io())
+            .subscribe(new Observer<Long>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+                    compositeDisposable.add(d);
                 }
 
-                int elapsedMinutes = (int) elapsedTime / 60;
-                int elapsedSeconds = (int) elapsedTime % 60;
+                @Override
+                public void onNext(Long interval) {
+                    HashMap<String, List<Estimate>> updatedEstimatesMap = new HashMap<>();
+                    for (Map.Entry<String, List<Estimate>> entry : origDestToEstimates.entrySet()) {
+                        List<Estimate> estimates = entry.getValue();
+                        ArrayList<Estimate> updatedEstimates = new ArrayList<>(estimates);
+                        for (Estimate estimate : updatedEstimates) {
+                            String minutes = estimate.getMinutes();
 
-                if (!stationToUpdatedRemainderSeconds.containsKey(originStation)) {
-                    stationToUpdatedRemainderSeconds.put(originStation, elapsedSeconds);
-                }
+                            if (!minutes.equals("0") && !minutes.equals("Leaving")) {
+                                String updatedMinutes =
+                                    String.valueOf(Integer.valueOf(minutes) - 1);
+                                estimate.setMinutes(updatedMinutes);
+                                updatedEstimates.add(estimate);
+                            }
+                        }
 
-                stationToRespTime.put(originStation, refreshTime);
-
-                for (int i = 0; i < estimates.size(); ++i) {
-                    Estimate estimate = estimates.get(i);
-                    if (estimate.getMinutes().equals("Leaving")) {
-                        estimates.remove(i);
-                        --i;
-                    } else {
-                        int updatedMinutes = Integer.valueOf(estimate.getMinutes()) - elapsedMinutes;
-                        if (updatedMinutes < 0) {
-                            estimates.remove(i);
-                            --i;
-                        } else if (updatedMinutes == 0) {
-                            estimate.setMinutes("Leaving");
-                            --i;
-                        } else {
-                            estimate.setMinutes(String.valueOf(updatedMinutes));
+                        if (!updatedEstimates.isEmpty()) {
+                            updatedEstimatesMap.put(entry.getKey(), updatedEstimates);
                         }
                     }
+
+                    Log.i("EstimatesManager", "Updated estimates!");
+                    origDestToEstimates.clear();
+                    origDestToEstimates.putAll(updatedEstimatesMap);
+                    estimatesSubject.onNext(EstimatesEvent.UPDATE);
                 }
-            }
-        }
 
-        stationToRemainderSeconds.putAll(stationToUpdatedRemainderSeconds);
+                @Override
+                public void onError(Throwable e) {
+                    Log.e("EstimatesManager", "rip");
+                }
 
-        if (estimatesUpdated) {
-            Log.i("EstimatesManager", "Estimates updated!");
-            for (EstimatesListener subscriber : getInstance().subscribers) {
-                subscriber.onEstimatesUpdated();
-            }
-        }
+                @Override
+                public void onComplete() {
+                }
+            });
     }
  }

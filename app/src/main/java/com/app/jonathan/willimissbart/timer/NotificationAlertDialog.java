@@ -125,10 +125,10 @@ public class NotificationAlertDialog {
 
     private void showNotification(int duration) {
         Context context = alarmIcon.getContext();
-        Intent intent = new Intent(context, TimerService.class);
-        intent.setAction(Constants.UPDATE);
-        intent.putExtra(Constants.TITLE, title);
-        intent.putExtra(Constants.SECONDS, duration);
+        Intent intent = new Intent(context, TimerService.class)
+            .setAction(Constants.UPDATE)
+            .putExtra(Constants.TITLE, title)
+            .putExtra(Constants.SECONDS, duration);
         context.startService(intent);
         Toast.makeText(context, R.string.starting_timer, Toast.LENGTH_SHORT).show();
     }

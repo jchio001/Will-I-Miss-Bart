@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             StationsFragment.PERMISSIONS_CODE ->
-                if (permissions.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (!permissions.isEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     stationsFragment.loadStation()
                 }
         }

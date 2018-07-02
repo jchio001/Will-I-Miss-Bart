@@ -35,8 +35,7 @@ public class TimerNotificationBuilder {
     }
 
     public RemoteViews createView(int time) {
-        Intent intent = new Intent();
-        intent.setAction(Constants.DISMISS);
+        Intent intent = new Intent().setAction(Constants.DISMISS);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
