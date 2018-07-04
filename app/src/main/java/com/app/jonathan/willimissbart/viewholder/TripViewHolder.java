@@ -47,12 +47,12 @@ public class TripViewHolder extends ViewHolder {
 
     @OnClick(R.id.route_card)
     public void onExpandRoute() {
-        /*if (trip != null) {
+        if (trip != null) {
             Intent intent = new Intent(itemView.getContext(), TripActivity.class)
                 .putExtra(Constants.TIME_OF_RESP, timeOfResp)
                 .putExtra(Constants.TRIP, (Parcelable) trip);
             itemView.getContext().startActivity(intent);
-        }*/
+        }
     }
 
     public void renderTrip(Trip trip, List<Estimate> estimates) {

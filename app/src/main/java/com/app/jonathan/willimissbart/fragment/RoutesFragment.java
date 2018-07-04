@@ -170,7 +170,7 @@ public class RoutesFragment extends Fragment {
 
         // TODO: WRITE A BETTER FREAKING COMMENT HERE. DO I NEED A MAP OR NOT?
         Map<String, Set<String>> origToDestsMapping = NotGuava.newHashMap();
-        for (Trip trip : adapter.getTrips()) {
+        for (Trip trip : mergedTrips) {
             if (trip != null) {
                 if (!origToDestsMapping.containsKey(trip.getOrigin())) {
                     origToDestsMapping.put(trip.getOrigin(),

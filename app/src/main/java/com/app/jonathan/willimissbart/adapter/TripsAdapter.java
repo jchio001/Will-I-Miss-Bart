@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.api.Models.Etd.Estimate;
-import com.app.jonathan.willimissbart.api.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.api.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.misc.EstimatesManager;
 import com.app.jonathan.willimissbart.misc.NotGuava;
@@ -66,7 +65,7 @@ public class TripsAdapter extends Adapter<TripViewHolder> {
     // not found.
     private List<Estimate> getEstimatesForTripsFirstLeg(Trip trip) {
         List<Estimate> estimates = estimatesManager
-            .getEstimates().get(trip.getOrigin() + trip.getLegList().get(0).getTrainHeadStation());
+            .getOrigDestToEstimates().get(trip.getOrigin() + trip.getLegList().get(0).getTrainHeadStation());
 
         return estimates;
     }

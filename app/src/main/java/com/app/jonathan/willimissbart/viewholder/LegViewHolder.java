@@ -44,7 +44,7 @@ public class LegViewHolder extends ViewHolder {
 
     public void displayEstimates(String origin, long timeOfResp) {
         List<Estimate> estimates =
-            EstimatesManager.get().getEstimates().get(origin + leg.getTrainHeadStation());
+            EstimatesManager.get().getOrigDestToEstimates().get(origin + leg.getTrainHeadStation());
         if (estimates != null && mainLegLayout.getChildCount() == 2) {
             for (Estimate estimate : estimates) {
                 View v = LayoutInflater.from(itemView.getContext())

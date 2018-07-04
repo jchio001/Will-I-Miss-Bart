@@ -10,24 +10,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.app.jonathan.willimissbart.R;
-import com.app.jonathan.willimissbart.api.Models.Etd.EtdRespWrapper;
+import com.app.jonathan.willimissbart.api.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.api.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.api.Models.Routes.Trip;
-import com.app.jonathan.willimissbart.api.RetrofitClient;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.EstimatesManager;
+import com.app.jonathan.willimissbart.misc.EstimatesManager.EstimateConsumer;
 import com.app.jonathan.willimissbart.misc.NotGuava;
+import com.app.jonathan.willimissbart.misc.RouteBundle;
 import com.app.jonathan.willimissbart.viewholder.LegViewHolder;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 public class TripActivity extends AppCompatActivity {
@@ -42,26 +42,6 @@ public class TripActivity extends AppCompatActivity {
     protected Disposable disposable;
 
     protected EstimatesManager estimatesManager = EstimatesManager.get();
-
-    private final SingleObserver<EtdRespWrapper> etdObserver =
-        new SingleObserver<EtdRespWrapper>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                disposable = d;
-            }
-
-            @Override
-            public void onSuccess(EtdRespWrapper etdRespWrapper) {
-                estimatesManager.persistThenPost(etdRespWrapper);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Toast.makeText(TripActivity.this,
-                    String.format("Wah wah %s", e.getMessage()), Toast.LENGTH_SHORT)
-                    .show();
-            }
-        };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,10 +118,24 @@ public class TripActivity extends AppCompatActivity {
 
         if (trip.getLegList().size() == 2 && !hasEstimatesLoaded(legsLayout.getChildAt(2))) {
             Log.i("TripActivity", "Loading estimates for 2nd leg...");
-            RetrofitClient.get().getRealTimeEstimates(trip.getLegList().get(1).getOrigin(),
-                NotGuava.newHashSet(trip.getLegList().get(1).getTrainHeadStation()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(etdObserver);
+
+            Leg nextLeg = trip.getLegList().get(1);
+            estimatesManager.requestEstimates(
+                new RouteBundle(nextLeg.getOrigin(),
+                    NotGuava.newHashSet(nextLeg.getTrainHeadStation())),
+                new EstimateConsumer() {
+                    @Override
+                    public void onPendingEstimates() {
+                    }
+
+                    @Override
+                    public void consumeEstimates(List<Estimate> estimates) {
+                        LegViewHolder legViewHolder = (LegViewHolder) legsLayout
+                            .getChildAt(2).getTag();
+                        legViewHolder.displayEstimates(
+                            nextLeg.getOrigin(), 0);
+                    }
+                });
         }
     }
 

@@ -25,11 +25,20 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
-// Singleton class for different components of the app to pull estimates from
+/**
+ * Note: the onError() method in an observer should never be called. If it is, something is messed
+ * up.
+ */
 public class EstimatesManager {
+
+    public interface EstimateConsumer {
+        void onPendingEstimates();
+        void consumeEstimates(List<Estimate> estimates);
+    }
 
     public enum EstimatesEvent {
         UPDATE,
@@ -64,13 +73,59 @@ public class EstimatesManager {
             .subscribe(estimatesEventObserver);
     }
 
-    public void persistThenPost(EtdRespWrapper etdRespWrapper) {
-        origDestToEstimates.putAll(etdRespWrapper.getOrigDestToEstimates());
-        estimatesSubject.onNext(EstimatesEvent.UPDATE);
+    public Map<String, List<Estimate>> getOrigDestToEstimates() {
+      return origDestToEstimates;
     }
 
-    public Map<String, List<Estimate>> getEstimates() {
-      return origDestToEstimates;
+    // TODO: THIS IS BROKEN
+    // If TripActivity is requesting estimates, and the user leaves before the request finishes,
+    // then there's going to be memory leak in the implicit TripActivity reference in
+    // EstimateConsumer.
+    public void requestEstimates(@NonNull RouteBundle routeBundle,
+                                 @NonNull EstimateConsumer estimateConsumer) {
+        if (consumeEstimatesIfPresent(routeBundle, estimateConsumer, origDestToEstimates)) {
+            return;
+        }
+
+        estimateConsumer.onPendingEstimates();
+        retrofitClient
+            .getRealTimeEstimates(routeBundle.getOrigin(), routeBundle.getTrainHeadStations())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new SingleObserver<EtdRespWrapper>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+                    compositeDisposable.add(d);
+                }
+
+                @Override
+                public void onSuccess(EtdRespWrapper etdRespWrapper) {
+                    origDestToEstimates.putAll(etdRespWrapper.getOrigDestToEstimates());
+                    consumeEstimatesIfPresent(routeBundle, estimateConsumer,
+                        etdRespWrapper.getOrigDestToEstimates());
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.w("EstimatesManager",
+                        String.format("Failed to get estimates for %s", routeBundle.getOrigin()));
+                }
+            });
+    }
+
+    private static boolean consumeEstimatesIfPresent(
+        @NonNull RouteBundle routeBundle,
+        @NonNull EstimateConsumer estimateConsumer,
+        @NonNull Map<String, List<Estimate>> origDestToEstimates) {
+        String origin = routeBundle.getOrigin();
+        for (String trainHeadStation : routeBundle.getTrainHeadStations()) {
+            String originDest = origin + trainHeadStation;
+            if (origDestToEstimates.containsKey(originDest)) {
+                estimateConsumer.consumeEstimates(origDestToEstimates.get(originDest));
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void invalidate() {
@@ -115,7 +170,8 @@ public class EstimatesManager {
         }
     }
 
-    public synchronized void beginMinutelyUpdateJob() {
+    // There's still a lot of work that needs to be done on this to resolve the ace conditions!
+    public void beginMinutelyUpdateJob() {
         Observable.interval(1, TimeUnit.MINUTES)
             .subscribeOn(Schedulers.io())
             .subscribe(new Observer<Long>() {
