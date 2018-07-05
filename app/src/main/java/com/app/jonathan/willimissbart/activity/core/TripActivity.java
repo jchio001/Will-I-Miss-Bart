@@ -64,7 +64,7 @@ public class TripActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        estimatesManager.invalidate();
+        estimatesManager.stopMinutelyUpdate();
         super.onStop();
     }
 

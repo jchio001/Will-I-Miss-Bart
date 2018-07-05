@@ -49,7 +49,8 @@ public class EstimatesManager {
 
     protected BehaviorSubject<EstimatesEvent> estimatesSubject = BehaviorSubject.create();
 
-    protected CompositeDisposable compositeDisposable = new CompositeDisposable();
+    protected CompositeDisposable estimatesDisposable = new CompositeDisposable();
+    protected Disposable minutelyUpdateDisposable;
 
     private RetrofitClient retrofitClient = RetrofitClient.get();
 
@@ -95,7 +96,7 @@ public class EstimatesManager {
             .subscribe(new SingleObserver<EtdRespWrapper>() {
                 @Override
                 public void onSubscribe(Disposable d) {
-                    compositeDisposable.add(d);
+                    estimatesDisposable.add(d);
                 }
 
                 @Override
@@ -131,11 +132,21 @@ public class EstimatesManager {
 
         return false;
     }
+    
+    public synchronized void stopMinutelyUpdate() {
+        if (minutelyUpdateDisposable != null) {
+            minutelyUpdateDisposable.dispose();
+            minutelyUpdateDisposable = null;
+            Log.i("EstimatesManager", "Minutely update stopped!");
+        }
+    }
 
     public synchronized void invalidate() {
-        if (compositeDisposable.size() != 0) {
-            compositeDisposable.dispose();
-            compositeDisposable = new CompositeDisposable();
+        stopMinutelyUpdate();
+
+        if (estimatesDisposable.size() != 0) {
+            estimatesDisposable.dispose();
+            estimatesDisposable = new CompositeDisposable();
             Log.i("EstimatesManager", "invalidated!");
         }
 
@@ -150,7 +161,7 @@ public class EstimatesManager {
             new SingleObserver<EtdRespWrapper>() {
                 @Override
                 public void onSubscribe(Disposable d) {
-                    compositeDisposable.add(d);
+                    estimatesDisposable.add(d);
                 }
 
                 @Override
@@ -195,7 +206,7 @@ public class EstimatesManager {
             .subscribe(new Observer<Long>() {
                 @Override
                 public void onSubscribe(Disposable d) {
-                    compositeDisposable.add(d);
+                    minutelyUpdateDisposable = d;
                 }
 
                 @Override
