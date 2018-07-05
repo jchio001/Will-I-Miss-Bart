@@ -31,6 +31,7 @@ import com.app.jonathan.willimissbart.api.RetrofitClient
 import com.app.jonathan.willimissbart.fragment.RoutesFragment
 import com.app.jonathan.willimissbart.fragment.StationsFragment
 import com.app.jonathan.willimissbart.misc.Constants
+import com.app.jonathan.willimissbart.misc.EstimatesManager
 import com.app.jonathan.willimissbart.misc.NotGuava
 import com.app.jonathan.willimissbart.misc.Utils
 import com.app.jonathan.willimissbart.persistence.SPManager
@@ -108,6 +109,11 @@ class MainActivity : AppCompatActivity() {
         if (SPManager.incrementUsageCounter(this) == SHOW_DIALOG_THRESHOLD) {
             createPleaseRateDialog().show();
         }
+    }
+
+    override fun onStop() {
+        EstimatesManager.get().invalidate();
+        super.onStop()
     }
 
     override fun onDestroy() {

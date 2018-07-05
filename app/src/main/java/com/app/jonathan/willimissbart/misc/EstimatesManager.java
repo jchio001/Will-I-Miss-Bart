@@ -132,9 +132,13 @@ public class EstimatesManager {
         return false;
     }
 
-    public void invalidate() {
-        compositeDisposable.dispose();
-        compositeDisposable = new CompositeDisposable();
+    public synchronized void invalidate() {
+        if (compositeDisposable.size() != 0) {
+            compositeDisposable.dispose();
+            compositeDisposable = new CompositeDisposable();
+            Log.i("EstimatesManager", "invalidated!");
+        }
+
         origDestToEstimates.clear();
     }
 
