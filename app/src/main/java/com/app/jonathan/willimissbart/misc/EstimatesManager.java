@@ -26,6 +26,11 @@ import io.reactivex.subjects.BehaviorSubject;
 /**
  * Note: the onError() method in an observer should never be called. If it is, something is messed
  * up.
+ *
+ * EstimatesManager should probably be broken up into 3 components:
+ * - A feed manager
+ * - A estimates client
+ * - A estimates manager that the above 2 items pool their results in
  */
 public class EstimatesManager {
 
