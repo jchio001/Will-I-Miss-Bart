@@ -16,6 +16,7 @@ import com.app.jonathan.willimissbart.api.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.api.Models.Routes.Leg;
 import com.app.jonathan.willimissbart.api.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.misc.Constants;
+import com.app.jonathan.willimissbart.misc.DisposableConsumer;
 import com.app.jonathan.willimissbart.misc.EstimatesManager;
 import com.app.jonathan.willimissbart.misc.EstimatesManager.EstimateConsumer;
 import com.app.jonathan.willimissbart.misc.NotGuava;
@@ -39,9 +40,9 @@ public class TripActivity extends AppCompatActivity {
 
     private Trip trip;
 
-    protected Disposable disposable;
-
     protected EstimatesManager estimatesManager = EstimatesManager.get();
+
+    private DisposableConsumer disposableConsumer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +64,8 @@ public class TripActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (disposable != null) {
-            disposable.dispose();
+        if (disposableConsumer != null) {
+            disposableConsumer.dispose();
         }
 
         super.onDestroy();
@@ -120,22 +121,27 @@ public class TripActivity extends AppCompatActivity {
             Log.i("TripActivity", "Loading estimates for 2nd leg...");
 
             Leg nextLeg = trip.getLegList().get(1);
+
+            EstimateConsumer estimateConsumer = new EstimateConsumer() {
+                @Override
+                public void onPendingEstimates() {
+                }
+
+                @Override
+                public void consumeEstimates(List<Estimate> estimates) {
+                    LegViewHolder legViewHolder = (LegViewHolder) legsLayout
+                        .getChildAt(2).getTag();
+                    legViewHolder.displayEstimates(
+                        nextLeg.getOrigin(), 0);
+                }
+            };
+
+            DisposableConsumer disposableConsumer = new DisposableConsumer(estimateConsumer);
+
             estimatesManager.requestEstimates(
                 new RouteBundle(nextLeg.getOrigin(),
                     NotGuava.newHashSet(nextLeg.getTrainHeadStation())),
-                new EstimateConsumer() {
-                    @Override
-                    public void onPendingEstimates() {
-                    }
-
-                    @Override
-                    public void consumeEstimates(List<Estimate> estimates) {
-                        LegViewHolder legViewHolder = (LegViewHolder) legsLayout
-                            .getChildAt(2).getTag();
-                        legViewHolder.displayEstimates(
-                            nextLeg.getOrigin(), 0);
-                    }
-                });
+                disposableConsumer);
         }
     }
 

@@ -3,29 +3,23 @@ package com.app.jonathan.willimissbart.misc;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.app.jonathan.willimissbart.api.Models.Etd.Estimate;
-import com.app.jonathan.willimissbart.api.Models.Etd.EtdResp;
 import com.app.jonathan.willimissbart.api.Models.Etd.EtdRespWrapper;
 import com.app.jonathan.willimissbart.api.RetrofitClient;
-import com.app.jonathan.willimissbart.fragment.RoutesFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
@@ -77,17 +71,19 @@ public class EstimatesManager {
       return origDestToEstimates;
     }
 
-    // TODO: THIS IS BROKEN
-    // If TripActivity is requesting estimates, and the user leaves before the request finishes,
-    // then there's going to be memory leak in the implicit TripActivity reference in
-    // EstimateConsumer.
+    /**
+     * Makes a request to fetch estimates specific to a origin station. The consumer is wrapped in
+     * {@link DisposableConsumer} to deal with race conditions.
+     * @param routeBundle
+     * @param disposableConsumer
+     */
     public void requestEstimates(@NonNull RouteBundle routeBundle,
-                                 @NonNull EstimateConsumer estimateConsumer) {
-        if (consumeEstimatesIfPresent(routeBundle, estimateConsumer, origDestToEstimates)) {
+                                 @NonNull DisposableConsumer disposableConsumer) {
+        if (consumeEstimatesIfPresent(routeBundle, disposableConsumer, origDestToEstimates)) {
             return;
         }
 
-        estimateConsumer.onPendingEstimates();
+        disposableConsumer.onPendingEstimates();
         retrofitClient
             .getRealTimeEstimates(routeBundle.getOrigin(), routeBundle.getTrainHeadStations())
             .observeOn(AndroidSchedulers.mainThread())
@@ -100,7 +96,7 @@ public class EstimatesManager {
                 @Override
                 public void onSuccess(EtdRespWrapper etdRespWrapper) {
                     origDestToEstimates.putAll(etdRespWrapper.getOrigDestToEstimates());
-                    consumeEstimatesIfPresent(routeBundle, estimateConsumer,
+                    consumeEstimatesIfPresent(routeBundle, disposableConsumer,
                         etdRespWrapper.getOrigDestToEstimates());
                 }
 
@@ -114,13 +110,13 @@ public class EstimatesManager {
 
     private static boolean consumeEstimatesIfPresent(
         @NonNull RouteBundle routeBundle,
-        @NonNull EstimateConsumer estimateConsumer,
+        @NonNull DisposableConsumer disposableConsumer,
         @NonNull Map<String, List<Estimate>> origDestToEstimates) {
         String origin = routeBundle.getOrigin();
         for (String trainHeadStation : routeBundle.getTrainHeadStations()) {
             String originDest = origin + trainHeadStation;
             if (origDestToEstimates.containsKey(originDest)) {
-                estimateConsumer.consumeEstimates(origDestToEstimates.get(originDest));
+                disposableConsumer.consumeEstimates(origDestToEstimates.get(originDest));
                 return true;
             }
         }
