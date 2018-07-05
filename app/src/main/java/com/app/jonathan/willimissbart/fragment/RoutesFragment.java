@@ -143,6 +143,7 @@ public class RoutesFragment extends Fragment {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.setMargins(0, 0, 0, footerLayout.getMeasuredHeight());
+        recyclerView.setLayoutParams(params);
     }
 
     @UiThread
