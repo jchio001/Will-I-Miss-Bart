@@ -35,6 +35,22 @@ public class Estimate implements Serializable {
     @Expose
     private String bikeFlag;
 
+    public Estimate(String minutes,
+                    String platform,
+                    String direction,
+                    String length,
+                    String color,
+                    String hexColor,
+                    String bikeFlag) {
+        this.minutes = minutes;
+        this.platform = platform;
+        this.direction = direction;
+        this.length = length;
+        this.color = color;
+        this.hexColor = hexColor;
+        this.bikeFlag = bikeFlag;
+    }
+
     public String getMinutes() {
         return minutes;
     }
@@ -77,5 +93,12 @@ public class Estimate implements Serializable {
                 return minutes + " minutes";
             }
         }
+    }
+
+    // This does a DEEP COPY!
+    // Yes I could save some processing power just by changing the field, but that could lead to
+    // some nasty now and in the future.
+    public Estimate updateMinutes(String updatedMinutes) {
+        return new Estimate(updatedMinutes, platform, direction, length, color, hexColor, bikeFlag);
     }
 }

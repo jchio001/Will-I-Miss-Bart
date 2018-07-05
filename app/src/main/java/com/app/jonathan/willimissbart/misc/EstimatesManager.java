@@ -100,7 +100,10 @@ public class EstimatesManager {
 
                 @Override
                 public void onSuccess(EtdRespWrapper etdRespWrapper) {
-                    origDestToEstimates.putAll(etdRespWrapper.getOrigDestToEstimates());
+                    synchronized (EstimatesManager.class) {
+                        origDestToEstimates.putAll(etdRespWrapper.getOrigDestToEstimates());
+                    }
+
                     consumeEstimatesIfPresent(routeBundle, disposableConsumer,
                         etdRespWrapper.getOrigDestToEstimates());
                 }
@@ -148,7 +151,16 @@ public class EstimatesManager {
 
                 @Override
                 public void onSuccess(EtdRespWrapper etdRespWrapper) {
-                    origDestToEstimates.putAll(etdRespWrapper.getOrigDestToEstimates());
+                    synchronized (EstimatesManager.class) {
+                        boolean wasEmpty = origDestToEstimates.isEmpty();
+
+                        origDestToEstimates.putAll(etdRespWrapper.getOrigDestToEstimates());
+
+                        if (wasEmpty) {
+                            beginMinutelyUpdateJob();
+                        }
+                    }
+
                     estimatesSubject.onNext(EstimatesEvent.UPDATE);
                 }
 
@@ -172,7 +184,8 @@ public class EstimatesManager {
     }
 
     // There's still a lot of work that needs to be done on this to resolve the ace conditions!
-    public void beginMinutelyUpdateJob() {
+    // TODO: Handle the app being paused/killed by the OS
+    protected void beginMinutelyUpdateJob() {
         Observable.interval(1, TimeUnit.MINUTES)
             .subscribeOn(Schedulers.io())
             .subscribe(new Observer<Long>() {
@@ -184,17 +197,18 @@ public class EstimatesManager {
                 @Override
                 public void onNext(Long interval) {
                     HashMap<String, List<Estimate>> updatedEstimatesMap = new HashMap<>();
+
+
                     for (Map.Entry<String, List<Estimate>> entry : origDestToEstimates.entrySet()) {
                         List<Estimate> estimates = entry.getValue();
-                        ArrayList<Estimate> updatedEstimates = new ArrayList<>(estimates);
-                        for (Estimate estimate : updatedEstimates) {
+                        ArrayList<Estimate> updatedEstimates = new ArrayList<>(estimates.size());
+                        for (Estimate estimate : estimates) {
                             String minutes = estimate.getMinutes();
 
                             if (!minutes.equals("0") && !minutes.equals("Leaving")) {
                                 String updatedMinutes =
                                     String.valueOf(Integer.valueOf(minutes) - 1);
-                                estimate.setMinutes(updatedMinutes);
-                                updatedEstimates.add(estimate);
+                                updatedEstimates.add(estimate.updateMinutes(updatedMinutes));
                             }
                         }
 
@@ -204,8 +218,11 @@ public class EstimatesManager {
                     }
 
                     Log.i("EstimatesManager", "Updated estimates!");
-                    origDestToEstimates.clear();
-                    origDestToEstimates.putAll(updatedEstimatesMap);
+                    synchronized (EstimatesManager.class) {
+                        origDestToEstimates.clear();
+                        origDestToEstimates.putAll(updatedEstimatesMap);
+                    }
+
                     estimatesSubject.onNext(EstimatesEvent.UPDATE);
                 }
 
