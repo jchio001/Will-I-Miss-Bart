@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,6 @@ import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.adapter.TripsAdapter;
 import com.app.jonathan.willimissbart.api.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.api.RetrofitClient;
-import com.app.jonathan.willimissbart.listener.swiperefresh.TripRefreshListener;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.EstimatesManager;
 import com.app.jonathan.willimissbart.misc.EstimatesManager.EstimatesEvent;
@@ -46,13 +44,11 @@ import io.reactivex.disposables.Disposable;
 
 public class RoutesFragment extends Fragment {
 
-    @Bind(R.id.route_swipe_refresh) SwipeRefreshLayout routeSwipeRefresh;
     @Bind(R.id.route_recycler) RecyclerView recyclerView;
     @Bind(R.id.progress_bar) ProgressBar progressBar;
     @Bind(R.id.footer_wrapper) LinearLayout footerLayout;
     @Bind(R.id.failure_text) TextView failureText;
 
-    private TripRefreshListener routeRefreshListener;
     private UserRouteFooterViewHolder footer;
     private List<UserStationData> userData;
     private List<UserStationData> updatedUserData;
@@ -113,10 +109,6 @@ public class RoutesFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_trip, container, false);
         ButterKnife.bind(this, v);
 
-        routeSwipeRefresh.setEnabled(false);
-        routeRefreshListener = new TripRefreshListener(routeSwipeRefresh, adapter);
-        routeSwipeRefresh.setOnRefreshListener(routeRefreshListener);
-
         if (getArguments() != null) {
             userData = getArguments().getParcelableArrayList(Constants.USER_DATA);
         } else {
@@ -151,16 +143,11 @@ public class RoutesFragment extends Fragment {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.setMargins(0, 0, 0, footerLayout.getMeasuredHeight());
-        routeSwipeRefresh.setLayoutParams(params);
     }
 
     @UiThread
     public void loadUserRoutes(List<Trip> mergedTrips) {
         progressBar.setVisibility(View.GONE);
-
-        routeRefreshListener.setRefreshState(Constants.REFRESH_STATE_INACTIVE);
-        routeSwipeRefresh.setRefreshing(false);
-        routeSwipeRefresh.setEnabled(true);
 
         failureText.setVisibility(View.GONE);
 
