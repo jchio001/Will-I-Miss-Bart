@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.activity.core.SelectStationActivity;
 import com.app.jonathan.willimissbart.fragment.RoutesFragment;
+import com.app.jonathan.willimissbart.fragment.UserDataManager;
 import com.app.jonathan.willimissbart.listener.animation.Footers.FooterAnimListener;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.Utils;
@@ -39,6 +40,8 @@ public class UserRouteFooterViewHolder {
     // userData is the user's data with pending changes which may or mat not have been persisted
     private List<UserStationData> userData;
 
+    private SPManager spManager;
+
     private final AnimatorUpdateListener updateListener = new AnimatorUpdateListener() {
         @Override
         public void onAnimationUpdate(ValueAnimator animation) {
@@ -50,10 +53,12 @@ public class UserRouteFooterViewHolder {
     public UserRouteFooterViewHolder(View v, RoutesFragment routeFragment,
                                      List<UserStationData> userData) {
         ButterKnife.bind(this, v);
+        this.spManager = new SPManager(v.getContext());
+
         this.routeFragment = routeFragment;
         origin.setText(userData.get(0).getAbbr());
         destination.setText(userData.get(1).getAbbr());
-        includeReturn.setChecked(SPManager.fetchIncludeReturnRoute(routeFragment.getContext()));
+        includeReturn.setChecked(spManager.fetchIncludeReturnRoute());
         this.userData = userData;
         createAnimations();
     }

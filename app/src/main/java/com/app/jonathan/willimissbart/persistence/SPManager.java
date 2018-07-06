@@ -19,33 +19,23 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SPManager {
 
-    private static SPManager instance = null;
     private SharedPreferences sp;
     private static Gson gson = new Gson();
 
-    private SPManager(Context context) {
+    public SPManager(Context context) {
         sp = PreferenceManager.getDefaultSharedPreferences(context);
-    }
-
-    public static SPManager getInstance(Context context) {
-        if (instance == null) {
-            instance = new SPManager(context);
-        }
-
-        return instance;
     }
 
     private SharedPreferences getSp() {
         return sp;
     }
 
-    public static boolean containsUserData(Context context) {
-        return getInstance(context).getSp().contains(Constants.USER_DATA);
+    public boolean containsUserData() {
+        return sp.contains(Constants.USER_DATA);
     }
 
-    public static ArrayList<UserStationData> fetchUserData(Context context) {
-        String userData = getInstance(context).getSp()
-            .getString(Constants.USER_DATA, "");
+    public ArrayList<UserStationData> fetchUserData() {
+        String userData = sp.getString(Constants.USER_DATA, "");
         if (userData.isEmpty()) {
             return null;
         } else {
@@ -54,30 +44,29 @@ public class SPManager {
         }
     }
 
-    public static Single<String> fetchStationsJson(Context context) {
-        return Single.just(getInstance(context).getSp()
-            .getString(Constants.STATION_LIST_KEY, ""))
+    public Single<String> fetchStationsJson(Context context) {
+        return Single.just(sp.getString(Constants.STATION_LIST_KEY, ""))
             .subscribeOn(Schedulers.io());
     }
 
     // Only use this method if you're 100% sure that the stations JSON is persisted in
     // SharedPreferences
-    public static Single<List<Station>> fetchStations(Context context) {
-        return Single.just(Utils.stationsJsonToList(getInstance(context).getSp()
-            .getString(Constants.STATION_LIST_KEY, "")))
+    public Single<List<Station>> fetchStations(Context context) {
+        return Single.just(Utils.stationsJsonToList(
+            sp.getString(Constants.STATION_LIST_KEY, "")))
             .subscribeOn(Schedulers.io());
     }
 
-    public static String fetchString(Context context, String key) {
-        return getInstance(context).getSp().getString(key, "");
+    public String fetchString(String key) {
+        return getSp().getString(key, "");
     }
 
-    public static void persistString(Context context, String key, String value) {
-        getInstance(context).getSp().edit().putString(key, value).apply();
+    public void persistString(String key, String value) {
+        sp.edit().putString(key, value).apply();
     }
 
-    public static void persistUserData(Context context, List<UserStationData> userData) {
-        getInstance(context).getSp().edit()
+    public void persistUserData(List<UserStationData> userData) {
+        sp.edit()
             .putString(Constants.USER_DATA, gson.toJson(userData))
             .apply();
     }
@@ -86,19 +75,18 @@ public class SPManager {
         sp.edit().putString(Constants.STATION_LIST_KEY, stationsJsonArr).apply();
     }
 
-    public static void persistIncludeReturnRoute(Context context, boolean includeReturnRoute) {
-        getInstance(context).getSp().edit()
+    public void persistIncludeReturnRoute(boolean includeReturnRoute) {
+        sp.edit()
             .putBoolean(Constants.INCLUDE_RETURN, includeReturnRoute).apply();
     }
 
-    public static boolean fetchIncludeReturnRoute(Context context) {
-        return getInstance(context).getSp().getBoolean(Constants.INCLUDE_RETURN, false);
+    public boolean fetchIncludeReturnRoute() {
+        return sp.getBoolean(Constants.INCLUDE_RETURN, false);
     }
 
-    public static int incrementUsageCounter(Context context) {
-        SharedPreferences sharedPreferences = getInstance(context).getSp();
-        int counter = sharedPreferences.getInt(Constants.USAGE_COUNTER, 0) + 1;
-        sharedPreferences.edit().putInt(Constants.USAGE_COUNTER, counter).apply();
+    public int incrementUsageCounter() {
+        int counter = sp.getInt(Constants.USAGE_COUNTER, 0) + 1;
+        sp.edit().putInt(Constants.USAGE_COUNTER, counter).apply();
         return counter;
     }
 }

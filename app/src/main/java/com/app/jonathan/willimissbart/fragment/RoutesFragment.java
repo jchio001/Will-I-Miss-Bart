@@ -50,9 +50,11 @@ public class RoutesFragment extends Fragment {
     @Bind(R.id.failure_text) TextView failureText;
 
     private UserRouteFooterViewHolder footer;
-    private List<UserStationData> userData;
-    private List<UserStationData> updatedUserData;
-    private TripsAdapter adapter = new TripsAdapter();
+    private TripsAdapter adapter;
+
+    private SPManager spManager;
+
+    private UserDataManager userDataManager;
 
     protected EstimatesManager estimatesManager = EstimatesManager.get();
 
@@ -106,27 +108,23 @@ public class RoutesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_trip, container, false);
-        ButterKnife.bind(this, v);
-
-        if (getArguments() != null) {
-            userData = getArguments().getParcelableArrayList(Constants.USER_DATA);
-        } else {
-            userData = SPManager.fetchUserData(getActivity());
-        }
-        updatedUserData = NotGuava.newArrayList(userData);
-
-        renderFooter();
-
-        recyclerView.setAdapter(adapter);
-        return v;
+        return inflater.inflate(R.layout.fragment_trip, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        boolean includeReturnRoute = SPManager.fetchIncludeReturnRoute(getContext());
-        getTrips(userData.get(0), userData.get(1), includeReturnRoute);
+
+        ButterKnife.bind(this, view);
+        spManager = new SPManager(getContext());
+        userDataManager = new UserDataManager(spManager, getArguments());
+        adapter = new TripsAdapter(userDataManager);
+
+        renderFooter();
+
+        recyclerView.setAdapter(adapter);
+
+        getTrips();
         estimatesManager.subscribe(estimatesMangerObserver);
     }
 
@@ -138,7 +136,8 @@ public class RoutesFragment extends Fragment {
     }
 
     private void renderFooter() {
-        footer = new UserRouteFooterViewHolder(footerLayout, this, updatedUserData);
+        footer = new UserRouteFooterViewHolder(footerLayout, this,
+            userDataManager.getUserDataCopy());
         footerLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -152,11 +151,10 @@ public class RoutesFragment extends Fragment {
 
         failureText.setVisibility(View.GONE);
 
-        boolean includeReturnRoute = SPManager.fetchIncludeReturnRoute(this.getActivity());
+        boolean includeReturnRoute = userDataManager.includeReturnRoute();
 
-        adapter.refresh(mergedTrips, userData);
+        adapter.refresh(mergedTrips);
 
-        // TODO: WRITE A BETTER FREAKING COMMENT HERE. DO I NEED A MAP OR NOT?
         Map<String, Set<String>> origToDestsMapping = NotGuava.newHashMap();
         for (Trip trip : mergedTrips) {
             if (trip != null) {
@@ -168,18 +166,17 @@ public class RoutesFragment extends Fragment {
                     destSet.add(trip.getLegList().get(0).getTrainHeadStation());
                 }
             }
-
         }
 
         RouteBundle routeBundle = null;
         if (routeFirstLegHead != null) {
-            String originAbbr = userData.get(0).getAbbr();
+            String originAbbr = userDataManager.getOriginStationData().getAbbr();
             routeBundle = new RouteBundle(originAbbr, origToDestsMapping.get(originAbbr));
         }
 
         RouteBundle returnRouteBundle = null;
         if (includeReturnRoute && returnFirstLegHead != null) {
-            String destAbbr = userData.get(1).getAbbr();
+            String destAbbr = userDataManager.getDestinationStationData().getAbbr();
             returnRouteBundle = new RouteBundle(destAbbr, origToDestsMapping.get(destAbbr));
         }
 
@@ -187,7 +184,6 @@ public class RoutesFragment extends Fragment {
     }
 
     public void updateUserStations(int resultCode, int stationIndex) {
-        updatedUserData.set(resultCode - 1, UserStationData.fromStationIndex(stationIndex));
         footer.updateStations(resultCode, StationsManager.getStations().get(stationIndex).getAbbr());
     }
 
@@ -197,27 +193,28 @@ public class RoutesFragment extends Fragment {
 
         // At this point, userData & updatedUserData need to be identical (in terms of what elements
         // are contained within each list, not do they point to the same list)
-        SPManager.persistUserData(getActivity(), updatedUserData);
-        userData = NotGuava.newArrayList(updatedUserData);
+        spManager.persistUserData(NotGuava.newArrayList());
 
         boolean isChecked = footer.includeReturn.isChecked();
-        SPManager.persistIncludeReturnRoute(getActivity(), isChecked);
+        spManager.persistIncludeReturnRoute(isChecked);
 
-        getTrips(updatedUserData.get(0), updatedUserData.get(1), isChecked);
+        getTrips();
 
         Utils.showSnackbar(getActivity(), footerLayout, R.color.bartBlue, R.string.updated_data);
     }
 
     // Does RxJava things to get a list of trips
-    private void getTrips(UserStationData origin,
-                          UserStationData destination,
-                          boolean includeReturnRoute) {
+    private void getTrips() {
+        UserStationData origin = userDataManager.getOriginStationData();
+        UserStationData destination = userDataManager.getDestinationStationData();
+
+
         Single<List<Trip>> departuresSingle = RetrofitClient.getTrips(
             origin.getAbbr(),
             destination.getAbbr());
 
         Single<List<Trip>> returnDeparturesSingle = null;
-        if (includeReturnRoute) {
+        if (userDataManager.includeReturnRoute()) {
             returnDeparturesSingle = RetrofitClient.getTrips(
                 destination.getAbbr(),
                 origin.getAbbr());

@@ -64,13 +64,15 @@ class MainActivity : AppCompatActivity() {
     private var routesFragment = RoutesFragment()
     private var stationsFragment = StationsFragment()
 
+    private lateinit var spManager : SPManager
+
     protected var announcements = NotGuava.newArrayList<Bsa>()
 
     protected var disposable : Disposable? = null;
 
     private val bsaObserver = (object:SingleObserver<List<Bsa>> {
         override fun onSubscribe(d: Disposable) {
-            this@MainActivity.disposable = disposable
+            this@MainActivity.disposable = d
         }
 
         override fun onSuccess(t: List<Bsa>) {
@@ -89,11 +91,13 @@ class MainActivity : AppCompatActivity() {
         ButterKnife.bind(this)
         setSupportActionBar(toolbar)
 
+        spManager = SPManager(this)
+
         stationInfoViewHolder = StationInfoViewHolder(stationInfoLayout,
                 Utils.getStationInfoLayoutHeight(this))
         NotificationWindowManager.isChecked =
-                SPManager
-                        .fetchString(this, Constants.MUTE_NOTIF)
+                spManager
+                        .fetchString(Constants.MUTE_NOTIF)
                         .equals(NotificationWindowManager.dateFormat.format(Date()))
 
         setUpViewPager(intent.extras)
@@ -101,12 +105,12 @@ class MainActivity : AppCompatActivity() {
 
         // Rather than parse the stations and then get the announcements, I can just save some time
         // and just do both at the same time and just zip the result.
-        Single.zip<List<Station>, List<Bsa>, List<Bsa>>(SPManager.fetchStations(this),
+        Single.zip<List<Station>, List<Bsa>, List<Bsa>>(spManager.fetchStations(this),
                 fetchAnnouncements(), BiFunction { _, resp ->  resp  } )
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith<SingleObserver<List<Bsa>>>(bsaObserver)
 
-        if (SPManager.incrementUsageCounter(this) == SHOW_DIALOG_THRESHOLD) {
+        if (spManager.incrementUsageCounter() == SHOW_DIALOG_THRESHOLD) {
             createPleaseRateDialog().show();
         }
     }

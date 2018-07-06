@@ -29,9 +29,12 @@ public class StationsFooterViewHolder {
     public View contentView;
     private OriginDestStationsAdapter adapter;
 
+    private SPManager spManager;
+
     public StationsFooterViewHolder(View v) {
         ButterKnife.bind(this, v);
         this.contentView = v;
+        this.spManager = new SPManager(v.getContext());
         updateFooterText("","");
     }
 
@@ -59,7 +62,7 @@ public class StationsFooterViewHolder {
         }
 
         Activity context = (Activity) contentView.getContext();
-        SPManager.persistUserData(context, userData);
+        spManager.persistUserData(userData);
         Intent intent = new Intent(context, MainActivity.class);
         intent.putParcelableArrayListExtra(Constants.USER_DATA, userData);
         contentView.getContext().startActivity(intent);

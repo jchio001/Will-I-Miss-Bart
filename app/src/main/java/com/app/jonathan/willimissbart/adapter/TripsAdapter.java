@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.api.Models.Etd.Estimate;
 import com.app.jonathan.willimissbart.api.Models.Routes.Trip;
+import com.app.jonathan.willimissbart.fragment.UserDataManager;
 import com.app.jonathan.willimissbart.misc.EstimatesManager;
 import com.app.jonathan.willimissbart.misc.NotGuava;
 import com.app.jonathan.willimissbart.persistence.models.UserStationData;
@@ -26,6 +27,12 @@ public class TripsAdapter extends Adapter<TripViewHolder> {
     private String destAbbr = "";
 
     private EstimatesManager estimatesManager = EstimatesManager.get();
+
+    private UserDataManager userDataManager;
+
+    public TripsAdapter(UserDataManager userDataManager) {
+        this.userDataManager = userDataManager;
+    }
 
     @Override
     public long getItemId(int position) {
@@ -78,9 +85,9 @@ public class TripsAdapter extends Adapter<TripViewHolder> {
         }
     }
 
-    public void refresh(List<Trip> trips, List<UserStationData> userData) {
-        this.origAbbr = userData.get(0).getAbbr();
-        this.destAbbr = userData.get(1).getAbbr();
+    public void refresh(List<Trip> trips) {
+        this.origAbbr = userDataManager.getOriginStationData().getAbbr();
+        this.destAbbr = userDataManager.getDestinationStationData().getAbbr();
         this.trips.clear();
         this.trips.addAll(trips);
         notifyDataSetChanged();

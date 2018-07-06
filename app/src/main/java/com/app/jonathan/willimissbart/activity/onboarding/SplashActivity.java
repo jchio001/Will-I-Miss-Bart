@@ -14,7 +14,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Intent intent = new Intent(this,
-            !SPManager.containsUserData(this)
+            !new SPManager(this).containsUserData()
                 ? OnboardingActivity.class : MainActivity.class);
         startActivity(intent);
         finish();

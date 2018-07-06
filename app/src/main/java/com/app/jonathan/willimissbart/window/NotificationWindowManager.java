@@ -34,11 +34,16 @@ public class NotificationWindowManager extends PopupWindow {
     public final static SimpleDateFormat dateFormat = new SimpleDateFormat(
         "yyyy/MM/dd", Locale.ENGLISH);
 
+    private SPManager spManager;
+
     public NotificationWindowManager(Context context, List<Bsa> bsaList) {
         super(LayoutInflater.from(context)
             .inflate(R.layout.bsa_notif_layout, null),
             800, WRAP_CONTENT);
         ButterKnife.bind(this, getContentView());
+
+        spManager = new SPManager(context);
+
         muteNotifCheckBox.setChecked(isChecked);
         setBackgroundDrawable(
             ContextCompat.getDrawable(context, R.drawable.background_pop_up_window));
@@ -56,10 +61,10 @@ public class NotificationWindowManager extends PopupWindow {
     public void onChangeMuteSettings() {
         isChecked = !isChecked;
         if (isChecked) {
-            SPManager.persistString(notifFeed.getContext(), Constants.MUTE_NOTIF,
+            spManager.persistString(Constants.MUTE_NOTIF,
                 dateFormat.format(new Date()));
         } else {
-            SPManager.persistString(notifFeed.getContext(), Constants.MUTE_NOTIF, "");
+            spManager.persistString(Constants.MUTE_NOTIF, "");
         }
     }
 }

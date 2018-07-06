@@ -49,6 +49,8 @@ public class OnboardingActivity extends AppCompatActivity {
     private StationsFooterViewHolder footer;
     private OriginDestStationsAdapter adapter;
 
+    private SPManager spManager;
+
     protected Disposable stationDisposable;
 
     private SingleObserver<List<Station>> stationsObserver = new SingleObserver<List<Station>>() {
@@ -76,6 +78,8 @@ public class OnboardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
         ButterKnife.bind(this);
+
+        this.spManager = new SPManager(this);
 
         footer = new StationsFooterViewHolder(stationsFooter);
         footer.done.setEnabled(false);
@@ -114,7 +118,7 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     protected void persistStations() {
-        SPManager.getInstance(getApplicationContext()).persistStations(
+        spManager.persistStations(
                 new Gson().toJson(StationsManager.getStations())
         );
     }
@@ -125,7 +129,7 @@ public class OnboardingActivity extends AppCompatActivity {
      * nothing else.
      */
     private void fetchAndHandleStations()  {
-        SPManager.fetchStationsJson(this)
+        spManager.fetchStationsJson(this)
             .flatMap(stationsJson -> {
                if (stationsJson.isEmpty()) {
                    return RetrofitClient.getStations()
