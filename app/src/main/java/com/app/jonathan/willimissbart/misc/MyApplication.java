@@ -15,6 +15,8 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Iconify.with(new IoniconsModule());
+        registerActivityLifecycleCallbacks(new BackgroundListener(EstimatesManager.get()));
+
         context = this;
     }
 

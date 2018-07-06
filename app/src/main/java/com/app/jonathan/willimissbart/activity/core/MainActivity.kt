@@ -112,7 +112,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        EstimatesManager.get().stopMinutelyUpdate();
         disposable?.dispose()
         super.onDestroy()
     }

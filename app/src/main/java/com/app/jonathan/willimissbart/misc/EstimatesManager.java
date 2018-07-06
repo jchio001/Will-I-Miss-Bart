@@ -199,7 +199,6 @@ public class EstimatesManager {
     }
 
     // There's still a lot of work that needs to be done on this to resolve the ace conditions!
-    // TODO: Handle the app being paused/killed by the OS
     protected void beginMinutelyUpdateJob() {
         Observable.interval(1, TimeUnit.MINUTES)
             .subscribeOn(Schedulers.io())

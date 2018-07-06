@@ -63,12 +63,6 @@ public class TripActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        estimatesManager.stopMinutelyUpdate();
-        super.onStop();
-    }
-
-    @Override
     protected void onDestroy() {
         if (disposableConsumer != null) {
             disposableConsumer.dispose();
