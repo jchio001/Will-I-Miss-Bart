@@ -4,14 +4,14 @@ import android.animation.Animator;
 import android.view.View;
 
 import com.app.jonathan.willimissbart.R;
-import com.app.jonathan.willimissbart.viewholder.UserRouteFooterViewHolder;
+import com.app.jonathan.willimissbart.viewholder.UserRouteFooter;
 
 public class FooterAnimListener implements Animator.AnimatorListener {
 
-    private UserRouteFooterViewHolder footer;
+    private UserRouteFooter footer;
     private int visibility;
 
-    public FooterAnimListener(UserRouteFooterViewHolder footer, int visibilty) {
+    public FooterAnimListener(UserRouteFooter footer, int visibilty) {
         this.footer = footer;
         this.visibility = visibilty;
     }

@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,7 +17,6 @@ import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.adapter.TripsAdapter;
 import com.app.jonathan.willimissbart.api.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.api.RetrofitClient;
-import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.EstimatesManager;
 import com.app.jonathan.willimissbart.misc.EstimatesManager.EstimatesEvent;
 import com.app.jonathan.willimissbart.misc.NotGuava;
@@ -27,7 +25,7 @@ import com.app.jonathan.willimissbart.misc.Utils;
 import com.app.jonathan.willimissbart.persistence.SPManager;
 import com.app.jonathan.willimissbart.persistence.StationsManager;
 import com.app.jonathan.willimissbart.persistence.models.UserStationData;
-import com.app.jonathan.willimissbart.viewholder.UserRouteFooterViewHolder;
+import com.app.jonathan.willimissbart.viewholder.UserRouteFooter;
 
 import java.util.List;
 import java.util.Map;
@@ -46,13 +44,10 @@ public class RoutesFragment extends Fragment {
 
     @Bind(R.id.route_recycler) RecyclerView recyclerView;
     @Bind(R.id.progress_bar) ProgressBar progressBar;
-    @Bind(R.id.footer_wrapper) LinearLayout footerLayout;
+    @Bind(R.id.user_route_footer) UserRouteFooter userRouteFooter;
     @Bind(R.id.failure_text) TextView failureText;
-
-    private UserRouteFooterViewHolder footer;
+    
     private TripsAdapter adapter;
-
-    private SPManager spManager;
 
     private UserDataManager userDataManager;
 
@@ -114,10 +109,18 @@ public class RoutesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         ButterKnife.bind(this, view);
-        spManager = new SPManager(getContext());
-        userDataManager = new UserDataManager(spManager, getArguments());
+        userDataManager = new UserDataManager(new SPManager(getContext()), getArguments());
+        userDataManager.subscribe((updatedUserData, includeReturnRoute) -> {
+            compositeDisposable.dispose();
+            compositeDisposable = new CompositeDisposable();
+            getTrips();
+            Utils.showSnackbar(getActivity(), userRouteFooter,
+                R.color.bartBlue, R.string.updated_data);
+        });
+
+        userRouteFooter.withUserDataManager(userDataManager);
+
         adapter = new TripsAdapter(userDataManager);
 
         renderFooter();
@@ -136,12 +139,10 @@ public class RoutesFragment extends Fragment {
     }
 
     private void renderFooter() {
-        footer = new UserRouteFooterViewHolder(footerLayout, this,
-            userDataManager.getUserDataCopy());
-        footerLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        userRouteFooter.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        params.setMargins(0, 0, 0, footerLayout.getMeasuredHeight());
+        params.setMargins(0, 0, 0, userRouteFooter.getMeasuredHeight());
         recyclerView.setLayoutParams(params);
     }
 
@@ -184,23 +185,8 @@ public class RoutesFragment extends Fragment {
     }
 
     public void updateUserStations(int resultCode, int stationIndex) {
-        footer.updateStations(resultCode, StationsManager.getStations().get(stationIndex).getAbbr());
-    }
-
-    public void persistUpdatesAndRefresh() {
-        compositeDisposable.dispose();
-        compositeDisposable = new CompositeDisposable();
-
-        // At this point, userData & updatedUserData need to be identical (in terms of what elements
-        // are contained within each list, not do they point to the same list)
-        spManager.persistUserData(NotGuava.newArrayList());
-
-        boolean isChecked = footer.includeReturn.isChecked();
-        spManager.persistIncludeReturnRoute(isChecked);
-
-        getTrips();
-
-        Utils.showSnackbar(getActivity(), footerLayout, R.color.bartBlue, R.string.updated_data);
+        userRouteFooter.updateStations(resultCode,
+            StationsManager.getStations().get(stationIndex).getAbbr());
     }
 
     // Does RxJava things to get a list of trips

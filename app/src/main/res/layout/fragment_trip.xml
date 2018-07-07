@@ -37,16 +37,11 @@
         android:visibility="gone"/>
 
     <!-- extra layout due to bug involving include and relative layouts -->
-    <LinearLayout
+    <com.app.jonathan.willimissbart.viewholder.UserRouteFooter
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:id="@+id/footer_wrapper">
-
-        <include
-            layout="@layout/layout_user_route_footer" />
-
-    </LinearLayout>
-
+        android:background="?android:colorBackground"
+        android:id="@+id/user_route_footer" />
 
 </RelativeLayout>

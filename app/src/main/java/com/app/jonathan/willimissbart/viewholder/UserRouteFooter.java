@@ -3,7 +3,10 @@ package com.app.jonathan.willimissbart.viewholder;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -16,17 +19,17 @@ import com.app.jonathan.willimissbart.fragment.UserDataManager;
 import com.app.jonathan.willimissbart.listener.animation.Footers.FooterAnimListener;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.Utils;
-import com.app.jonathan.willimissbart.persistence.SPManager;
 import com.app.jonathan.willimissbart.persistence.models.UserStationData;
 import com.joanzapata.iconify.widget.IconTextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class UserRouteFooterViewHolder {
+public class UserRouteFooter extends LinearLayout {
 
     @Bind(R.id.user_route_expansion) public LinearLayout footerBody;
     @Bind(R.id.user_route_expand) public IconTextView expandCollapseIcon;
@@ -34,13 +37,12 @@ public class UserRouteFooterViewHolder {
     @Bind(R.id.user_route_dest) public TextView destination;
     @Bind(R.id.include_return) public CheckBox includeReturn;
 
-    private RoutesFragment routeFragment;
     private ValueAnimator expandAnimation;
     private ValueAnimator collapseAnimation;
     // userData is the user's data with pending changes which may or mat not have been persisted
-    private List<UserStationData> userData;
+    private ArrayList<UserStationData> userData;
 
-    private SPManager spManager;
+    private UserDataManager userDataManager;
 
     private final AnimatorUpdateListener updateListener = new AnimatorUpdateListener() {
         @Override
@@ -50,21 +52,25 @@ public class UserRouteFooterViewHolder {
         }
     };
 
-    public UserRouteFooterViewHolder(View v, RoutesFragment routeFragment,
-                                     List<UserStationData> userData) {
-        ButterKnife.bind(this, v);
-        this.spManager = new SPManager(v.getContext());
-
-        this.routeFragment = routeFragment;
-        origin.setText(userData.get(0).getAbbr());
-        destination.setText(userData.get(1).getAbbr());
-        includeReturn.setChecked(spManager.fetchIncludeReturnRoute());
-        this.userData = userData;
+    public UserRouteFooter(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        setOrientation(VERTICAL);
+        inflate(context, R.layout.layout_user_route_footer, this);
+        ButterKnife.bind(this, this);
         createAnimations();
     }
 
+    public void withUserDataManager(UserDataManager userDataManager) {
+        this.userDataManager = userDataManager;
+
+        this.userData = userDataManager.getUserDataCopy();
+        origin.setText(userData.get(0).getAbbr());
+        destination.setText(userData.get(1).getAbbr());
+        includeReturn.setChecked(userDataManager.includeReturnRoute());
+    }
+
     @OnClick(R.id.user_route_expand)
-    public void onExpandOrCollapse() {
+    public void onOrientationChanged() {
         expandCollapseIcon.setEnabled(false);
         Utils.hideKeyboard((Activity) footerBody.getContext());
         if (footerBody.getVisibility() == View.GONE) {
@@ -90,7 +96,7 @@ public class UserRouteFooterViewHolder {
     public void onUserRouteUpdate() {
         collapseAnimation.start();
         Utils.hideKeyboard((Activity) footerBody.getContext());
-        routeFragment.persistUpdatesAndRefresh();
+        userDataManager.updateUserData(userData, includeReturn.isChecked());
     }
 
     @OnClick(R.id.user_route_swap)
@@ -107,7 +113,7 @@ public class UserRouteFooterViewHolder {
         TextView abbrTextView = (resultCode == Constants.UPDATED_ORIGIN) ? origin : destination;
         abbrTextView.setText(newAbbr);
         if (footerBody.getVisibility() == View.GONE) {
-            onExpandOrCollapse();
+            onOrientationChanged();
         }
     }
 
