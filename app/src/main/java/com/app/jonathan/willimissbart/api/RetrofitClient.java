@@ -14,6 +14,7 @@ import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.lang.annotation.Retention;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -138,8 +139,8 @@ public class RetrofitClient {
      * In the future, I can tell the difference by checking the status code (200 & null body) =
      * pure failure
      */
-    public static Single<List<Trip>> getTrips(String orig,
-                                              String dest) {
+    public Single<ArrayList<Trip>> getTrips(String orig,
+                                            String dest) {
         return RetrofitClient.get()
             .getMatchingService()
             .getDepartures("depart", orig, dest,

@@ -4,15 +4,16 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class Request implements Serializable {
     @SerializedName("trip")
     @Expose
-    private List<Trip> trips;
+    private ArrayList<Trip> trips;
 
-    public List<Trip> getTrips() {
+    public ArrayList<Trip> getTrips() {
         return trips;
     }
 }

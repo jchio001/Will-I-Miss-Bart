@@ -22,6 +22,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
+import kotlin.Pair;
 
 /**
  * Note: the onError() method in an observer should never be called. If it is, something is messed
@@ -153,9 +154,11 @@ public class EstimatesManager {
         origDestToEstimates.clear();
     }
 
-    public void populateWithFeedEstimates(@NonNull RouteBundle routeBundle,
-                                          @Nullable RouteBundle returnRouteBundle) {
+    public void populateWithFeedEstimates(Pair<RouteBundle, RouteBundle> userRouteData) {
         invalidate();
+
+        RouteBundle routeBundle = userRouteData.getFirst();
+        RouteBundle returnRouteBundle = userRouteData.getSecond();
 
         SingleObserver<EtdRespWrapper> etdObserver =
             new SingleObserver<EtdRespWrapper>() {

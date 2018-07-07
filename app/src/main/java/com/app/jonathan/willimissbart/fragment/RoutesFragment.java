@@ -2,7 +2,6 @@ package com.app.jonathan.willimissbart.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,24 +18,17 @@ import com.app.jonathan.willimissbart.api.Models.Routes.Trip;
 import com.app.jonathan.willimissbart.api.RetrofitClient;
 import com.app.jonathan.willimissbart.misc.EstimatesManager;
 import com.app.jonathan.willimissbart.misc.EstimatesManager.EstimatesEvent;
-import com.app.jonathan.willimissbart.misc.NotGuava;
-import com.app.jonathan.willimissbart.misc.RouteBundle;
 import com.app.jonathan.willimissbart.misc.Utils;
 import com.app.jonathan.willimissbart.persistence.SPManager;
 import com.app.jonathan.willimissbart.persistence.StationsManager;
-import com.app.jonathan.willimissbart.persistence.models.UserStationData;
 import com.app.jonathan.willimissbart.viewholder.UserRouteFooter;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reactivex.Observer;
-import io.reactivex.Single;
 import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
@@ -53,31 +45,34 @@ public class RoutesFragment extends Fragment {
 
     protected EstimatesManager estimatesManager = EstimatesManager.get();
 
-    protected String routeFirstLegHead = null;
-    protected String returnFirstLegHead = null;
+    private TripManager tripManager;
 
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private final SingleObserver<List<Trip>> tripSubscriber = new SingleObserver<List<Trip>>() {
-        @Override
-        public void onSubscribe(Disposable d) {
-            compositeDisposable.add(d);
-        }
+    private final SingleObserver<ArrayList<Trip>> tripSubscriber =
+        new SingleObserver<ArrayList<Trip>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                compositeDisposable.add(d);
+            }
 
-        @Override
-        public void onSuccess(List<Trip> mergedTrips) {
-            loadUserRoutes(mergedTrips);
-        }
+            @Override
+            public void onSuccess(ArrayList<Trip> mergedTrips) {
+                progressBar.setVisibility(View.GONE);
+                failureText.setVisibility(View.GONE);
+                adapter.refresh(mergedTrips);
+                estimatesManager
+                    .populateWithFeedEstimates(tripManager.getRouteBundles(mergedTrips));
+            }
 
-        @Override
-        public void onError(Throwable e) {
-            Toast.makeText(RoutesFragment.this.getContext(),
-                String.format("Trips Wah wah %s", e.getMessage()), Toast.LENGTH_SHORT)
-                .show();
-        }
-    };
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(getContext(),
+                    String.format("Trips Wah wah %s", e.getMessage()), Toast.LENGTH_SHORT).show();
+            }
+        };
 
-    private final Observer<EstimatesEvent> estimatesMangerObserver =
+    private final Observer<EstimatesEvent> estimatesManagerObserver =
         new Observer<EstimatesEvent>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -110,25 +105,26 @@ public class RoutesFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
         userDataManager = new UserDataManager(new SPManager(getContext()), getArguments());
+        tripManager = new TripManager(userDataManager, RetrofitClient.get());
+
         userDataManager.subscribe((updatedUserData, includeReturnRoute) -> {
             compositeDisposable.dispose();
             compositeDisposable = new CompositeDisposable();
-            getTrips();
+            tripManager.getTrips().subscribeWith(tripSubscriber);
             Utils.showSnackbar(getActivity(), userRouteFooter,
                 R.color.bartBlue, R.string.updated_data);
         });
 
         userRouteFooter.withUserDataManager(userDataManager);
-
-        adapter = new TripsAdapter(userDataManager);
-
         renderFooter();
 
+        adapter = new TripsAdapter(userDataManager);
         recyclerView.setAdapter(adapter);
 
-        getTrips();
-        estimatesManager.subscribe(estimatesMangerObserver);
+        tripManager.getTrips().subscribeWith(tripSubscriber);
+        estimatesManager.subscribe(estimatesManagerObserver);
     }
 
     @Override
@@ -146,102 +142,8 @@ public class RoutesFragment extends Fragment {
         recyclerView.setLayoutParams(params);
     }
 
-    @UiThread
-    public void loadUserRoutes(List<Trip> mergedTrips) {
-        progressBar.setVisibility(View.GONE);
-
-        failureText.setVisibility(View.GONE);
-
-        boolean includeReturnRoute = userDataManager.includeReturnRoute();
-
-        adapter.refresh(mergedTrips);
-
-        Map<String, Set<String>> origToDestsMapping = NotGuava.newHashMap();
-        for (Trip trip : mergedTrips) {
-            if (trip != null) {
-                if (!origToDestsMapping.containsKey(trip.getOrigin())) {
-                    origToDestsMapping.put(trip.getOrigin(),
-                        NotGuava.newHashSet(trip.getLegList().get(0).getTrainHeadStation()));
-                } else {
-                    Set<String> destSet = origToDestsMapping.get(trip.getOrigin());
-                    destSet.add(trip.getLegList().get(0).getTrainHeadStation());
-                }
-            }
-        }
-
-        RouteBundle routeBundle = null;
-        if (routeFirstLegHead != null) {
-            String originAbbr = userDataManager.getOriginStationData().getAbbr();
-            routeBundle = new RouteBundle(originAbbr, origToDestsMapping.get(originAbbr));
-        }
-
-        RouteBundle returnRouteBundle = null;
-        if (includeReturnRoute && returnFirstLegHead != null) {
-            String destAbbr = userDataManager.getDestinationStationData().getAbbr();
-            returnRouteBundle = new RouteBundle(destAbbr, origToDestsMapping.get(destAbbr));
-        }
-
-        estimatesManager.populateWithFeedEstimates(routeBundle, returnRouteBundle);
-    }
-
     public void updateUserStations(int resultCode, int stationIndex) {
         userRouteFooter.updateStations(resultCode,
             StationsManager.getStations().get(stationIndex).getAbbr());
-    }
-
-    // Does RxJava things to get a list of trips
-    private void getTrips() {
-        UserStationData origin = userDataManager.getOriginStationData();
-        UserStationData destination = userDataManager.getDestinationStationData();
-
-
-        Single<List<Trip>> departuresSingle = RetrofitClient.getTrips(
-            origin.getAbbr(),
-            destination.getAbbr());
-
-        Single<List<Trip>> returnDeparturesSingle = null;
-        if (userDataManager.includeReturnRoute()) {
-            returnDeparturesSingle = RetrofitClient.getTrips(
-                destination.getAbbr(),
-                origin.getAbbr());
-        }
-
-        mergeTrips(departuresSingle, returnDeparturesSingle)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(tripSubscriber);
-    }
-
-    /**
-     * Merges trips and return trips together into a Single of List<Trip>
-     * @param tripsSingle Single<List<Trip>> for the user specified route
-     * @param returnTripsSingle Single<List<Trip>> for the return route
-     * @return A single containing all the trips merged together
-     */
-    private Single<List<Trip>> mergeTrips(Single<List<Trip>> tripsSingle,
-                                          Single<List<Trip>> returnTripsSingle) {
-        if (returnTripsSingle != null) {
-            return Single.zip(tripsSingle, returnTripsSingle,
-                (trips, returnTrips) -> {
-                    List<Trip> mergedTrips = NotGuava.newArrayList();
-
-                    mergedTrips.addAll(trips);
-                    if (trips.get(0) != null) {
-                        routeFirstLegHead = trips.get(0).getLegList().get(0).getTrainHeadStation();
-                    }
-
-                    mergedTrips.addAll(returnTrips);
-                    if (returnTrips.get(0) != null) {
-                        returnFirstLegHead = trips.get(0).getLegList().get(0).getTrainHeadStation();
-                    }
-
-                    return mergedTrips;
-                });
-        } else {
-            return tripsSingle.doOnSuccess(trips -> {
-                if (trips.get(0) != null) {
-                    routeFirstLegHead = trips.get(0).getLegList().get(0).getTrainHeadStation();
-                }
-            });
-        }
     }
 }

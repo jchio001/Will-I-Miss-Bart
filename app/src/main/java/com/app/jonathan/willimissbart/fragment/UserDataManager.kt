@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.app.jonathan.willimissbart.misc.Constants
 import com.app.jonathan.willimissbart.persistence.SPManager
 import com.app.jonathan.willimissbart.persistence.models.UserStationData
-import java.util.*
+import java.util.ArrayList
 
 /**
  * Manages user data (the stations they're travelling to and from and whether or not they want a
