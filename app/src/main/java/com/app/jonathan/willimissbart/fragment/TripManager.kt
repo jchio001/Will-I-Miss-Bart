@@ -18,7 +18,7 @@ class TripManager(val userDataManager: UserDataManager,
     protected var routeFirstLegHead: String? = null
     protected var returnFirstLegHead: String? = null
 
-    fun getTrips() : Single<ArrayList<Trip>> {
+    fun getTrips() : Single<ArrayList<Trip?>> {
         val origin = userDataManager.getOriginStationData()
         val destination = userDataManager.getDestinationStationData()
 
@@ -26,7 +26,7 @@ class TripManager(val userDataManager: UserDataManager,
                 origin.getAbbr(),
                 destination.getAbbr())
 
-        var returnDeparturesSingle: Single<ArrayList<Trip>>? = null
+        var returnDeparturesSingle: Single<ArrayList<Trip?>>? = null
         if (userDataManager.includeReturnRoute()) {
             returnDeparturesSingle = retrofitClient.getTrips(
                     destination.getAbbr(),
@@ -36,36 +36,44 @@ class TripManager(val userDataManager: UserDataManager,
         return mergeTripRequests(departuresSingle, returnDeparturesSingle)
     }
 
-    private fun mergeTripRequests(departuresSingle: Single<ArrayList<Trip>>,
-                                  returnDeparturesSingle: Single<ArrayList<Trip>>?)
-            : Single<ArrayList<Trip>> {
-        return returnDeparturesSingle?.let{
-            Single.zip(departuresSingle, it, BiFunction{ trips: List<Trip>, returnTrips: List<Trip> ->
-                val mergedTrips = NotGuava.newArrayList<Trip>();
-                mergedTrips.addAll(trips)
-                routeFirstLegHead = trips.get(0).getLegList().get(0).getTrainHeadStation()
+    private fun mergeTripRequests(departuresSingle: Single<ArrayList<Trip?>>,
+                                  returnDeparturesSingle: Single<ArrayList<Trip?>>?)
+            : Single<ArrayList<Trip?>> {
+        return returnDeparturesSingle?.let {
+            Single.zip(departuresSingle, it,
+                    BiFunction { trips: List<Trip?>, returnTrips: List<Trip?> ->
+                        val mergedTrips = NotGuava.newArrayList<Trip>();
+                        mergedTrips.addAll(trips)
+                        trips.get(0)?.let {
+                            routeFirstLegHead = it.legList.get(0).trainHeadStation
+                        }
 
-                mergedTrips.addAll(returnTrips)
-                returnFirstLegHead = trips.get(0).getLegList().get(0).getTrainHeadStation()
+                        mergedTrips.addAll(returnTrips)
+                        trips.get(0)?.let {
+                            returnFirstLegHead = it.legList.get(0).trainHeadStation
+                        }
 
-                return@BiFunction mergedTrips
-            })
-        } ?: departuresSingle.doOnSuccess{ trips ->
-            routeFirstLegHead = trips.get(0).getLegList().get(0).getTrainHeadStation()
+                        return@BiFunction mergedTrips
+                    })
+        } ?: departuresSingle.doOnSuccess { trips ->
+            routeFirstLegHead = trips.get(0)?.legList?.get(0)?.trainHeadStation
         }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    fun getRouteBundles(mergedTrips: ArrayList<Trip>): Pair<RouteBundle?, RouteBundle?> {
+    // Note: trip can be null. See RetrofitClient's getTrips() method.
+    fun getRouteBundles(mergedTrips: ArrayList<Trip?>): Pair<RouteBundle?, RouteBundle?> {
         val origToDestsMapping = NotGuava.newHashMap<String, HashSet<String>>()
         for (trip in mergedTrips) {
-            if (!origToDestsMapping.containsKey(trip.origin)) {
-                origToDestsMapping[trip.origin] =
-                        NotGuava.newHashSet(trip.legList[0].trainHeadStation)
-            } else {
-                val destSet = origToDestsMapping[trip.origin]
-                destSet!!.add(trip.legList[0].trainHeadStation)
+            trip?.let {
+                if (!origToDestsMapping.containsKey(it.origin)) {
+                    origToDestsMapping[it.origin] =
+                            NotGuava.newHashSet(it.legList[0].trainHeadStation)
+                } else {
+                    val destSet = origToDestsMapping[it.origin]
+                    destSet!!.add(it.legList[0].trainHeadStation)
+                }
             }
         }
 
