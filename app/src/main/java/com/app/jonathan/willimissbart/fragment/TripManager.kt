@@ -7,10 +7,7 @@ import com.app.jonathan.willimissbart.misc.RouteBundle
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
-import io.reactivex.schedulers.Schedulers
-
-import java.util.ArrayList
-import java.util.HashSet
+import java.util.*
 
 class TripManager(val userDataManager: UserDataManager,
                   val retrofitClient: RetrofitClient) {
@@ -45,20 +42,19 @@ class TripManager(val userDataManager: UserDataManager,
                         val mergedTrips = NotGuava.newArrayList<Trip>();
                         mergedTrips.addAll(trips)
                         trips.get(0)?.let {
-                            routeFirstLegHead = it.legList.get(0).trainHeadStation
+                            routeFirstLegHead = it.legList[0].trainHeadStation
                         }
 
                         mergedTrips.addAll(returnTrips)
                         trips.get(0)?.let {
-                            returnFirstLegHead = it.legList.get(0).trainHeadStation
+                            returnFirstLegHead = it.legList[0].trainHeadStation
                         }
 
                         return@BiFunction mergedTrips
                     })
         } ?: departuresSingle.doOnSuccess { trips ->
-            routeFirstLegHead = trips.get(0)?.legList?.get(0)?.trainHeadStation
+            routeFirstLegHead = trips[0]?.legList?.get(0)?.trainHeadStation
         }
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
