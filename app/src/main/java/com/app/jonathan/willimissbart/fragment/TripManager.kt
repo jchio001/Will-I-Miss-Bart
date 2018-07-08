@@ -7,6 +7,7 @@ import com.app.jonathan.willimissbart.misc.RouteBundle
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 class TripManager(val userDataManager: UserDataManager,
@@ -31,6 +32,7 @@ class TripManager(val userDataManager: UserDataManager,
         }
 
         return mergeTripRequests(departuresSingle, returnDeparturesSingle)
+                .observeOn(AndroidSchedulers.mainThread())
     }
 
     private fun mergeTripRequests(departuresSingle: Single<ArrayList<Trip?>>,
@@ -55,7 +57,6 @@ class TripManager(val userDataManager: UserDataManager,
         } ?: departuresSingle.doOnSuccess { trips ->
             routeFirstLegHead = trips[0]?.legList?.get(0)?.trainHeadStation
         }
-                .observeOn(AndroidSchedulers.mainThread());
     }
 
     // Note: trip can be null. See RetrofitClient's getTrips() method.

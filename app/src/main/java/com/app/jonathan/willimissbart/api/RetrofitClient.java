@@ -141,8 +141,7 @@ public class RetrofitClient {
      */
     public Single<ArrayList<Trip>> getTrips(String orig,
                                             String dest) {
-        return RetrofitClient.get()
-            .getMatchingService()
+        return matchingService
             .getDepartures("depart", orig, dest,
                 "now", 0, 2, API_KEY, 'y')
             .doOnError(e -> Log.w(LOG_TAG,
