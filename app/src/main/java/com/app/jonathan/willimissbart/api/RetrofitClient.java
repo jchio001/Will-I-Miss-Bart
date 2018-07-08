@@ -84,15 +84,10 @@ public class RetrofitClient {
         matchingService = retrofit.create(MatchingService.class);
     }
 
-    public MatchingService getMatchingService() {
-        return matchingService;
-    }
-
     public Single<EtdRespWrapper> getRealTimeEstimates(String origin,
                                                        Set<String> trainHeadSet) {
         EtdRespWrapper failedEtdResp = new EtdRespWrapper(origin, null, trainHeadSet);
-        return RetrofitClient.get()
-            .getMatchingService()
+        return matchingService
             .getEtd("etd", API_KEY, 'y', origin)
             .doOnError(e  -> Log.w(LOG_TAG, String.format(FAIL_ETDS_REQ_TEMPLATE, origin)))
             .flatMap(etdResp -> {
@@ -107,16 +102,14 @@ public class RetrofitClient {
             .subscribeOn(Schedulers.io());
     }
 
-    public static Single<Response<BsaResp>> getBsas() {
-        return RetrofitClient.get()
-            .getMatchingService()
+    public Single<Response<BsaResp>> getBsas() {
+        return matchingService
             .getBsa("bsa", API_KEY, 'y')
             .subscribeOn(Schedulers.io());
     }
 
-    public static Single<List<Station>> getStations() {
-        return RetrofitClient.get()
-            .getMatchingService()
+    public Single<List<Station>> getStations() {
+        return matchingService
             .getStations("stns", API_KEY, 'y')
             .flatMap(stationsResp -> Single.just(stationsResp.body()
                 .getStationsRoot().getStations().getStationList()))
@@ -124,9 +117,8 @@ public class RetrofitClient {
             .subscribeOn(Schedulers.io());
     }
 
-    public static Single<Response<StationInfoResp>> getStationInfo(String abbr) {
-        return RetrofitClient.get()
-            .getMatchingService()
+    public Single<Response<StationInfoResp>> getStationInfo(String abbr) {
+        return matchingService
             .getStationInfo("stninfo", API_KEY, abbr, 'y')
             .subscribeOn(Schedulers.io());
     }

@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchAnnouncements(): Single<List<Bsa>> {
-        return  RetrofitClient.getBsas()
+        return  RetrofitClient.get().getBsas()
                 .onErrorReturnItem(Response.success(null))
                 .flatMap { bsaResp ->
                     if (bsaResp.body() != null) {

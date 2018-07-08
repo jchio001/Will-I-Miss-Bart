@@ -74,7 +74,7 @@ public class StationInfoViewHolder {
         public void onAnimationEnd(Animator animation) {
             stationInfoParent.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.VISIBLE);
-            RetrofitClient.getStationInfo(stationAbbr)
+            RetrofitClient.get().getStationInfo(stationAbbr)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(stationInfoSubscriber);
         }

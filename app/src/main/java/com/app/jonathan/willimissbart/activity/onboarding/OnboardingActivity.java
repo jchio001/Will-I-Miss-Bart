@@ -132,7 +132,7 @@ public class OnboardingActivity extends AppCompatActivity {
         spManager.fetchStationsJson(this)
             .flatMap(stationsJson -> {
                if (stationsJson.isEmpty()) {
-                   return RetrofitClient.getStations()
+                   return RetrofitClient.get().getStations()
                        .doOnSuccess(stations -> {
                            for (int i = 0, size = stations.size(); i < size; ++i) {
                                stations.get(i).setIndex(i);
