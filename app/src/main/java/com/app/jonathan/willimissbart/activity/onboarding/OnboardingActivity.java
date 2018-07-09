@@ -16,6 +16,7 @@ import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.adapter.OriginDestStationsAdapter;
 import com.app.jonathan.willimissbart.api.Models.Station.Station;
 import com.app.jonathan.willimissbart.api.RetrofitClient;
+import com.app.jonathan.willimissbart.fragment.UserDataManager;
 import com.app.jonathan.willimissbart.listener.animation.Onboarding.HideProgressBarAnimListener;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.misc.Utils;
@@ -49,6 +50,7 @@ public class OnboardingActivity extends AppCompatActivity {
     private StationsFooterViewHolder footer;
     private OriginDestStationsAdapter adapter;
 
+    private UserDataManager userDataManager;
     private SPManager spManager;
 
     protected Disposable stationDisposable;
@@ -80,8 +82,9 @@ public class OnboardingActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         this.spManager = new SPManager(this);
+        this.userDataManager = new UserDataManager(spManager);
 
-        footer = new StationsFooterViewHolder(stationsFooter);
+        footer = new StationsFooterViewHolder(stationsFooter, userDataManager);
         footer.done.setEnabled(false);
 
         fetchAndHandleStations();
@@ -104,7 +107,10 @@ public class OnboardingActivity extends AppCompatActivity {
     @SuppressWarnings("unchecked")
     @UiThread
     protected void setUpActivityLayout() {
-        adapter = new OriginDestStationsAdapter(StationsManager.getStations(), null, footer);
+        adapter = new OriginDestStationsAdapter(
+            StationsManager.getStations(),
+            null,
+            userDataManager);
         stationGridViewHolder = new StationGridViewHolder(stationGridLayout, adapter, 0, true);
 
         AlphaAnimation hideProgressBar = new AlphaAnimation(1.0f, 0.0f);

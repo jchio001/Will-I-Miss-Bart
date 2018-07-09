@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.activity.core.SelectStationActivity;
-import com.app.jonathan.willimissbart.fragment.RoutesFragment;
 import com.app.jonathan.willimissbart.fragment.UserDataManager;
 import com.app.jonathan.willimissbart.listener.animation.Footers.FooterAnimListener;
 import com.app.jonathan.willimissbart.misc.Constants;
@@ -23,7 +22,6 @@ import com.app.jonathan.willimissbart.persistence.models.UserStationData;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -96,7 +94,7 @@ public class UserRouteFooter extends LinearLayout {
     public void onUserRouteUpdate() {
         collapseAnimation.start();
         Utils.hideKeyboard((Activity) footerBody.getContext());
-        userDataManager.updateUserData(userData, includeReturn.isChecked());
+        userDataManager.commitAndUpdate(userData, includeReturn.isChecked());
     }
 
     @OnClick(R.id.user_route_swap)

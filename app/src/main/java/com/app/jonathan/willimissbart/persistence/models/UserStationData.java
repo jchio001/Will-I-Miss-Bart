@@ -13,6 +13,8 @@ import java.io.Serializable;
 
 public class UserStationData implements Serializable, Parcelable {
 
+    public static final UserStationData UNSELECTED_DATA = new UserStationData("", "", -1);
+
     @SerializedName("station")
     @Expose
     private String station;
@@ -38,6 +40,12 @@ public class UserStationData implements Serializable, Parcelable {
     };
 
     public UserStationData() {}
+
+    public UserStationData(String station, String abbr, int stationIndex) {
+        this.station = station;
+        this.abbr = abbr;
+        this.stationIndex = stationIndex;
+    }
 
     public UserStationData(Parcel in) {
         this.station = in.readString();

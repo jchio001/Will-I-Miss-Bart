@@ -13,9 +13,10 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        boolean hasUserData = !new SPManager(this).containsUserData();
+
         Intent intent = new Intent(this,
-            !new SPManager(this).containsUserData()
-                ? OnboardingActivity.class : MainActivity.class);
+            !hasUserData ? OnboardingActivity.class : MainActivity.class);
         startActivity(intent);
         finish();
     }

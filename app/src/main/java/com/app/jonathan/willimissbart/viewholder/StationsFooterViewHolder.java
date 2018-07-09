@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.activity.core.MainActivity;
 import com.app.jonathan.willimissbart.adapter.OriginDestStationsAdapter;
+import com.app.jonathan.willimissbart.fragment.UserDataManager;
+import com.app.jonathan.willimissbart.fragment.UserDataManager.UserDataSubscriber;
 import com.app.jonathan.willimissbart.misc.Constants;
 import com.app.jonathan.willimissbart.persistence.SPManager;
 import com.app.jonathan.willimissbart.persistence.models.UserStationData;
@@ -29,13 +31,18 @@ public class StationsFooterViewHolder {
     public View contentView;
     private OriginDestStationsAdapter adapter;
 
+    private UserDataManager userDataManager;
     private SPManager spManager;
 
-    public StationsFooterViewHolder(View v) {
+    private UserDataSubscriber userDataSubscriber = this::updateFooterText;
+
+    public StationsFooterViewHolder(View v, UserDataManager userDataManager) {
         ButterKnife.bind(this, v);
         this.contentView = v;
+        this.userDataManager = userDataManager;
         this.spManager = new SPManager(v.getContext());
-        updateFooterText("","");
+        updateFooterText();
+        userDataManager.subscribe(userDataSubscriber);
     }
 
     public StationsFooterViewHolder setAdapter(OriginDestStationsAdapter adapter) {
@@ -43,29 +50,40 @@ public class StationsFooterViewHolder {
         return this;
     }
 
-    public void updateFooterText(String originAbbr, String destAbbr) {
+    public void updateFooterText() {
         Context context = origin.getContext();
-        origin.setText(context.getString(R.string.stn_from, originAbbr));
-        dest.setText(context.getString(R.string.stn_to, destAbbr));
+        origin.setText(context.getString(R.string.stn_from,
+            userDataManager.getOriginStationData().getAbbr()));
+        dest.setText(context.getString(R.string.stn_to,
+            userDataManager.getDestinationStationData().getAbbr()));
     }
 
     @OnClick(R.id.swap)
     public void onSwap() {
-        adapter.swap();
+        ArrayList<UserStationData> userData = userDataManager.getUserDataCopy();
+
+        UserStationData tmp = userData.get(0);
+        userData.set(0, userData.get(1));
+        userData.set(1, tmp);
+
+        Context context = contentView.getContext();
+        origin.setText(context.getString(R.string.stn_from, userData.get(0).getAbbr()));
+        dest.setText(context.getString(R.string.stn_to, userData.get(1).getAbbr()));
+
+        userDataManager.ignoreNextBroadcast(userDataSubscriber);
+        userDataManager.update(userData, false);
     }
 
     @OnClick(R.id.done)
     public void done() {
-        ArrayList<UserStationData> userData = adapter.getUserBartData();
-        if (userData == null) {
-            return;
+        if (userDataManager.isDataFullyInitialized()) {
+            Activity context = (Activity) contentView.getContext();
+            ArrayList<UserStationData> userStationData = userDataManager.getUserDataCopy();
+            spManager.persistUserData(userStationData);
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.putParcelableArrayListExtra(Constants.USER_DATA, userStationData);
+            contentView.getContext().startActivity(intent);
+            context.finish();
         }
-
-        Activity context = (Activity) contentView.getContext();
-        spManager.persistUserData(userData);
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.putParcelableArrayListExtra(Constants.USER_DATA, userData);
-        contentView.getContext().startActivity(intent);
-        context.finish();
     }
 }

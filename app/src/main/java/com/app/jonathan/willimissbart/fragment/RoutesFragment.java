@@ -109,7 +109,7 @@ public class RoutesFragment extends Fragment {
         userDataManager = new UserDataManager(new SPManager(getContext()), getArguments());
         tripManager = new TripManager(userDataManager, RetrofitClient.get());
 
-        userDataManager.subscribe((updatedUserData, includeReturnRoute) -> {
+        userDataManager.subscribe(() -> {
             compositeDisposable.dispose();
             compositeDisposable = new CompositeDisposable();
             tripManager.getTrips().subscribeWith(tripSubscriber);
