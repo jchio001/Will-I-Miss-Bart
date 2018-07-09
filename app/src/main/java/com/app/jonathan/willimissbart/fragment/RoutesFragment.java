@@ -144,6 +144,6 @@ public class RoutesFragment extends Fragment {
 
     public void updateUserStations(int resultCode, int stationIndex) {
         userRouteFooter.updateStations(resultCode,
-            StationsManager.getStations().get(stationIndex).getAbbr());
+            StationsManager.get().getStations().get(stationIndex).getAbbr());
     }
 }

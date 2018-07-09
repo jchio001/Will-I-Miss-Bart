@@ -28,11 +28,13 @@ import java.util.Locale;
 public class Utils {
 
     public static List<Station> stationsJsonToList(String stationsJSON) {
-        if (StationsManager.getStations().isEmpty()) {
+        StationsManager stationsManager = StationsManager.get();
+
+        if (stationsManager.getStations().isEmpty()) {
             Gson gson = new Gson();
             Type listType = new TypeToken<List<Station>>() {}.getType();
             List<Station> stations = gson.fromJson(stationsJSON, listType);
-            StationsManager.setStations(stations);
+            stationsManager.setStations(stations);
             return stations;
         } else {
             return NotGuava.newArrayList();
@@ -149,7 +151,7 @@ public class Utils {
         int minIndex = -1;
         double curMin = 0;
 
-        List<Station> stations = StationsManager.getStations();
+        List<Station> stations = StationsManager.get().getStations();
         for (int i = 0; i < stations.size(); ++i) {
             Station station = stations.get(i);
             if (minIndex == -1) {

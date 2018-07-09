@@ -14,6 +14,7 @@ import android.widget.ScrollView;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.activity.core.MainActivity;
 import com.app.jonathan.willimissbart.adapter.SelectStationsAdapter;
+import com.app.jonathan.willimissbart.api.Models.Station.Station;
 import com.app.jonathan.willimissbart.misc.Utils;
 import com.app.jonathan.willimissbart.persistence.StationsManager;
 import com.app.jonathan.willimissbart.viewholder.StationGridViewHolder;
@@ -46,12 +47,14 @@ public class StationsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_stations, container, false);
         ButterKnife.bind(this, v);
 
+        StationsManager stationsManager = StationsManager.get();
+
         stationInfoViewHolder = new WeakReference<>(
             ((MainActivity) getActivity()).stationInfoViewHolder);
-        adapter = new SelectStationsAdapter(StationsManager.getStations(),
+        adapter = new SelectStationsAdapter(StationsManager.get().getStations(),
             stationInfoViewHolder.get());
         stationGridViewHolder = new StationGridViewHolder(
-            stationGridLayout, adapter, PERMISSIONS_CODE, false);
+            stationGridLayout, adapter, stationsManager, PERMISSIONS_CODE, false);
         return v;
     }
 

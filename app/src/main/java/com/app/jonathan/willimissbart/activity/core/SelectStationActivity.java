@@ -36,6 +36,8 @@ public class SelectStationActivity extends AppCompatActivity {
     private SingleElemStationsAdapter adapter;
     private StationGridViewHolder stationGridViewHolder;
 
+    private StationsManager stationsManager;
+
     // This is the index chosen for the current origin if the user wants to select a new
     // destination, and the current destination if the user wants to select a new origin
     private int prevSelectedIndex = -1;
@@ -45,6 +47,8 @@ public class SelectStationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_station);
         Bundle bundle = getIntent().getExtras();
+
+        this.stationsManager = StationsManager.get();
 
         int titleId = bundle.getInt(Constants.TITLE);
         prevSelectedIndex = bundle.getInt(Constants.NOT_THIS_INDEX);
@@ -56,10 +60,15 @@ public class SelectStationActivity extends AppCompatActivity {
 
         stationInfoViewHolder = new StationInfoViewHolder(stationInfoLayout,
             Utils.getStationInfoLayoutHeight(this));
-        adapter = new SingleElemStationsAdapter(StationsManager.getStations(),
+        adapter = new SingleElemStationsAdapter(StationsManager.get().getStations(),
             stationInfoViewHolder, true)
             .setSelectingOrigin(titleId == R.string.select_origin);
-        stationGridViewHolder = new StationGridViewHolder(stationGridLayout, adapter, 0, false);
+        stationGridViewHolder = new StationGridViewHolder(
+            stationGridLayout,
+            adapter,
+            stationsManager,
+            0,
+            false);
 
         stationGrid.setAdapter(adapter);
     }

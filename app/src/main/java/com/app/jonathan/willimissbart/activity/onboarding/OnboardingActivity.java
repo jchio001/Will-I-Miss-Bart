@@ -24,19 +24,18 @@ import com.app.jonathan.willimissbart.persistence.SPManager;
 import com.app.jonathan.willimissbart.persistence.StationsManager;
 import com.app.jonathan.willimissbart.viewholder.StationGridViewHolder;
 import com.app.jonathan.willimissbart.viewholder.StationsFooterViewHolder;
-import com.google.gson.Gson;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
-import io.reactivex.Single;
 import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 public class OnboardingActivity extends AppCompatActivity {
+
+    private static final String LOG_TAG = "Onboarding";
 
     @Bind(R.id.activity_station_input) CoordinatorLayout parent;
     @Bind(R.id.stn_grid_layout) LinearLayout stationGridLayout;
@@ -44,14 +43,14 @@ public class OnboardingActivity extends AppCompatActivity {
     @Bind(R.id.onboarding_blurb) TextView onboardingBlurb;
     @Bind(R.id.progress_bar) ProgressBar progressBar;
 
-    private static final String LOG_TAG = "Onboarding";
-
     private StationGridViewHolder stationGridViewHolder;
     private StationsFooterViewHolder footer;
     private OriginDestStationsAdapter adapter;
 
     private UserDataManager userDataManager;
     private SPManager spManager;
+    private OnboardingStationsManager onboardingStationsManager;
+    private StationsManager stationsManager;
 
     protected Disposable stationDisposable;
 
@@ -83,11 +82,16 @@ public class OnboardingActivity extends AppCompatActivity {
 
         this.spManager = new SPManager(this);
         this.userDataManager = new UserDataManager(spManager);
+        this.stationsManager = StationsManager.get();
+        this.onboardingStationsManager = new OnboardingStationsManager(
+            RetrofitClient.get(),
+            spManager,
+           stationsManager);
 
         footer = new StationsFooterViewHolder(stationsFooter, userDataManager);
         footer.done.setEnabled(false);
 
-        fetchAndHandleStations();
+        onboardingStationsManager.getStations().subscribeWith(stationsObserver);
     }
 
     @Override
@@ -108,10 +112,15 @@ public class OnboardingActivity extends AppCompatActivity {
     @UiThread
     protected void setUpActivityLayout() {
         adapter = new OriginDestStationsAdapter(
-            StationsManager.getStations(),
+            stationsManager.getStations(),
             null,
             userDataManager);
-        stationGridViewHolder = new StationGridViewHolder(stationGridLayout, adapter, 0, true);
+        stationGridViewHolder = new StationGridViewHolder(
+            stationGridLayout,
+            adapter,
+            StationsManager.get(),
+            0,
+            true);
 
         AlphaAnimation hideProgressBar = new AlphaAnimation(1.0f, 0.0f);
         hideProgressBar.setDuration(Constants.LONG_DURATION);
@@ -121,37 +130,5 @@ public class OnboardingActivity extends AppCompatActivity {
             .setGridLayout(stationGridLayout)
             .setFooter(footer));
         progressBar.startAnimation(hideProgressBar);
-    }
-
-    protected void persistStations() {
-        spManager.persistStations(
-                new Gson().toJson(StationsManager.getStations())
-        );
-    }
-
-    /**
-     * If we need to interact with retrofit to retrieve the stations, initialize the index values
-     * and persist to SharedPreferences. Else, just get retrieve it from SharedPreferences and
-     * nothing else.
-     */
-    private void fetchAndHandleStations()  {
-        spManager.fetchStationsJson(this)
-            .flatMap(stationsJson -> {
-               if (stationsJson.isEmpty()) {
-                   return RetrofitClient.get().getStations()
-                       .doOnSuccess(stations -> {
-                           for (int i = 0, size = stations.size(); i < size; ++i) {
-                               stations.get(i).setIndex(i);
-                           }
-
-                           StationsManager.setStations(stations);
-                           persistStations();
-                       });
-               } else {
-                   return Single.just(Utils.stationsJsonToList(stationsJson));
-               }
-            })
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(stationsObserver);
     }
 }

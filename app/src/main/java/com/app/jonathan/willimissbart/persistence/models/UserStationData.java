@@ -93,7 +93,7 @@ public class UserStationData implements Serializable, Parcelable {
     }
 
     public static UserStationData fromStationIndex(int stationIndex) {
-        Station station = StationsManager.getStations().get(stationIndex);
+        Station station = StationsManager.get().getStations().get(stationIndex);
         return new UserStationData()
             .setStation(station.getName())
             .setAbbr(station.getAbbr())

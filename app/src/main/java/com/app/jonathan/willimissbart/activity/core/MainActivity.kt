@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
 
         // Rather than parse the stations and then get the announcements, I can just save some time
         // and just do both at the same time and just zip the result.
-        Single.zip<List<Station>, List<Bsa>, List<Bsa>>(spManager.fetchStations(this),
+        Single.zip<List<Station>, List<Bsa>, List<Bsa>>(spManager.fetchStations(),
                 fetchAnnouncements(), BiFunction { _, resp ->  resp  } )
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith<SingleObserver<List<Bsa>>>(bsaObserver)

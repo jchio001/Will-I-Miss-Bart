@@ -44,14 +44,14 @@ public class SPManager {
         }
     }
 
-    public Single<String> fetchStationsJson(Context context) {
+    public Single<String> fetchStationsJson() {
         return Single.just(sp.getString(Constants.STATION_LIST_KEY, ""))
             .subscribeOn(Schedulers.io());
     }
 
     // Only use this method if you're 100% sure that the stations JSON is persisted in
     // SharedPreferences
-    public Single<List<Station>> fetchStations(Context context) {
+    public Single<List<Station>> fetchStations() {
         return Single.just(Utils.stationsJsonToList(
             sp.getString(Constants.STATION_LIST_KEY, "")))
             .subscribeOn(Schedulers.io());

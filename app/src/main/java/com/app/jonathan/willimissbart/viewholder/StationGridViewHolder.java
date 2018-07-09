@@ -38,16 +38,20 @@ public class StationGridViewHolder extends ViewHolder {
     private WeakReference<AbstractStationsAdapter> adapter;
     protected boolean fetchingLocation = false;
     protected Handler handler = new Handler();
+    private StationsManager stationsManager;
 
     private int permissionCode = 0;
     protected int closestIndex = -1;
 
     public StationGridViewHolder(View v,
                                  AbstractStationsAdapter adapter,
+                                 StationsManager stationsManager,
                                  int permissionCode,
                                  boolean isOnboarding) {
         super(v);
         ButterKnife.bind(this, v);
+
+        this.stationsManager = stationsManager;
         this.permissionCode = permissionCode;
 
         if (isOnboarding) {
@@ -107,6 +111,6 @@ public class StationGridViewHolder extends ViewHolder {
     }
 
     public void loadClosestStation(int index) {
-        stationEditText.setText(StationsManager.getStations().get(index).getAbbr());
+        stationEditText.setText(stationsManager.getStations().get(index).getAbbr());
     }
 }

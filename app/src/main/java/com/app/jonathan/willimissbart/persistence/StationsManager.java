@@ -10,7 +10,7 @@ public class StationsManager {
     private static StationsManager instance;
     private List<Station> stations = NotGuava.newArrayList();
 
-    public static StationsManager getInstance() {
+    public static StationsManager get() {
         if (instance == null) {
             instance = new StationsManager();
         }
@@ -18,11 +18,11 @@ public class StationsManager {
         return instance;
     }
 
-    public static List<Station> getStations() {
-        return getInstance().stations;
+    public List<Station> getStations() {
+        return get().stations;
     }
 
-    public static void setStations(List<Station> stations) {
-        getInstance().stations.addAll(stations);
+    public void setStations(List<Station> stations) {
+        get().stations.addAll(stations);
     }
 }
