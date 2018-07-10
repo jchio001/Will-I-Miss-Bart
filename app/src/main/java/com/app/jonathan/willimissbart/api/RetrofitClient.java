@@ -108,7 +108,7 @@ public class RetrofitClient {
             .subscribeOn(Schedulers.io());
     }
 
-    public Single<List<Station>> getStations() {
+    public Single<ArrayList<Station>> getStations() {
         return matchingService
             .getStations("stns", API_KEY, 'y')
             .flatMap(stationsResp -> Single.just(stationsResp.body()

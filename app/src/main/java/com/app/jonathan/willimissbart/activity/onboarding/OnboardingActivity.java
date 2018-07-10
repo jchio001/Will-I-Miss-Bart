@@ -49,7 +49,6 @@ public class OnboardingActivity extends AppCompatActivity {
 
     private UserDataManager userDataManager;
     private SPManager spManager;
-    private OnboardingStationsManager onboardingStationsManager;
     private StationsManager stationsManager;
 
     protected Disposable stationDisposable;
@@ -83,15 +82,13 @@ public class OnboardingActivity extends AppCompatActivity {
         this.spManager = new SPManager(this);
         this.userDataManager = new UserDataManager(spManager);
         this.stationsManager = StationsManager.get();
-        this.onboardingStationsManager = new OnboardingStationsManager(
-            RetrofitClient.get(),
-            spManager,
-           stationsManager);
 
         footer = new StationsFooterViewHolder(stationsFooter, userDataManager);
         footer.done.setEnabled(false);
 
-        onboardingStationsManager.getStations().subscribeWith(stationsObserver);
+        stationsManager
+            .getStations(spManager, RetrofitClient.get())
+            .subscribeWith(stationsObserver);
     }
 
     @Override

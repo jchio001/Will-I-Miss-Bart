@@ -14,7 +14,6 @@ import android.widget.ScrollView;
 import com.app.jonathan.willimissbart.R;
 import com.app.jonathan.willimissbart.activity.core.MainActivity;
 import com.app.jonathan.willimissbart.adapter.SelectStationsAdapter;
-import com.app.jonathan.willimissbart.api.Models.Station.Station;
 import com.app.jonathan.willimissbart.misc.Utils;
 import com.app.jonathan.willimissbart.persistence.StationsManager;
 import com.app.jonathan.willimissbart.viewholder.StationGridViewHolder;

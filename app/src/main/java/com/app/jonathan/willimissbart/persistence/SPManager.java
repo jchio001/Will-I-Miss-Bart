@@ -51,7 +51,7 @@ public class SPManager {
 
     // Only use this method if you're 100% sure that the stations JSON is persisted in
     // SharedPreferences
-    public Single<List<Station>> fetchStations() {
+    public Single<ArrayList<Station>> fetchStations() {
         return Single.just(Utils.stationsJsonToList(
             sp.getString(Constants.STATION_LIST_KEY, "")))
             .subscribeOn(Schedulers.io());

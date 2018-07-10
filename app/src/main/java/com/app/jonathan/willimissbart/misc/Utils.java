@@ -22,19 +22,19 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class Utils {
 
-    public static List<Station> stationsJsonToList(String stationsJSON) {
-        StationsManager stationsManager = StationsManager.get();
-
-        if (stationsManager.getStations().isEmpty()) {
+    // This method sucks. Tight coupling on a util method is pretty stupid.
+    public static ArrayList<Station> stationsJsonToList(String stationsJSON) {
+        if (!stationsJSON.isEmpty()) {
             Gson gson = new Gson();
-            Type listType = new TypeToken<List<Station>>() {}.getType();
-            List<Station> stations = gson.fromJson(stationsJSON, listType);
-            stationsManager.setStations(stations);
+            Type listType = new TypeToken<ArrayList<Station>>() {}.getType();
+            ArrayList<Station> stations = gson.fromJson(stationsJSON, listType);
+            StationsManager.get().setStations(stations);
             return stations;
         } else {
             return NotGuava.newArrayList();
